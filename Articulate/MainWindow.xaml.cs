@@ -55,8 +55,9 @@ namespace Articulate
             ni.Visible = false;
             ni.Dispose();
             ni = null;
-            
-            recognizor.Dispose();
+
+            if (recognizor != null)
+                recognizor.Dispose();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

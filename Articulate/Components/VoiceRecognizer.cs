@@ -55,6 +55,7 @@ namespace Articulate
 
         public void Dispose()
         {
+            voiceEngine.RecognizeAsyncCancel();
             voiceEngine.Dispose();
         }
     }
