@@ -31,7 +31,7 @@ namespace Articulate
 
             ni = new System.Windows.Forms.NotifyIcon();
 
-            ni.Icon = new Icon("Main.ico");
+            ni.Icon = Articulate.Properties.Resources.Main;
             ni.Visible = true;
             ni.Text = "Articulate for Arma 3";
             ni.DoubleClick +=
