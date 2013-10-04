@@ -66,7 +66,7 @@ namespace Articulate
             commandSet.Add(flankRight.Item);
 
             // stop (6)
-            Command stop = new Command("STOP", new string[] { "stop", "hold position" }, new ushort[] { Keys.One, Keys.Six }, subjectRef);
+            Command stop = new Command("STOP", new string[] { "stop", "hold position", "halt" }, new ushort[] { Keys.One, Keys.Six }, subjectRef);
             commandObjects.Add("STOP", stop);
             commandSet.Add(stop.Item);
 
@@ -80,7 +80,7 @@ namespace Articulate
             commandObjects.Add("COVER", cover);
             commandSet.Add(cover.Item);
 
-            // Find cover (9)
+            // Next waypoint (9)
             Command nextWaypoint = new Command("NEXTWAYPOINT", new string[] { "next waypoint", "go to the next waypoint" }, new ushort[] { Keys.One, Keys.Nine }, subjectRef);
             commandObjects.Add("NEXTWAYPOINT", nextWaypoint);
             commandSet.Add(nextWaypoint.Item);
@@ -88,12 +88,12 @@ namespace Articulate
 
             #region Target (2)
             // open menu
-            Command openTargetMenu = new Command("OPENTARGET", new string[] { "show targets", "target menu" }, new ushort[] { Keys.Two }, subjectRef);
+            Command openTargetMenu = new Command("OPENTARGET", new string[] { "show targets", "target menu", "open target menu" }, new ushort[] { Keys.Two }, subjectRef);
             commandObjects.Add("OPENTARGET", openTargetMenu);
             commandSet.Add(openTargetMenu.Item);
 
             // cancel target (1)
-            Command cancelTarget = new Command("CANCELTARGET", new string[] { "cancel targets", "no target" }, new ushort[] { Keys.Two, Keys.One }, subjectRef);
+            Command cancelTarget = new Command("CANCELTARGET", new string[] { "cancel target", "cancel targets", "no target" }, new ushort[] { Keys.Two, Keys.One }, subjectRef);
             commandObjects.Add("CANCELTARGET", cancelTarget);
             commandSet.Add(cancelTarget.Item);
             #endregion
@@ -151,12 +151,12 @@ namespace Articulate
                 document.Rules.Add(rule);
             }
 
-            Command watch = new Command("WATCH", new string[] { "watch" }, new ushort[] { Keys.Three, Keys.Eight }, subjectRef, direction);
+            Command watch = new Command("WATCH", new string[] { "watch", "watch the"}, new ushort[] { Keys.Three, Keys.Eight }, subjectRef, direction);
             commandObjects.Add("WATCH", watch);
             commandSet.Add(watch.Item);
 
             // suppressive fire (9)
-            Command suppresiveFire = new Command("SUPRESS", new string[] { "supppresive fire" }, new ushort[] { Keys.Three, Keys.Nine }, subjectRef);
+            Command suppresiveFire = new Command("SUPRESS", new string[] { "supppresive fire", "surpress" }, new ushort[] { Keys.Three, Keys.Nine }, subjectRef);
             commandObjects.Add("SUPRESS", suppresiveFire);
             commandSet.Add(suppresiveFire.Item);
             #endregion
@@ -175,7 +175,7 @@ namespace Articulate
 
             #region Action (6)
             // open menu
-            Command openActionMenu = new Command("OPENACTION", new string[] { "show actions", "action menu", "perform action" }, new ushort[] { Keys.Six }, subjectRef);
+            Command openActionMenu = new Command("OPENACTION", new string[] { "show actions", "action menu", "perform action", "do action" }, new ushort[] { Keys.Six }, subjectRef);
             commandObjects.Add("OPENACTION", openActionMenu);
             commandSet.Add(openActionMenu.Item);
             #endregion
@@ -197,7 +197,7 @@ namespace Articulate
             commandSet.Add(aware.Item);
 
             // relax (4)
-            Command relax = new Command("RELAX", new string[] { "relax", "relaxed mode" }, new ushort[] { Keys.Seven, Keys.Four }, subjectRef);
+            Command relax = new Command("RELAX", new string[] { "relax", "relaxed mode", "safe" }, new ushort[] { Keys.Seven, Keys.Four }, subjectRef);
             commandObjects.Add("RELAX", relax);
             commandSet.Add(relax.Item);
 
@@ -283,7 +283,7 @@ namespace Articulate
                 document.Rules.Add(rule);
             }
 
-            Command assignTeam = new Command("ASSIGN", new string[] { "assign team", "assign", "add to" }, new ushort[] { Keys.Nine }, subjectRef, team);
+            Command assignTeam = new Command("ASSIGN", new string[] { "assign", "assign to", "add to" }, new ushort[] { Keys.Nine }, subjectRef, team);
             commandObjects.Add("ASSIGN", assignTeam);
             commandSet.Add(assignTeam.Item);
             #endregion
