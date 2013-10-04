@@ -32,10 +32,8 @@ namespace Articulate
             SrgsItem eight = GetNewNode(new string[] { "eight" }, "EIGHT");
             SrgsItem nine = GetNewNode(new string[] { "nine" }, "NINE");
             SrgsItem ten = GetNewNode(new string[] { "ten" }, "TEN");
-            SrgsItem eleven = GetNewNode(new string[] { "eleven" }, "ELEVEN");
-            SrgsItem twelve = GetNewNode(new string[] { "twelve" }, "TWELVE");
 
-            SrgsOneOf squadNumbersChoice = new SrgsOneOf(one, two, three, four, five, six, seven, eight, nine, ten, eleven, twelve);
+            SrgsOneOf squadNumbersChoice = new SrgsOneOf(one, two, three, four, five, six, seven, eight, nine, ten);
             SrgsItem squadNumbersConcatChoice = new SrgsItem(squadNumbersChoice, new SrgsItem(0, 1, "and"));
             squadNumbersConcatChoice.SetRepeat(1, 12);
             SrgsRule squadNumbers = new SrgsRule("squadNumbers");
@@ -107,10 +105,6 @@ namespace Articulate
             nine.Add(Keys.F9);
             List<ushort> ten = new List<ushort>();
             ten.Add(Keys.F10);
-            List<ushort> eleven = new List<ushort>();
-            eleven.Add(Keys.F11);
-            List<ushort> twelve = new List<ushort>();
-            twelve.Add(Keys.F12);
 
             List<ushort> red = new List<ushort>();
             red.Add(Keys.Nine);
@@ -151,8 +145,6 @@ namespace Articulate
             KeyLookup.Add("EIGHT", eight);
             KeyLookup.Add("NINE", nine);
             KeyLookup.Add("TEN", ten);
-            KeyLookup.Add("ELEVEN", eleven);
-            KeyLookup.Add("TWELVE", twelve);
 
             // TEAM SELECTION
             KeyLookup.Add("RED", red);
