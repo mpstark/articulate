@@ -7,22 +7,24 @@
 		Height="350" MinHeight="350" MaxHeight="350"
 		Width="525" MinWidth="525" MaxWidth="525"
 		Loaded="Window_Loaded"
-		Closed="Window_Closed"
 					   
 		Template="{StaticResource WindowTemplateKey}"               
 		Resources="{StaticResource WindowResources}" ResizeMode="CanMinimize" 
 			   ShowIconOnTitleBar="True" 
 			   ShowMaxRestoreButton="False" 
+			   Icon="Main.ico"
 			   TitleCaps="False" >
 	
 	<m:MetroWindow.WindowCommands>
 		<m:WindowCommands>
 			<Button x:Name="Settings"
+					DataContext="{Binding ElementName=this}"
 					ToolTip="Configure Articulate"
 					Content="Settings"
 					Click="Settings_Click">
 			</Button>
 			<Button x:Name="About"
+					DataContext="{Binding ElementName=this}"
 					ToolTip="Information about Articulate"
 					Content="About"
 					Click="About_Click">
@@ -62,10 +64,11 @@
 		</m:Flyout>
 		
 		<m:Flyout x:Name="ErrorFlyout" Header="Error" Position="Right">
-			<StackPanel Margin="30 0" Width="300">
+			<StackPanel Margin="30 0" Width="300"
+					DataContext="{Binding ElementName=this}">
 				<Label FontSize="20" Content="Error Message"/>
 				<TextBlock TextWrapping="Wrap"
-						   Text="{Binding ErrorMessage,ElementName=this}"/>
+						   Text="{Binding ErrorMessage}"/>
 
 				<Button x:Name="ReloadRecognizer" Click="ReloadRecognizer_Click">
 					Retry

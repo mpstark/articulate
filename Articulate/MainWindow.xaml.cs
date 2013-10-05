@@ -25,7 +25,7 @@ namespace Articulate
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
-	public partial class MainWindow : MetroWindow
+	public partial class MainWindow : MetroWindow, IDisposable
 	{
 		NotifyIcon ni;
 		VoiceRecognizer recognizer;
@@ -36,7 +36,7 @@ namespace Articulate
 
 			ni = new System.Windows.Forms.NotifyIcon();
 
-			ni.Icon = new Icon("Main.ico");
+			ni.Icon = Properties.Resources.Main;
 			ni.Visible = true;
 			ni.Text = "Articulate";
 			ni.DoubleClick += (sender, args) =>
@@ -63,11 +63,11 @@ namespace Articulate
 			set { SetValue(ArticulateStateProperty, value); }
 		}
 
-		public static DependencyProperty ArticulateErrorProperty = DependencyProperty.Register("ErrorMessage", typeof(string), typeof(MainWindow), new PropertyMetadata(""));
+		public static DependencyProperty ArticulateErrorMessageProperty = DependencyProperty.Register("ErrorMessage", typeof(string), typeof(MainWindow), new PropertyMetadata(""));
 		public string ErrorMessage
 		{
-			get { return (string)GetValue(ArticulateErrorProperty); }
-			set { SetValue(ArticulateErrorProperty, value); }
+			get { return (string)GetValue(ArticulateErrorMessageProperty); }
+			set { SetValue(ArticulateErrorMessageProperty, value); }
 		}
 
 		#endregion
@@ -80,16 +80,6 @@ namespace Articulate
 				this.Hide();
 
 			base.OnStateChanged(e);
-		}
-
-		private void Window_Closed(object sender, EventArgs e)
-		{
-			ni.Visible = false;
-			ni.Dispose();
-			ni = null;
-
-			if (recognizer != null)
-				recognizer.Dispose();
 		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -144,5 +134,21 @@ namespace Articulate
 		#region Settings
 		
 		#endregion
+
+		public void Dispose()
+		{
+			if (recognizer != null)
+			{
+				recognizer.Dispose();
+				recognizer = null;
+			}
+
+			if (ni != null)
+			{
+				ni.Visible = false;
+				ni.Dispose();
+				ni = null;
+			}
+		}
 	}
 }
