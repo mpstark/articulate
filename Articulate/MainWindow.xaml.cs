@@ -191,7 +191,7 @@ namespace Articulate
 				else
 					settings.PTTKey = e.KeyCode;
 
-				PTTKey.Content = e.KeyCode.ToString();
+				PTTKey.Content = settings.PTTKey.ToString();
 
 				Enabled = settings.PushToIgnore || settings.PTTKey == System.Windows.Forms.Keys.None;
 				Task.Factory.StartNew(() => settings.Save());
