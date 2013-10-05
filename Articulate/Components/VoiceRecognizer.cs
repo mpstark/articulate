@@ -21,6 +21,12 @@ namespace Articulate
 			private set;
 		}
 
+		public bool Enabled
+		{
+			get;
+			set;
+		}
+
 		public SpeechRecognitionEngine Engine { get; private set; }
 		
 		public int ConfidenceMargin
@@ -41,12 +47,7 @@ namespace Articulate
 			get;
 			private set;
 		}
-
-		/// <summary>
-		/// The voice recognition engine.
-		/// </summary>
-		private SpeechRecognitionEngine voiceEngine;
-
+		
 		/// <summary>
 		/// Default constructor. Sets up the voice recognizer with default settings.
 		/// 
@@ -93,6 +94,8 @@ namespace Articulate
 		/// </summary>
 		void sre_SpeechRecognized(object sender, SpeechRecognizedEventArgs recognizedPhrase)
 		{
+			if (!Enabled) return;
+
 			Trace.WriteLine("Recognized with confidence: " + recognizedPhrase.Result.Confidence);
 			// Get a thread from the thread pool to deal with it
 			Task.Factory.StartNew(() => CommandPool.Execute(recognizedPhrase.Result.Semantics));
