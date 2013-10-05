@@ -19,6 +19,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Reactive;
 using System.Reactive.Linq;
+using SierraLib.GlobalHooks;
 
 namespace Articulate
 {
@@ -90,6 +91,9 @@ namespace Articulate
 
 			if (recognizer != null)
 				recognizer.Dispose();
+			
+			HookManager.KeyDown -= HookManager_KeyDown;
+			HookManager.KeyUp -= HookManager_KeyUp;
 		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -107,7 +111,11 @@ namespace Articulate
 			{
 				State = "LISTENING...";
 				ConfidenceMargin.Value = 90;
+				recognizer.Enabled = true;
 			}
+
+			HookManager.KeyDown += HookManager_KeyDown;
+			HookManager.KeyUp += HookManager_KeyUp;
 		}
 
 		#endregion
@@ -141,8 +149,22 @@ namespace Articulate
 
 		#endregion
 
+		#region PTT
+				
+		void HookManager_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
+		{
+			
+		}
+
+		void HookManager_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+		{
+
+		}
+
+		#endregion
+
 		#region Settings
-		
+
 		#endregion
 	}
 }
