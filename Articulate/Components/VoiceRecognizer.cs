@@ -28,7 +28,7 @@ namespace Articulate
         /// <summary>
         /// Default constructor. Sets up the voice recognizer with default settings.
         /// 
-        /// Namely, default options are: en-US, default input device, listen always.
+        /// Namely, default options are: en-US, default input device, listen always, confidence level at .90
         /// </summary>
         public VoiceRecognizer()
         {
@@ -39,6 +39,9 @@ namespace Articulate
 
                 // Setup the audio device
                 voiceEngine.SetInputToDefaultAudioDevice();
+
+                // Set the confidence setting
+                voiceEngine.UpdateRecognizerSetting("CFGConfidenceRejectionThreshold", 90);
             
                 // Create the Grammar instance and load it into the speech recognition engine.
                 Grammar g = new Grammar(CommandPool.BuildSrgsGrammar());
@@ -46,6 +49,7 @@ namespace Articulate
                 
                 // Register a handler for the SpeechRecognized event
                 voiceEngine.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(sre_SpeechRecognized);
+                voiceEngine.SpeechRecognitionRejected += new EventHandler<SpeechRecognitionRejectedEventArgs>(sre_SpeechRecognitionRejected);
 
                 // Start listening in multiple mode (that is, don't quit after a single recongition)
                 voiceEngine.RecognizeAsync(RecognizeMode.Multiple);
@@ -59,16 +63,24 @@ namespace Articulate
             }
         }
 
+        // TODO: add constructor with options
+
         /// <summary>
         /// Some speech was recognized by the voiceEngine.
         /// </summary>
         void sre_SpeechRecognized(object sender, SpeechRecognizedEventArgs recognizedPhrase)
         {
-            if (recognizedPhrase.Result.Confidence > .90)
-            {
-                // Get a thread from the thread pool to deal with it
-                Task.Factory.StartNew(() => CommandPool.Execute(recognizedPhrase.Result.Semantics));
-            }
+            Trace.WriteLine("Recognized with confidence: " + recognizedPhrase.Result.Confidence);
+            // Get a thread from the thread pool to deal with it
+            Task.Factory.StartNew(() => CommandPool.Execute(recognizedPhrase.Result.Semantics));
+        }
+
+        /// <summary>
+        /// Some speech was rejected by the voiceEngine
+        /// </summary>
+        void sre_SpeechRecognitionRejected(object sender, SpeechRecognitionRejectedEventArgs recognizedPhrase)
+        {
+            Trace.WriteLine("Rejected with confidence: " + recognizedPhrase.Result.Confidence);
         }
 
         /// <summary>

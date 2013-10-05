@@ -329,11 +329,6 @@ namespace Articulate
             document.Rules.Add(commands);
             document.Root = commands;
 
-            // write grammar out for debugging purposes
-            System.Xml.XmlWriter xWriter = System.Xml.XmlWriter.Create("grammar.xml");
-            document.WriteSrgs(xWriter);
-            xWriter.Close();
-
             return document;
         }
         
@@ -356,7 +351,7 @@ namespace Articulate
                     Trace.WriteLine(subject);
                     if (subjectObject.KeyLookup.ContainsKey(subject))
                     {
-                        DirectInputEmulator.SendKeyPresses(subjectObject.KeyLookup[subject]);
+                        DirectInputEmulator.SendKeyPresses(subjectObject.KeyLookup[subject], 50);
                     }
                 }
             }
@@ -365,13 +360,13 @@ namespace Articulate
             {
                 // execute command keypresses
                 Trace.WriteLine(command);
-                DirectInputEmulator.SendKeyPresses(commandObjects[command].KeyLookup[command]);
+                DirectInputEmulator.SendKeyPresses(commandObjects[command].KeyLookup[command], 50);
 
                 // execute direct object keypresses (if needed)
                 if (directObject != null && directObject != "")
                 {
                     Trace.WriteLine(directObject);
-                    DirectInputEmulator.SendKeyPresses(commandObjects[command].KeyLookup[directObject]);
+                    DirectInputEmulator.SendKeyPresses(commandObjects[command].KeyLookup[directObject], 50);
                 }
             }
         }
