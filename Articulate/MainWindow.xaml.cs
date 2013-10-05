@@ -148,6 +148,7 @@ namespace Articulate
 		private void ReloadRecognizer_Click(object sender, RoutedEventArgs e)
 		{
 			Window_Loaded(sender, e);
+			ErrorFlyout.IsOpen = false;
 		}
 
 		private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
