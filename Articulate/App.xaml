@@ -1,9 +1,9 @@
 ﻿<Application x:Class="Articulate.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:m="http://metro.mahapps.com/winfx/xaml/controls"
 			 xmlns:c="http://metro.mahapps.com/winfx/xaml/shared"
-             StartupUri="MainWindow.xaml">
+			 StartupUri="MainWindow.xaml">
 	<Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
@@ -21,7 +21,7 @@
 											<RowDefinition Height="*"/>
 										</Grid.RowDefinitions>
 										<Grid x:Name="PART_TitleBar"
-                                              Background="{TemplateBinding Background}"
+											  Background="{TemplateBinding Background}"
 											  Height="{Binding TitlebarHeight, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type m:MetroWindow}}}"
 											  ClipToBounds="False">
 											<Grid.ColumnDefinitions>
