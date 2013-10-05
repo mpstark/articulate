@@ -10,4 +10,4 @@ For more information on the commands currently available, take a look at the wik
 Michael is the original creater of Articulate, and he has developed the framework on which it works.
 
 ### Benjamin Pannell [github](https://github.com/SPARTAN563), [company](https://sierrasoftworks.com)
-Benjamin is responsible for the new user interface used by Articulate, as well as being the person behind the configuration system.
+Benjamin is responsible for the new user interface used by Articulate, as well as the Push To Talk and Confidence Margin systems.
