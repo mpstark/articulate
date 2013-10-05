@@ -39,8 +39,10 @@ namespace Articulate
         {
             try
             {
+                CultureInfo cultureInfo = new CultureInfo("en-US");
+
                 // Create a new SpeechRecognitionEngine instance.
-                voiceEngine = new SpeechRecognitionEngine(new CultureInfo("en-US"));
+                voiceEngine = new SpeechRecognitionEngine(cultureInfo);
 
                 // Setup the audio device
                 voiceEngine.SetInputToDefaultAudioDevice();
@@ -49,7 +51,7 @@ namespace Articulate
                 voiceEngine.UpdateRecognizerSetting("CFGConfidenceRejectionThreshold", 90);
             
                 // Create the Grammar instance and load it into the speech recognition engine.
-                Grammar g = new Grammar(CommandPool.BuildSrgsGrammar());
+                Grammar g = new Grammar(CommandPool.BuildSrgsGrammar(cultureInfo));
                 voiceEngine.LoadGrammar(g);
                 
                 // Register a handler for the SpeechRecognized event

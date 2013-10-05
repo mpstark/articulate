@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Speech.Recognition;
 using System.Speech.Recognition.SrgsGrammar;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace Articulate
 {
@@ -15,9 +16,10 @@ namespace Articulate
         private static Subject subjectObject;
         private static Dictionary<string, Command> commandObjects;
 
-        public static SrgsDocument BuildSrgsGrammar()
+        public static SrgsDocument BuildSrgsGrammar(CultureInfo cultureInfo)
         {
             SrgsDocument document = new SrgsDocument();
+            document.Culture = cultureInfo;
 
             // make a new subject item and then add all of it's rules to the document
             subjectObject = new Subject();
