@@ -43,11 +43,6 @@ namespace Articulate
 		}
 
 		/// <summary>
-		/// The voice recognition engine.
-		/// </summary>
-		private SpeechRecognitionEngine voiceEngine;
-
-		/// <summary>
 		/// Default constructor. Sets up the voice recognizer with default settings.
 		/// 
 		/// Namely, default options are: en-US, default input device, listen always, confidence level at .90
