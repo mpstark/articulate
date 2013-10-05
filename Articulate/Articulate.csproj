@@ -123,6 +123,7 @@
     <Compile Include="CommandChunks\Subject.cs" />
     <Compile Include="Components\CommandPool.cs" />
     <Compile Include="CommandChunks\Command.cs" />
+    <Compile Include="Components\ForegroundProcess.cs" />
     <Compile Include="Components\VoiceRecognizer.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Page Include="MainWindow.xaml">

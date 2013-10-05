@@ -28,6 +28,8 @@ namespace Articulate
 		}
 
 		public SpeechRecognitionEngine Engine { get; private set; }
+
+		public List<string> MonitoredExecutables = new List<string>();
 		
 		public int ConfidenceMargin
 		{
@@ -71,8 +73,8 @@ namespace Articulate
 				Engine.LoadGrammar(g);
 				
 				// Register a handler for the SpeechRecognized event
-				Engine.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(sre_SpeechRecognized);
-				Engine.SpeechRecognitionRejected += new EventHandler<SpeechRecognitionRejectedEventArgs>(sre_SpeechRecognitionRejected);
+				Engine.SpeechRecognized += sre_SpeechRecognized;
+				Engine.SpeechRecognitionRejected += sre_SpeechRecognitionRejected;
 
 				// Start listening in multiple mode (that is, don't quit after a single recongition)
 				Engine.RecognizeAsync(RecognizeMode.Multiple);
@@ -97,6 +99,15 @@ namespace Articulate
 			if (!Enabled) return;
 
 			Trace.WriteLine("Recognized with confidence: " + recognizedPhrase.Result.Confidence);
+
+			var activeApplication = ForegroundProcess.ExecutableName;
+
+			if (!MonitoredExecutables.Any(x => x.Equals(activeApplication, StringComparison.OrdinalIgnoreCase)))
+			{
+				Trace.WriteLine(string.Format("Skipping command, {0} is not in the list of monitored applications", activeApplication));
+				return;
+			}
+
 			// Get a thread from the thread pool to deal with it
 			Task.Factory.StartNew(() => CommandPool.Execute(recognizedPhrase.Result.Semantics));
 		}

@@ -102,7 +102,7 @@ namespace Articulate
 			PushToIgnore.IsChecked = settings.PushToIgnore;
 
 			recognizer = new VoiceRecognizer();
-
+			
 			// something happened with the setup of the VoiceRecognizer (no mic, etc.)
 			if (!recognizer.IsSetup)
 			{
@@ -112,6 +112,8 @@ namespace Articulate
 			}
 			else
 			{
+				recognizer.MonitoredExecutables.AddRange(settings.Applications);
+
 				State = "LISTENING...";
 				ConfidenceMargin.Value = settings.ConfidenceMargin;
 				Enabled = settings.PushToIgnore || settings.PTTKey == System.Windows.Forms.Keys.None;
