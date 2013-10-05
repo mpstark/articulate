@@ -128,6 +128,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Components\DirectInputEmulator.cs" />
+    <Compile Include="GlobalHooks\GlobalEventProvider.cs" />
+    <Compile Include="GlobalHooks\HookManager.Callbacks.cs" />
+    <Compile Include="GlobalHooks\HookManager.cs" />
+    <Compile Include="GlobalHooks\HookManager.Structures.cs" />
+    <Compile Include="GlobalHooks\HookManager.Windows.cs" />
+    <Compile Include="GlobalHooks\MouseEventExtArgs.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
