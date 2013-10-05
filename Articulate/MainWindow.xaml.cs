@@ -15,67 +15,112 @@ using System.Windows.Shapes;
 using System.Windows.Forms;
 using System.Drawing;
 using MahApps.Metro.Controls;
+using System.ComponentModel;
 
 namespace Articulate
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : MetroWindow
-    {
-        NotifyIcon ni;
-        VoiceRecognizer recognizor;
+	/// <summary>
+	/// Interaction logic for MainWindow.xaml
+	/// </summary>
+	public partial class MainWindow : MetroWindow, INotifyPropertyChanged
+	{
+		NotifyIcon ni;
+		VoiceRecognizer recognizor;
 
-        public MainWindow()
-        {
-            InitializeComponent();
+		public event PropertyChangedEventHandler PropertyChanged;
 
-            ni = new System.Windows.Forms.NotifyIcon();
+		public MainWindow()
+		{
+			InitializeComponent();
 
-            ni.Icon = new Icon("Main.ico");
-            ni.Visible = true;
-            ni.Text = "Articulate for Arma 3";
-            ni.DoubleClick +=
-                delegate(object sender, EventArgs args)
-                {
-                    this.Show();
-                    this.WindowState = WindowState.Normal;
-                };
-        }
+			ni = new System.Windows.Forms.NotifyIcon();
 
-        protected override void OnStateChanged(EventArgs e)
-        {
-            if (WindowState == System.Windows.WindowState.Minimized)
-                this.Hide();
+			ni.Icon = new Icon("Main.ico");
+			ni.Visible = true;
+			ni.Text = "Articulate for Arma 3";
+			ni.DoubleClick +=
+				delegate(object sender, EventArgs args)
+				{
+					this.Show();
+					this.WindowState = WindowState.Normal;
+				};
+		}
 
-            base.OnStateChanged(e);
-        }
 
-        private void Window_Closed(object sender, EventArgs e)
-        {
-            ni.Visible = false;
-            ni.Dispose();
-            ni = null;
+		#region MVVM Properties
 
-            if (recognizor != null)
-                recognizor.Dispose();
-        }
+		public static DependencyProperty ArticulateStateProperty = DependencyProperty.Register("State", typeof(string), typeof(MainWindow), new PropertyMetadata("LOADING..."));
+		public string State
+		{
+			get { return (string)GetValue(ArticulateStateProperty); }
+			set { SetValue(ArticulateStateProperty, value); }
+		}
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            recognizor = new VoiceRecognizer();
+		public static DependencyProperty ArticulateReloadEnabledProperty = DependencyProperty.Register("ReloadEnabled", typeof(bool), typeof(MainWindow), new PropertyMetadata(false));
+		public bool ReloadEnabled
+		{
+			get { return (bool)GetValue(ArticulateReloadEnabledProperty); }
+			set { SetValue(ArticulateReloadEnabledProperty, value); }
+		}
 
-            // something happened with the setup of the VoiceRecognizer (no mic, etc.)
-            if (!recognizor.IsSetup)
-            {
-                System.Windows.MessageBox.Show("There was a problem starting Articulate. Is there a valid default input device?");
-                this.Close();
-            }
-        }
+		#endregion
+
+		#region Window Events
+
+		protected override void OnStateChanged(EventArgs e)
+		{
+			if (WindowState == System.Windows.WindowState.Minimized)
+				this.Hide();
+
+			base.OnStateChanged(e);
+		}
+
+		private void Window_Closed(object sender, EventArgs e)
+		{
+			ni.Visible = false;
+			ni.Dispose();
+			ni = null;
+
+			if (recognizor != null)
+				recognizor.Dispose();
+		}
+
+		private void Window_Loaded(object sender, RoutedEventArgs e)
+		{
+			recognizor = new VoiceRecognizer();
+
+			// something happened with the setup of the VoiceRecognizer (no mic, etc.)
+			if (!recognizor.IsSetup)
+			{
+				State = "FAILED";
+				ReloadEnabled = true;
+			}
+			else
+			{
+				State = "LISTENING...";
+				ReloadEnabled = false;
+			}
+		}
+
+		#endregion
+
+		#region Window Command Buttons
+
+		private void Settings_Click(object sender, RoutedEventArgs e)
+		{
+			SettingsFlyout.IsOpen = true;
+		}
 
 		private void About_Click(object sender, RoutedEventArgs e)
 		{
 			AboutFlyout.IsOpen = true;
 		}
-    }
+
+		#endregion
+
+		private void ReloadRecognizer_Click(object sender, RoutedEventArgs e)
+		{
+			Window_Loaded(sender, e);
+		}
+	}
 }
