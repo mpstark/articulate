@@ -47,7 +47,7 @@ namespace Articulate
 			get;
 			private set;
 		}
-		
+
 		/// <summary>
 		/// Default constructor. Sets up the voice recognizer with default settings.
 		/// 
