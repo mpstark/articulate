@@ -10,63 +10,113 @@ using System.Diagnostics;
 
 namespace Articulate
 {
-    class VoiceRecognizer : IDisposable
-    {
-        public bool IsSetup 
+	/// <summary>
+	/// Object that listens for user voice input (as setup by the CommandPool) and then passes the execution to CommandPool.
+	/// </summary>
+	class VoiceRecognizer : IDisposable
+	{
+		public bool IsSetup 
 		{
 			get;
 			private set;
 		}
 
 		public SpeechRecognitionEngine Engine { get; private set; }
-
-		public double ConfidenceMargin
-		{ get; set; }
-
-        public VoiceRecognizer()
+		
+		public int ConfidenceMargin
 		{
-			ConfidenceMargin = 0.85;
+			get { return Engine != null ? (int)Engine.QueryRecognizerSetting("CFGConfidenceRejectionThreshold") : 90; }
+			set
+			{
+				if(Engine != null)
+					Engine.UpdateRecognizerSetting("CFGConfidenceRejectionThreshold", value);
+			}
+		}
 
-            try
-            {
-                // Create a new SpeechRecognitionEngine instance.
-                Engine = new SpeechRecognitionEngine(new CultureInfo("en-US"));
+		/// <summary>
+		/// Ugly way of providing exception message.
+		/// </summary>
+		public string SetupError
+		{
+			get;
+			private set;
+		}
 
-                // Setup the audio device
-                Engine.SetInputToDefaultAudioDevice();
-            
-                // Create the Grammar instance and load it into the speech recognition engine.
-                Grammar g = new Grammar(CommandPool.BuildSrgsGrammar());
-                Engine.LoadGrammar(g);
+		/// <summary>
+		/// The voice recognition engine.
+		/// </summary>
+		private SpeechRecognitionEngine voiceEngine;
 
-                //Engine.EndSilenceTimeout = new TimeSpan(0, 0, 1);
+		/// <summary>
+		/// Default constructor. Sets up the voice recognizer with default settings.
+		/// 
+		/// Namely, default options are: en-US, default input device, listen always, confidence level at .90
+		/// </summary>
+		public VoiceRecognizer()
+		{
+			try
+			{
+				// Create a new SpeechRecognitionEngine instance.
+				Engine = new SpeechRecognitionEngine(new CultureInfo("en-US"));
 
-                // Register a handler for the SpeechRecognized event
-                Engine.SpeechRecognized += sre_SpeechRecognized;
+				// Setup the audio device
+				Engine.SetInputToDefaultAudioDevice();
 
-                // Start listening in multiple mode (that is, don't quit after a single recongition)
-                Engine.RecognizeAsync(RecognizeMode.Multiple);
-                IsSetup = true;
-            }
-            catch(Exception e)
-            {
-                IsSetup = false;
-            }
-        }
+				// Set the confidence setting
+				ConfidenceMargin = 90;
+			
+				// Create the Grammar instance and load it into the speech recognition engine.
+				Grammar g = new Grammar(CommandPool.BuildSrgsGrammar());
+				Engine.LoadGrammar(g);
+				
+				// Register a handler for the SpeechRecognized event
+				Engine.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(sre_SpeechRecognized);
+				Engine.SpeechRecognitionRejected += new EventHandler<SpeechRecognitionRejectedEventArgs>(sre_SpeechRecognitionRejected);
 
-        void sre_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
-        {
-            if (e.Result.Confidence > ConfidenceMargin)
-            {
-                // Async deal with it
-                Task.Factory.StartNew(() => CommandPool.Execute(e.Result.Semantics));
-            }
-        }
+				// Start listening in multiple mode (that is, don't quit after a single recongition)
+				Engine.RecognizeAsync(RecognizeMode.Multiple);
+				IsSetup = true;
+			}
+			catch(Exception e)
+			{
+				// Something went wrong setting up the voiceEngine.
+				Trace.WriteLine(e.Message);
+				SetupError = e.ToString();
+				IsSetup = false;
+			}
+		}
 
-        public void Dispose()
-        {
-            Engine.RecognizeAsyncCancel();
-            Engine.Dispose();
-        }
-    }
+		// TODO: add constructor with options
+
+		/// <summary>
+		/// Some speech was recognized by the voiceEngine.
+		/// </summary>
+		void sre_SpeechRecognized(object sender, SpeechRecognizedEventArgs recognizedPhrase)
+		{
+			Trace.WriteLine("Recognized with confidence: " + recognizedPhrase.Result.Confidence);
+			// Get a thread from the thread pool to deal with it
+			Task.Factory.StartNew(() => CommandPool.Execute(recognizedPhrase.Result.Semantics));
+		}
+
+		/// <summary>
+		/// Some speech was rejected by the voiceEngine
+		/// </summary>
+		void sre_SpeechRecognitionRejected(object sender, SpeechRecognitionRejectedEventArgs recognizedPhrase)
+		{
+			Trace.WriteLine("Rejected with confidence: " + recognizedPhrase.Result.Confidence);
+		}
+
+		/// <summary>
+		/// Cleanup before destoying the object.
+		/// </summary>
+		public void Dispose()
+		{
+			// make sure that the voiceEngine is turned off
+			Engine.RecognizeAsyncCancel();
+
+			// dispose of the voiceEngine
+			Engine.Dispose();
+			Engine = null;
+		}
+	}
 }

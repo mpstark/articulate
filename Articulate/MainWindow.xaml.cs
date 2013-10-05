@@ -16,19 +16,20 @@ using System.Windows.Forms;
 using System.Drawing;
 using MahApps.Metro.Controls;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Reactive;
+using System.Reactive.Linq;
 
 namespace Articulate
 {
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
-	public partial class MainWindow : MetroWindow, INotifyPropertyChanged
+	public partial class MainWindow : MetroWindow
 	{
 		NotifyIcon ni;
 		VoiceRecognizer recognizer;
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
+		
 		public MainWindow()
 		{
 			InitializeComponent();
@@ -43,6 +44,13 @@ namespace Articulate
 					this.Show();
 					this.WindowState = WindowState.Normal;
 				};
+
+			Observable.FromEventPattern<RoutedPropertyChangedEventArgs<double>>(ConfidenceMargin, "ValueChanged")
+				.Throttle(TimeSpan.FromMilliseconds(500)).Subscribe(args =>
+				{
+					if (recognizer != null)
+						recognizer.ConfidenceMargin = (int)args.EventArgs.NewValue;
+				});
 		}
 
 
@@ -55,11 +63,11 @@ namespace Articulate
 			set { SetValue(ArticulateStateProperty, value); }
 		}
 
-		public static DependencyProperty ArticulateReloadEnabledProperty = DependencyProperty.Register("ReloadEnabled", typeof(bool), typeof(MainWindow), new PropertyMetadata(false));
-		public bool ReloadEnabled
+		public static DependencyProperty ArticulateErrorProperty = DependencyProperty.Register("ErrorMessage", typeof(string), typeof(MainWindow), new PropertyMetadata(""));
+		public string ErrorMessage
 		{
-			get { return (bool)GetValue(ArticulateReloadEnabledProperty); }
-			set { SetValue(ArticulateReloadEnabledProperty, value); }
+			get { return (string)GetValue(ArticulateErrorProperty); }
+			set { SetValue(ArticulateErrorProperty, value); }
 		}
 
 		#endregion
@@ -92,13 +100,13 @@ namespace Articulate
 			if (!recognizer.IsSetup)
 			{
 				State = "FAILED";
-				ReloadEnabled = true;
+				ErrorMessage = recognizer.SetupError;
+				ErrorFlyout.IsOpen = true;
 			}
 			else
 			{
 				State = "LISTENING...";
-				ReloadEnabled = false;
-				ConfidenceMargin.Value = recognizer.ConfidenceMargin * 100;
+				ConfidenceMargin.Value = 90;
 			}
 		}
 
@@ -125,14 +133,19 @@ namespace Articulate
 			Window_Loaded(sender, e);
 		}
 
+		private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+		{
+			Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+			e.Handled = true;
+		}
+
 		#endregion
 
 		#region Settings
 		
 		private void ConfidenceMargin_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
 		{
-			if(recognizer != null)
-				recognizer.ConfidenceMargin = e.NewValue / 100;
+
 		}
 
 		#endregion

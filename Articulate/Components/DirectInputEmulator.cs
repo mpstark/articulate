@@ -9,9 +9,14 @@ using System.Diagnostics;
 
 namespace Articulate
 {
+    /// <summary>
+    /// Stores the ushort keycodes for DirectInput. These vary per keyboard some.
+    /// 
+    /// More information about these is available at:
+    /// http://www.gamespp.com/directx/directInputKeyboardScanCodes.html
+    /// </summary>
     static class Keys
     {
-        // http://www.gamespp.com/directx/directInputKeyboardScanCodes.html
         public const ushort F1 = 0x3B;
         public const ushort F2 = 0x3C;
         public const ushort F3 = 0x3D;
@@ -39,6 +44,10 @@ namespace Articulate
         public const ushort Tilde = 0x29;
     }
 
+    /// <summary>
+    /// Exposes the SendInput method from the User32/Win32 library. Using this instead of other options because
+    /// this allows input into DirectInput applications (i.e. Arma 3 and other applications that use DirectX).
+    /// </summary>
     static class DirectInputEmulator
     {
         [DllImport("user32.dll")]
@@ -69,27 +78,38 @@ namespace Articulate
             KEYEVENTF_SCANCODE = 0x0008,
         }
 
-        public static void SendKeyPresses(List<ushort> keys)
+        /// <summary>
+        /// Sends a series of keypresses in order from a List with an optional delay. This is a blocking operation.
+        /// </summary>
+        /// <param name="keys">The keypresses to send.</param>
+        /// <param name="delay">The delay to wait between each keypress.</param>
+        public static void SendKeyPresses(List<ushort> keys, int delay = 0)
         {
             foreach (ushort key in keys)
             {
                 SendKeyPress(key);
-                Thread.Sleep(50);
+
+                if (delay > 0)
+                    Thread.Sleep(delay);
             }
         }
 
-        public static void SendKeyPress(ushort k)
+        /// <summary>
+        /// Sends a single keypress (Down and then up)
+        /// </summary>
+        /// <param name="key">The key to press</param>
+        public static void SendKeyPress(ushort key)
         {
             INPUT[] InputData = new INPUT[2];
 
             InputData[0].Type = 1; //INPUT_KEYBOARD
-            InputData[0].Scan = (ushort)k;
+            InputData[0].Scan = (ushort)key;
             InputData[0].Flags = (uint)SendInputFlags.KEYEVENTF_SCANCODE;
             InputData[0].Time = 0;
             InputData[0].ExtraInfo = UIntPtr.Zero;
 
             InputData[1].Type = 1; //INPUT_KEYBOARD
-            InputData[1].Scan = (ushort)k;
+            InputData[1].Scan = (ushort)key;
             InputData[1].Flags = (uint)(SendInputFlags.KEYEVENTF_SCANCODE | SendInputFlags.KEYEVENTF_KEYUP);
             InputData[1].Time = 0;
             InputData[1].ExtraInfo = UIntPtr.Zero;
@@ -98,12 +118,16 @@ namespace Articulate
             SendInput(2, InputData, Marshal.SizeOf(typeof(INPUT)));
         }
 
-        public static void SendKeyDown(ushort k)
+        /// <summary>
+        /// Sends a key down for a single key
+        /// </summary>
+        /// <param name="key">Key to send key down on</param>
+        public static void SendKeyDown(ushort key)
         {
             INPUT[] InputData = new INPUT[1];
 
             InputData[0].Type = 1; //INPUT_KEYBOARD
-            InputData[0].Scan = (ushort)k;
+            InputData[0].Scan = (ushort)key;
             InputData[0].Flags = (uint)SendInputFlags.KEYEVENTF_SCANCODE;
             InputData[0].Time = 0;
             InputData[0].ExtraInfo = UIntPtr.Zero;
@@ -112,12 +136,16 @@ namespace Articulate
             SendInput(1, InputData, Marshal.SizeOf(typeof(INPUT)));
         }
 
-        public static void SendKeyUp(ushort k)
+        /// <summary>
+        /// Sends a key up for a single key
+        /// </summary>
+        /// <param name="key">Key to send key up on</param>
+        public static void SendKeyUp(ushort key)
         {
             INPUT[] InputData = new INPUT[1];
 
             InputData[0].Type = 1; //INPUT_KEYBOARD
-            InputData[0].Scan = (ushort)k;
+            InputData[0].Scan = (ushort)key;
             InputData[0].Flags = (uint)(SendInputFlags.KEYEVENTF_SCANCODE | SendInputFlags.KEYEVENTF_KEYUP);
             InputData[0].Time = 0;
             InputData[0].ExtraInfo = UIntPtr.Zero;

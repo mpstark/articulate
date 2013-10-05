@@ -35,7 +35,7 @@ namespace Articulate
 
             SrgsOneOf squadNumbersChoice = new SrgsOneOf(one, two, three, four, five, six, seven, eight, nine, ten);
             SrgsItem squadNumbersConcatChoice = new SrgsItem(squadNumbersChoice, new SrgsItem(0, 1, "and"));
-            squadNumbersConcatChoice.SetRepeat(1, 12);
+            squadNumbersConcatChoice.SetRepeat(1, 10);
             SrgsRule squadNumbers = new SrgsRule("squadNumbers");
             squadNumbers.Add(squadNumbersConcatChoice);
             RuleList.Add(squadNumbers);

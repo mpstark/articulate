@@ -13,8 +13,7 @@
 		Resources="{StaticResource WindowResources}" ResizeMode="CanMinimize" 
 			   ShowIconOnTitleBar="True" 
 			   ShowMaxRestoreButton="False" 
-			   TitleCaps="False" 
-			   Icon="pack://siteoforigin:,,,/Main.ico">
+			   TitleCaps="False" >
 	
 	<m:MetroWindow.WindowCommands>
 		<m:WindowCommands>
@@ -55,23 +54,56 @@
 			<StackPanel Margin="30 0" Width="300">
 				<Label FontSize="20" Content="Confidence Margin"/>
 				<Slider x:Name="ConfidenceMargin"
-						ValueChanged="ConfidenceMargin_ValueChanged"
 						Value="85"/>
+				<TextBlock TextWrapping="Wrap">
+					Reducing this value can help increase responsiveness at the cost of accuracy
+				</TextBlock>
+			</StackPanel>
+		</m:Flyout>
+		
+		<m:Flyout x:Name="ErrorFlyout" Header="Error" Position="Right">
+			<StackPanel Margin="30 0" Width="300">
+				<Label FontSize="20" Content="Error Message"/>
+				<TextBlock TextWrapping="Wrap"
+						   Text="{Binding ErrorMessage,ElementName=this}"/>
+
+				<Button x:Name="ReloadRecognizer" Click="ReloadRecognizer_Click">
+					Retry
+				</Button>
 			</StackPanel>
 		</m:Flyout>
 	</m:MetroWindow.Flyouts>
 	
 	<m:MetroContentControl>
 		<Grid>
-			<Grid>
-				<Label Content="{Binding State,ElementName=this}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="64" Margin="59,94,59,120"/>
-									
-				<Button x:Name="ReloadRecognizer" Visibility="Hidden" Click="ReloadRecognizer_Click">
-					Retry
-				</Button>
-				
-			</Grid>
-			<Label Content="This is an extremely early build for preview and feedback. Experiences will vary." HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="Auto"/>
+			</Grid.RowDefinitions>
+
+			<Label Grid.Row="0" Content="{Binding State,ElementName=this}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="64"/>
+			
+			<TextBlock Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="12"
+					   TextAlignment="Center"
+					   Margin="0,0,0,5">  
+				This is an extremely early build for preview and feedback. Experiences will vary.
+				<LineBreak/>
+				<Hyperlink NavigateUri="http://forums.bistudio.com/showthread.php?166228-Articulate-Squad-Voice-Command-Utility-for-Arma-3" 
+						   RequestNavigate="Hyperlink_RequestNavigate"
+						   Foreground="#fff">
+					[BI Forum Post]
+				</Hyperlink>
+				<Hyperlink NavigateUri="https://docs.google.com/forms/d/17Mpe3nCUXEQGAWjrR75tzwZjYNH4jk6Z5DRpzZfmT7Y/viewform" 
+						   RequestNavigate="Hyperlink_RequestNavigate"
+						   Foreground="#fff">
+					[Provide Feedback]
+				</Hyperlink>
+				<Hyperlink NavigateUri="https://github.com/Mpstark/articulate/wiki" 
+						   RequestNavigate="Hyperlink_RequestNavigate"
+						   Foreground="#fff">
+					[GitHub Wiki]
+				</Hyperlink>
+			</TextBlock>
 		</Grid>
 
 	</m:MetroContentControl>
