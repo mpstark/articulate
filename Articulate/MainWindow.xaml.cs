@@ -25,7 +25,7 @@ namespace Articulate
 	public partial class MainWindow : MetroWindow, INotifyPropertyChanged
 	{
 		NotifyIcon ni;
-		VoiceRecognizer recognizor;
+		VoiceRecognizer recognizer;
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
@@ -80,16 +80,16 @@ namespace Articulate
 			ni.Dispose();
 			ni = null;
 
-			if (recognizor != null)
-				recognizor.Dispose();
+			if (recognizer != null)
+				recognizer.Dispose();
 		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-			recognizor = new VoiceRecognizer();
+			recognizer = new VoiceRecognizer();
 
 			// something happened with the setup of the VoiceRecognizer (no mic, etc.)
-			if (!recognizor.IsSetup)
+			if (!recognizer.IsSetup)
 			{
 				State = "FAILED";
 				ReloadEnabled = true;
@@ -98,6 +98,7 @@ namespace Articulate
 			{
 				State = "LISTENING...";
 				ReloadEnabled = false;
+				ConfidenceMargin.Value = recognizer.ConfidenceMargin * 100;
 			}
 		}
 
@@ -122,6 +123,16 @@ namespace Articulate
 		private void ReloadRecognizer_Click(object sender, RoutedEventArgs e)
 		{
 			Window_Loaded(sender, e);
+		}
+
+		#endregion
+
+		#region Settings
+		
+		private void ConfidenceMargin_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+		{
+			if(recognizer != null)
+				recognizer.ConfidenceMargin = e.NewValue / 100;
 		}
 
 		#endregion

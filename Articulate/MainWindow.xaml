@@ -53,7 +53,10 @@
 		</m:Flyout>
 		<m:Flyout x:Name="SettingsFlyout" Header="Settings" Position="Right">
 			<StackPanel Margin="30 0" Width="300">
-				
+				<Label FontSize="20" Content="Confidence Margin"/>
+				<Slider x:Name="ConfidenceMargin"
+						ValueChanged="ConfidenceMargin_ValueChanged"
+						Value="85"/>
 			</StackPanel>
 		</m:Flyout>
 	</m:MetroWindow.Flyouts>
@@ -66,6 +69,7 @@
 				<Button x:Name="ReloadRecognizer" Visibility="Hidden" Click="ReloadRecognizer_Click">
 					Retry
 				</Button>
+				
 			</Grid>
 			<Label Content="This is an extremely early build for preview and feedback. Experiences will vary." HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
 		</Grid>
