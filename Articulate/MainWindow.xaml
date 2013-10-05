@@ -62,6 +62,7 @@
 		<Grid>
 			<Grid>
 				<Label Content="{Binding State,ElementName=this}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="64" Margin="59,94,59,120"/>
+									
 				<Button x:Name="ReloadRecognizer" Visibility="Hidden" Click="ReloadRecognizer_Click">
 					Retry
 				</Button>

@@ -37,9 +37,8 @@ namespace Articulate
 
 			ni.Icon = new Icon("Main.ico");
 			ni.Visible = true;
-			ni.Text = "Articulate for Arma 3";
-			ni.DoubleClick +=
-				delegate(object sender, EventArgs args)
+			ni.Text = "Articulate";
+			ni.DoubleClick += (sender, args) =>
 				{
 					this.Show();
 					this.WindowState = WindowState.Normal;
@@ -118,9 +117,13 @@ namespace Articulate
 
 		#endregion
 
+		#region Window Buttons
+
 		private void ReloadRecognizer_Click(object sender, RoutedEventArgs e)
 		{
 			Window_Loaded(sender, e);
 		}
+
+		#endregion
 	}
 }
