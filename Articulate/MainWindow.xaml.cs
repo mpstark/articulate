@@ -87,7 +87,7 @@ namespace Articulate
 			recognizer = new VoiceRecognizer();
 
 			// something happened with the setup of the VoiceRecognizer (no mic, etc.)
-			if (!recognizer.IsSetup)
+			if (recognizer.State == VoiceRecognizer.VoiceRecognizerState.Error)
 			{
 				State = "FAILED";
 				ErrorMessage = recognizer.SetupError;
