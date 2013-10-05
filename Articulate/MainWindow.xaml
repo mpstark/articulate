@@ -7,6 +7,7 @@
 		Height="350" MinHeight="350" MaxHeight="350"
 		Width="525" MinWidth="525" MaxWidth="525"
 		Loaded="Window_Loaded"
+			   Closing="Window_Closing"
 					   
 		Template="{StaticResource WindowTemplateKey}"               
 		Resources="{StaticResource WindowResources}" ResizeMode="CanMinimize" 
@@ -54,12 +55,23 @@
 		</m:Flyout>
 		<m:Flyout x:Name="SettingsFlyout" Header="Settings" Position="Right">
 			<StackPanel Margin="30 0" Width="300">
-				<Label FontSize="20" Content="Confidence Margin"/>
+				<Label FontSize="16" Content="Confidence Margin"/>
 				<Slider x:Name="ConfidenceMargin"
-						Value="90"/>
+						Value="80"/>
 				<TextBlock TextWrapping="Wrap">
 					Reducing this value can help increase responsiveness at the cost of accuracy
 				</TextBlock>
+				
+				<Label FontSize="16" Content="Push To Talk"/>
+				<Button x:Name="PTTKey" Content="None" ToolTip="Click to change your PTT Key" Click="PTTKey_Click"/>
+				<TextBlock TextWrapping="Wrap">
+					Click the button to change your PTT Key
+				</TextBlock>
+				<m:ToggleSwitch x:Name="PushToIgnore" Header="Push To Ignore" 
+								ToolTip="If enabled, Articulate will ignore commands issued while this key is pressed." 
+								Checked="PushToIgnore_Checked"
+								Unchecked="PushToIgnore_Checked"/>
+
 			</StackPanel>
 		</m:Flyout>
 		

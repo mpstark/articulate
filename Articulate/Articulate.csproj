@@ -44,6 +44,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -53,6 +54,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Main.ico</ApplicationIcon>
@@ -122,6 +124,7 @@
     <Compile Include="Components\CommandPool.cs" />
     <Compile Include="CommandChunks\Command.cs" />
     <Compile Include="Components\VoiceRecognizer.cs" />
+    <Compile Include="Settings\Settings.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -131,7 +134,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Components\DirectInputEmulator.cs" />
-    <Compile Include="GlobalHooks\GlobalEventProvider.cs" />
+    <Compile Include="GlobalHooks\GlobalEventProvider.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="GlobalHooks\HookManager.Callbacks.cs" />
     <Compile Include="GlobalHooks\HookManager.cs" />
     <Compile Include="GlobalHooks\HookManager.Structures.cs" />

@@ -30,7 +30,9 @@ namespace Articulate
 	{
 		NotifyIcon ni;
 		VoiceRecognizer recognizer;
-		
+
+		Settings settings;
+
 		public MainWindow()
 		{
 			InitializeComponent();
@@ -46,12 +48,22 @@ namespace Articulate
 					this.WindowState = WindowState.Normal;
 				};
 
+
+			settings = Articulate.Settings.Load();
+
+			#region Rx Event Handlers
+
 			Observable.FromEventPattern<RoutedPropertyChangedEventArgs<double>>(ConfidenceMargin, "ValueChanged")
 				.Throttle(TimeSpan.FromMilliseconds(500)).Subscribe(args =>
 				{
 					if (recognizer != null)
 						recognizer.ConfidenceMargin = (int)args.EventArgs.NewValue;
+
+					settings.ConfidenceMargin = (int)args.EventArgs.NewValue;
+					Task.Factory.StartNew(() => settings.Save());
 				});
+
+			#endregion
 		}
 
 
@@ -85,6 +97,10 @@ namespace Articulate
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
+
+			PTTKey.Content = settings.PTTKey.ToString();
+			PushToIgnore.IsChecked = settings.PushToIgnore;
+
 			recognizer = new VoiceRecognizer();
 
 			// something happened with the setup of the VoiceRecognizer (no mic, etc.)
@@ -97,12 +113,18 @@ namespace Articulate
 			else
 			{
 				State = "LISTENING...";
-				ConfidenceMargin.Value = 90;
-				recognizer.Enabled = true;
+				ConfidenceMargin.Value = settings.ConfidenceMargin;
+				Enabled = settings.PushToIgnore || settings.PTTKey == System.Windows.Forms.Keys.None;
 			}
-
+			
 			HookManager.KeyDown += HookManager_KeyDown;
 			HookManager.KeyUp += HookManager_KeyUp;
+		}
+
+		private void Window_Closing(object sender, CancelEventArgs e)
+		{
+			if (ni != null)
+				ni.Visible = false;
 		}
 
 		#endregion
@@ -138,19 +160,67 @@ namespace Articulate
 
 		#region PTT
 				
+		public bool Enabled
+		{
+			get { return recognizer.Enabled; }
+			set
+			{
+				recognizer.Enabled = value;
+				if (value)
+					State = "LISTENING...";
+				else
+					State = "WAITING...";
+			}
+		}
+
 		void HookManager_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
 		{
-			
+			if(settings.PTTKey == System.Windows.Forms.Keys.None || e.KeyCode != settings.PTTKey) return;
+
+			Enabled = settings.PushToIgnore;
 		}
 
 		void HookManager_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
 		{
+			if (ListeningForNewPTT)
+			{
+				ListeningForNewPTT = false;
 
+				if (e.KeyCode == System.Windows.Forms.Keys.Escape)				
+					settings.PTTKey = System.Windows.Forms.Keys.None;
+				else
+					settings.PTTKey = e.KeyCode;
+
+				PTTKey.Content = e.KeyCode.ToString();
+
+				Enabled = settings.PushToIgnore || settings.PTTKey == System.Windows.Forms.Keys.None;
+				Task.Factory.StartNew(() => settings.Save());
+
+				return;
+			}
+
+			if (settings.PTTKey == System.Windows.Forms.Keys.None || e.KeyCode != settings.PTTKey) return;
+
+			Enabled = !settings.PushToIgnore;
 		}
 
 		#endregion
 
 		#region Settings
+
+		private bool ListeningForNewPTT = false;
+
+		private void PTTKey_Click(object sender, RoutedEventArgs e)
+		{
+			ListeningForNewPTT = true;
+		}
+
+		private void PushToIgnore_Checked(object sender, RoutedEventArgs e)
+		{
+			settings.PushToIgnore = PushToIgnore.IsChecked ?? false;
+			Enabled = settings.PushToIgnore || settings.PTTKey == System.Windows.Forms.Keys.None;
+			Task.Factory.StartNew(() => settings.Save());
+		}
 
 		#endregion
 
@@ -164,7 +234,6 @@ namespace Articulate
 
 			if (ni != null)
 			{
-				ni.Visible = false;
 				ni.Dispose();
 				ni = null;
 			}
