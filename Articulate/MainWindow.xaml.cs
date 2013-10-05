@@ -14,13 +14,14 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Forms;
 using System.Drawing;
+using MahApps.Metro.Controls;
 
 namespace Articulate
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : MetroWindow
     {
         NotifyIcon ni;
         VoiceRecognizer recognizor;
@@ -71,5 +72,10 @@ namespace Articulate
                 this.Close();
             }
         }
+
+		private void About_Click(object sender, RoutedEventArgs e)
+		{
+			AboutFlyout.IsOpen = true;
+		}
     }
 }
