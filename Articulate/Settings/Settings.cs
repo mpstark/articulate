@@ -52,8 +52,8 @@ namespace Articulate
 				var parentDirectory = Environment.ExpandEnvironmentVariables(@"%AppData%\Articulate");
 				if (!Directory.Exists(parentDirectory))
 					Directory.CreateDirectory(parentDirectory);
-
-				using (var fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
+				
+				using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
 				{
 					var serializer = new XmlSerializer(typeof(Settings));
 					serializer.Serialize(fs, this);
