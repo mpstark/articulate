@@ -65,7 +65,7 @@
 				<Label FontSize="16" Content="Push To Talk"/>
 				<Button x:Name="PTTKey" Content="None" ToolTip="Click to change your PTT Key" Click="PTTKey_Click"/>
 				<TextBlock TextWrapping="Wrap">
-					Click the button to change your PTT Key
+					Click the button to change your PTT Key, press Esc to disable PTT
 				</TextBlock>
 				<m:ToggleSwitch x:Name="PushToIgnore" Header="Push To Ignore" 
 								ToolTip="If enabled, Articulate will ignore commands issued while this key is pressed." 
