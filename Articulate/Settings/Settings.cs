@@ -19,14 +19,10 @@ namespace Articulate
 			ConfidenceMargin = 80;
 
 			PTTKey = System.Windows.Forms.Keys.None;
+			PushToArm = true;
+			PushToIgnore = false;
 
-			Applications = new List<string>(new[] {
-				"arma",
-				"arma2",
-				"arma2co",
-				"arma3",
-				"takeonh"
-			});
+			Applications = new List<string>();
 		}
 
 		#region File Handling
@@ -82,6 +78,9 @@ namespace Articulate
 		{ get; set; }
 
 		public bool PushToIgnore
+		{ get; set; }
+
+		public bool PushToArm
 		{ get; set; }
 
 		public List<string> Applications

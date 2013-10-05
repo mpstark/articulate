@@ -23,8 +23,26 @@ namespace Articulate
 
 		public bool Enabled
 		{
-			get;
-			set;
+			get { return Engine != null && Engine.AudioState != AudioState.Stopped; }
+			set
+			{
+				if (Engine == null) return;
+				
+				if (!value && Engine.AudioState != AudioState.Stopped) Engine.RecognizeAsyncStop();
+				else if (value && Engine.AudioState == AudioState.Stopped) Engine.RecognizeAsync();
+			}
+		}
+
+		RecognizeMode recognizeMode = RecognizeMode.Multiple;
+		public RecognizeMode Mode
+		{
+			get { return recognizeMode; }
+			set
+			{
+				if (Engine.AudioState != AudioState.Stopped) throw new InvalidOperationException("Cannot change the recognition mode while the recognizer is active, please stop the recognizer before changing the mode.");
+
+				recognizeMode = value;
+			}
 		}
 
 		public SpeechRecognitionEngine Engine { get; private set; }
@@ -66,7 +84,7 @@ namespace Articulate
 				Engine.SetInputToDefaultAudioDevice();
 
 				// Set the confidence setting
-				ConfidenceMargin = 90;
+				ConfidenceMargin = 75;
 			
 				// Create the Grammar instance and load it into the speech recognition engine.
 				Grammar g = new Grammar(CommandPool.BuildSrgsGrammar());
@@ -75,9 +93,7 @@ namespace Articulate
 				// Register a handler for the SpeechRecognized event
 				Engine.SpeechRecognized += sre_SpeechRecognized;
 				Engine.SpeechRecognitionRejected += sre_SpeechRecognitionRejected;
-
-				// Start listening in multiple mode (that is, don't quit after a single recongition)
-				Engine.RecognizeAsync(RecognizeMode.Multiple);
+				
 				IsSetup = true;
 			}
 			catch(Exception e)
@@ -96,8 +112,6 @@ namespace Articulate
 		/// </summary>
 		void sre_SpeechRecognized(object sender, SpeechRecognizedEventArgs recognizedPhrase)
 		{
-			if (!Enabled) return;
-
 			Trace.WriteLine("Recognized with confidence: " + recognizedPhrase.Result.Confidence);
 
 			var activeApplication = ForegroundProcess.ExecutableName;

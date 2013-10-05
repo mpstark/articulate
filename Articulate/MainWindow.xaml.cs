@@ -20,6 +20,8 @@ using System.Diagnostics;
 using System.Reactive;
 using System.Reactive.Linq;
 using SierraLib.GlobalHooks;
+using System.Threading;
+using System.Speech.Recognition;
 
 namespace Articulate
 {
@@ -50,6 +52,17 @@ namespace Articulate
 
 
 			settings = Articulate.Settings.Load();
+
+			if (!settings.Applications.Any())
+			{
+				settings.Applications.AddRange(new[]{
+					"arma",
+					"arma2",
+					"arma2co",
+					"takeonh",
+					"arma3"
+				});
+			}
 
 			#region Rx Event Handlers
 
@@ -116,6 +129,8 @@ namespace Articulate
 
 				State = "LISTENING...";
 				ConfidenceMargin.Value = settings.ConfidenceMargin;
+
+				recognizer.Mode = settings.PushToArm ? RecognizeMode.Single : RecognizeMode.Multiple;
 				Enabled = settings.PushToIgnore || settings.PTTKey == System.Windows.Forms.Keys.None;
 			}
 			
@@ -180,7 +195,7 @@ namespace Articulate
 		{
 			if(settings.PTTKey == System.Windows.Forms.Keys.None || e.KeyCode != settings.PTTKey) return;
 
-			Enabled = settings.PushToIgnore;
+			Enabled = settings.PushToIgnore;			
 		}
 
 		void HookManager_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
@@ -197,6 +212,7 @@ namespace Articulate
 				PTTKey.Content = settings.PTTKey.ToString();
 
 				Enabled = settings.PushToIgnore || settings.PTTKey == System.Windows.Forms.Keys.None;
+
 				Task.Factory.StartNew(() => settings.Save());
 
 				return;
