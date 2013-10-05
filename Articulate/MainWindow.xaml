@@ -8,6 +8,17 @@
         Closed="Window_Closed">
     <Grid>
         <Label Content="LISTENING..." HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="64" Margin="59,94,59,120"/>
-        <Label Content="This is an extremely early build for preview and feedback. Experiences will vary." HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+        <Label Content="This is an extremely early build for preview and feedback. Experiences will vary." HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="40,0,40,27"/>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="20" >     
+            <Hyperlink NavigateUri="http://forums.bistudio.com/showthread.php?166228-Articulate-Squad-Voice-Command-Utility-for-Arma-3" RequestNavigate="Hyperlink_RequestNavigate">
+                [BI Forum Post]
+            </Hyperlink>
+            <Hyperlink NavigateUri="https://docs.google.com/forms/d/17Mpe3nCUXEQGAWjrR75tzwZjYNH4jk6Z5DRpzZfmT7Y/viewform" RequestNavigate="Hyperlink_RequestNavigate">
+                [Provide Feedback]
+            </Hyperlink>
+            <Hyperlink NavigateUri="https://github.com/Mpstark/articulate/wiki" RequestNavigate="Hyperlink_RequestNavigate">
+                [GitHub Wiki]
+            </Hyperlink>
+        </TextBlock>
     </Grid>
 </Window>

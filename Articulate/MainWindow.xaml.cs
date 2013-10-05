@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Diagnostics;
 
 namespace Articulate
 {
@@ -67,9 +68,15 @@ namespace Articulate
             // something happened with the setup of the VoiceRecognizer (no mic, etc.)
             if (!recognizor.IsSetup)
             {
-                System.Windows.MessageBox.Show("There was a problem starting Articulate. Is there a valid default input device?");
+                System.Windows.MessageBox.Show("Is there a valid default input device?\n\n" + recognizor.SetupError);
                 this.Close();
             }
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+            e.Handled = true;
         }
     }
 }

@@ -21,6 +21,11 @@ namespace Articulate
         public bool IsSetup = false;
 
         /// <summary>
+        /// Ugly way of providing exception message.
+        /// </summary>
+        public string SetupError = "";
+
+        /// <summary>
         /// The voice recognition engine.
         /// </summary>
         private SpeechRecognitionEngine voiceEngine;
@@ -59,6 +64,7 @@ namespace Articulate
             {
                 // Something went wrong setting up the voiceEngine.
                 Trace.WriteLine(e.Message);
+                SetupError = e.ToString();
                 IsSetup = false;
             }
         }
