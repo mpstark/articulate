@@ -143,11 +143,6 @@ namespace Articulate
 
 		#region Settings
 		
-		private void ConfidenceMargin_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-		{
-
-		}
-
 		#endregion
 	}
 }

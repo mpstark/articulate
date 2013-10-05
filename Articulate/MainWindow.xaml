@@ -54,7 +54,7 @@
 			<StackPanel Margin="30 0" Width="300">
 				<Label FontSize="20" Content="Confidence Margin"/>
 				<Slider x:Name="ConfidenceMargin"
-						Value="85"/>
+						Value="90"/>
 				<TextBlock TextWrapping="Wrap">
 					Reducing this value can help increase responsiveness at the cost of accuracy
 				</TextBlock>
