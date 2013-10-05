@@ -10,7 +10,6 @@
 				<ResourceDictionary>
 					<c:ToUpperConverter x:Key="ToUpperConverter"/>
 
-
 					<!--Window Layout-->
 					<ControlTemplate x:Key="WindowTemplateKey" TargetType="{x:Type m:MetroWindow}">
 						<Grid Background="{TemplateBinding Background}">
@@ -64,16 +63,26 @@
 											</ItemsControl.ItemsPanel>
 										</ItemsControl>
 
-										<Image      x:Name="Icon"
+										<Border x:Name="Icon"
+													Visibility="Hidden"
 													Grid.Row="0"
 													HorizontalAlignment="Left"
 													VerticalAlignment="Top"
 													Margin="10,0,0,-10"
 													Panel.ZIndex="2"
 													Width="40"
-													Height="40"
-													Visibility="Hidden"
-													Source="{TemplateBinding Icon}"/>
+													Height="40">
+											<Border.Background>
+												<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+													<GradientStop Offset="0" Color="#E00"/>
+													<GradientStop Offset="1" Color="#A00"/>
+												</LinearGradientBrush>
+											</Border.Background>
+											<Image Source="{TemplateBinding Icon}"
+												   Width="32"
+												   Height="32"/>
+										</Border>
+										
 									</Grid>
 								</m:MetroContentControl>
 							</AdornerDecorator>
