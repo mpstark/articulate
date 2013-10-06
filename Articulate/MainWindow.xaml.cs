@@ -65,12 +65,12 @@ namespace Articulate
 			});
 
 			ConfidenceObserverSubscription = ConfidenceObserver.Subscribe(args =>
-				{
+			{
+				settings.ConfidenceMargin = (int)args.EventArgs.NewValue;
+				settings.Save();
+
 					if (recognizer != null)
 						recognizer.ConfidenceMargin = (int)args.EventArgs.NewValue;
-
-					settings.ConfidenceMargin = (int)args.EventArgs.NewValue;
-					settings.Save();
 				});
 
 			#endregion
