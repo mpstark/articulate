@@ -56,8 +56,13 @@ namespace Articulate
 
 			#region Rx Event Handlers
 
-			ConfidenceObserver = Observable.FromEventPattern<RoutedPropertyChangedEventArgs<double>>(ConfidenceMargin, "ValueChanged")
-				.Sample(TimeSpan.FromMilliseconds(500)).ObserveOn(ThreadPoolScheduler.Instance);
+			var ConfidenceEvent = Observable.FromEventPattern<RoutedPropertyChangedEventArgs<double>>(ConfidenceMargin, "ValueChanged");
+
+			ConfidenceObserver = ConfidenceEvent.Sample(TimeSpan.FromMilliseconds(500)).ObserveOn(ThreadPoolScheduler.Instance);
+			ConfidenceEvent.Sample(TimeSpan.FromMilliseconds(50)).ObserveOnDispatcher().Subscribe(args =>
+			{
+				ConfidenceMarginNumber.Content = Math.Floor(args.EventArgs.NewValue).ToString();
+			});
 
 			ConfidenceObserverSubscription = ConfidenceObserver.Subscribe(args =>
 				{

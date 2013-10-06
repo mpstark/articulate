@@ -71,9 +71,13 @@
 					Click the button to change your command key, press Esc to remove it.
 				</TextBlock>
 
-				<Label FontSize="16" Content="Confidence Margin"/>
+				<Grid>
+					<Label FontSize="16" Content="Confidence Margin" HorizontalAlignment="Left"/>
+					<Label x:Name="ConfidenceMarginNumber" FontSize="16" HorizontalAlignment="Right" 
+						   Content="80" />
+				</Grid>
 				<Slider x:Name="ConfidenceMargin"
-						Value="80"/>
+						Value="80" Minimum="65" Maximum="95"/>
 				<TextBlock TextWrapping="Wrap">
 					Reducing this value can help increase responsiveness at the cost of accuracy
 				</TextBlock>
