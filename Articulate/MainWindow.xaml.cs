@@ -180,6 +180,8 @@ namespace Articulate
 		{
 			Trace.WriteLine("Rejected command: " + e.Phrase + " " + e.Confidence);
 
+			LastCommand.Content = "What was that?";
+
 			// TODO: Decide whether or not Push To Arm should keep trying until it gets a match
 			if (settings.Mode == Articulate.ListenMode.PushToArm) Enabled = false;
 		}
