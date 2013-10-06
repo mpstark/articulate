@@ -55,18 +55,6 @@
 		</m:Flyout>
 		<m:Flyout x:Name="SettingsFlyout" Header="Settings" Position="Right">
 			<StackPanel Margin="30 0" Width="300">
-				<Label FontSize="16" Content="Confidence Margin"/>
-				<Slider x:Name="ConfidenceMargin"
-						Value="80"/>
-				<TextBlock TextWrapping="Wrap">
-					Reducing this value can help increase responsiveness at the cost of accuracy
-				</TextBlock>
-				
-				<Label FontSize="16" Content="Command Key"/>
-				<Button x:Name="PTTKey" Content="None" ToolTip="Click to change your PTT Key" Click="PTTKey_Click"/>
-				<TextBlock TextWrapping="Wrap">
-					Click the button to change your command key, press Esc to remove it.
-				</TextBlock>
 
 				<Label FontSize="16" Content="Listening Mode"/>
 				<ComboBox x:Name="ListenMode"
@@ -76,6 +64,19 @@
 					<ComboBoxItem>Push To Arm</ComboBoxItem>
 					<ComboBoxItem>Push To Ignore</ComboBoxItem>
 				</ComboBox>
+				
+				<Label FontSize="16" Content="Command Key"/>
+				<Button x:Name="PTTKey" Content="None" ToolTip="Click to change your PTT Key" Click="PTTKey_Click"/>
+				<TextBlock TextWrapping="Wrap">
+					Click the button to change your command key, press Esc to remove it.
+				</TextBlock>
+
+				<Label FontSize="16" Content="Confidence Margin"/>
+				<Slider x:Name="ConfidenceMargin"
+						Value="80"/>
+				<TextBlock TextWrapping="Wrap">
+					Reducing this value can help increase responsiveness at the cost of accuracy
+				</TextBlock>
 
 			</StackPanel>
 		</m:Flyout>
