@@ -194,7 +194,7 @@ namespace Articulate
             commandSet.Add(combat.Item);
 
             // aware (3)
-            Command aware = new Command("AWARE", new string[] { "aware", "aware mode", "stay sharp", "stay frosty" }, new ushort[] { Keys.Seven, Keys.Three }, subjectRef);
+			Command aware = new Command("AWARE", new string[] { "aware", "alert", "aware mode", "stay sharp", "stay frosty", "stay alert" }, new ushort[] { Keys.Seven, Keys.Three }, subjectRef);
             commandObjects.Add("AWARE", aware);
             commandSet.Add(aware.Item);
 
