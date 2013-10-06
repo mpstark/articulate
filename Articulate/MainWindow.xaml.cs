@@ -51,8 +51,7 @@ namespace Articulate
 					this.Show();
 					this.WindowState = WindowState.Normal;
 				};
-
-
+			
 			settings = Articulate.Settings.Load();
 
 			#region Rx Event Handlers
@@ -276,7 +275,8 @@ namespace Articulate
 		
 		#endregion
 
-		public void Dispose()
+        #region IDispose Implementation
+        public void Dispose()
 		{
 			if (recognizer != null)
 			{
@@ -289,6 +289,7 @@ namespace Articulate
 				ni.Dispose();
 				ni = null;
 			}
-		}
-	}
+        }
+        #endregion
+    }
 }
