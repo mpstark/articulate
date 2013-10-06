@@ -100,7 +100,17 @@ namespace Articulate
 		{
 
 			PTTKey.Content = settings.PTTKey.ToString();
-			PushToIgnore.IsChecked = settings.PushToIgnore;
+			ListenMode.SelectedIndex = (int)settings.Mode;
+			ConfidenceMargin.Value = settings.ConfidenceMargin;
+
+			if (!settings.Applications.Any())
+				settings.Applications.AddRange(new[] {
+					"arma",
+					"arma2",
+					"arma2co",
+					"takeonh",
+					"arma3"
+				});
 
 			recognizer = new VoiceRecognizer();
 			
@@ -113,11 +123,13 @@ namespace Articulate
 			}
 			else
 			{
+				recognizer.ConfidenceMargin = settings.ConfidenceMargin;
 				recognizer.MonitoredExecutables.AddRange(settings.Applications);
+				recognizer.SpeechRecognized += recognizer_SpeechRecognized;
+				recognizer.SpeechRejected += recognizer_SpeechRejected;
 
-				State = "LISTENING...";
-				ConfidenceMargin.Value = settings.ConfidenceMargin;
-				Enabled = settings.PushToIgnore || settings.PTTKey == System.Windows.Forms.Keys.None;
+
+				Enabled = settings.Mode == Articulate.ListenMode.Continuous || settings.Mode == Articulate.ListenMode.PushToIgnore;
 			}
 			
 			HookManager.KeyDown += HookManager_KeyDown;
@@ -169,15 +181,19 @@ namespace Articulate
 			get { return recognizer.State == VoiceRecognizer.VoiceRecognizerState.Listening || recognizer.State == VoiceRecognizer.VoiceRecognizerState.ListeningOnce; }
 			set
 			{
+				if (recognizer == null) return;
+
 				if (value)
 				{
-					recognizer.StartListening();
-					State = "LISTENING...";
+					if (settings.Mode == Articulate.ListenMode.PushToArm) recognizer.ListenOnce();
+					else recognizer.StartListening();
+
+					State = "LISTENING";
 				}
 				else
 				{
 					recognizer.StopListening();
-					State = "WAITING...";
+					State = "OFFLINE";
 				}
 			}
 		}
@@ -186,7 +202,9 @@ namespace Articulate
 		{
 			if(settings.PTTKey == System.Windows.Forms.Keys.None || e.KeyCode != settings.PTTKey) return;
 
-			Enabled = settings.PushToIgnore;
+			if (settings.Mode == Articulate.ListenMode.PushToArm) return; // Don't disable if we're armed
+
+			Enabled = settings.Mode == Articulate.ListenMode.Continuous || settings.Mode == Articulate.ListenMode.PushToIgnore;
 		}
 
 		void HookManager_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
@@ -195,14 +213,18 @@ namespace Articulate
 			{
 				ListeningForNewPTT = false;
 
-				if (e.KeyCode == System.Windows.Forms.Keys.Escape)				
+				if (e.KeyCode == System.Windows.Forms.Keys.Escape)
+				{
+					settings.Mode = Articulate.ListenMode.Continuous;
 					settings.PTTKey = System.Windows.Forms.Keys.None;
+				}
 				else
 					settings.PTTKey = e.KeyCode;
 
 				PTTKey.Content = settings.PTTKey.ToString();
+				ListenMode.SelectedIndex = (int)settings.Mode;
 
-				Enabled = settings.PushToIgnore || settings.PTTKey == System.Windows.Forms.Keys.None;
+				Enabled = settings.Mode == Articulate.ListenMode.Continuous || settings.Mode == Articulate.ListenMode.PushToIgnore;
 				Task.Factory.StartNew(() => settings.Save());
 
 				return;
@@ -210,7 +232,18 @@ namespace Articulate
 
 			if (settings.PTTKey == System.Windows.Forms.Keys.None || e.KeyCode != settings.PTTKey) return;
 
-			Enabled = !settings.PushToIgnore;
+			Enabled = settings.Mode == Articulate.ListenMode.PushToTalk || settings.Mode == Articulate.ListenMode.PushToArm;
+		}
+		
+		void recognizer_SpeechRecognized(object sender, EventArgs e)
+		{
+			if (settings.Mode == Articulate.ListenMode.PushToArm) Enabled = false;
+		}
+
+		void recognizer_SpeechRejected(object sender, EventArgs e)
+		{
+			// TODO: Decide whether or not Push To Arm should keep trying until it gets a match
+			if (settings.Mode == Articulate.ListenMode.PushToArm) Enabled = false;
 		}
 
 		#endregion
@@ -224,13 +257,15 @@ namespace Articulate
 			ListeningForNewPTT = true;
 		}
 
-		private void PushToIgnore_Checked(object sender, RoutedEventArgs e)
+		private void ListenMode_Selected(object sender, RoutedEventArgs e)
 		{
-			settings.PushToIgnore = PushToIgnore.IsChecked ?? false;
-			Enabled = settings.PushToIgnore || settings.PTTKey == System.Windows.Forms.Keys.None;
+			settings.Mode = (Articulate.ListenMode)(ListenMode.SelectedIndex);
+			
+			Enabled = settings.Mode == Articulate.ListenMode.Continuous || settings.Mode == Articulate.ListenMode.PushToIgnore;
+
 			Task.Factory.StartNew(() => settings.Save());
 		}
-
+		
 		#endregion
 
 		public void Dispose()
