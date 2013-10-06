@@ -102,7 +102,6 @@ namespace Articulate
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-
 			PTTKey.Content = settings.PTTKey.ToString();
 			ListenMode.SelectedIndex = (int)settings.Mode;
 			ConfidenceMargin.Value = settings.ConfidenceMargin;
@@ -116,8 +115,29 @@ namespace Articulate
 					"arma3"
 				});
 
-			recognizer = new VoiceRecognizer();
+			LoadRecognizer();
 			
+			HookManager.KeyDown += HookManager_KeyDown;
+			HookManager.KeyUp += HookManager_KeyUp;
+		}
+
+		private void Window_Closing(object sender, CancelEventArgs e)
+		{
+			if (ni != null)
+				ni.Visible = false;
+
+			if(ConfidenceObserverSubscription != null)
+				ConfidenceObserverSubscription.Dispose();
+		}
+
+		#endregion
+
+		#region Recognition
+
+		private void LoadRecognizer()
+		{
+			recognizer = new VoiceRecognizer();
+
 			// something happened with the setup of the VoiceRecognizer (no mic, etc.)
 			if (recognizer.State == VoiceRecognizer.VoiceRecognizerState.Error)
 			{
@@ -135,18 +155,6 @@ namespace Articulate
 
 				Enabled = settings.Mode == Articulate.ListenMode.Continuous || settings.Mode == Articulate.ListenMode.PushToIgnore;
 			}
-			
-			HookManager.KeyDown += HookManager_KeyDown;
-			HookManager.KeyUp += HookManager_KeyUp;
-		}
-
-		private void Window_Closing(object sender, CancelEventArgs e)
-		{
-			if (ni != null)
-				ni.Visible = false;
-
-			if(ConfidenceObserverSubscription != null)
-				ConfidenceObserverSubscription.Dispose();
 		}
 
 		#endregion
@@ -169,8 +177,8 @@ namespace Articulate
 
 		private void ReloadRecognizer_Click(object sender, RoutedEventArgs e)
 		{
-			Window_Loaded(sender, e);
 			ErrorFlyout.IsOpen = false;
+			LoadRecognizer();
 		}
 
 		private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
