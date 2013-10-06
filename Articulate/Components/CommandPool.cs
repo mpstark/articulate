@@ -43,7 +43,7 @@ namespace Articulate
             #region Commands
             #region Move (1)
             // return to formation (1)
-            Command returnToFormation = new Command("FORMUP", new string[] { "return to formation", "form up" }, new ushort[] { Keys.One, Keys.One }, subjectRef);
+            Command returnToFormation = new Command("FORMUP", new string[] { "return to formation", "form up", "fallback" }, new ushort[] { Keys.One, Keys.One }, subjectRef);
             commandObjects.Add("FORMUP", returnToFormation);
             commandSet.Add(returnToFormation.Item);
 
