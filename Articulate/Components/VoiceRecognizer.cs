@@ -66,9 +66,11 @@ namespace Articulate
 			{                
 				if(Engine != null)
                 {
+					ChangeConfidence(value);
+
                     // TODO: this is not FIFO 
                     // roll off a thread to set it
-                    Task.Factory.StartNew(() => ChangeConfidence(value));
+                    //Task.Factory.StartNew(() => ChangeConfidence(value));
                 }
                 else
                 {

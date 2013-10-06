@@ -20,6 +20,7 @@ using System.Diagnostics;
 using System.Reactive;
 using System.Reactive.Linq;
 using SierraLib.GlobalHooks;
+using System.Reactive.Concurrency;
 
 namespace Articulate
 {
@@ -54,7 +55,7 @@ namespace Articulate
 			#region Rx Event Handlers
 
 			Observable.FromEventPattern<RoutedPropertyChangedEventArgs<double>>(ConfidenceMargin, "ValueChanged")
-				.Throttle(TimeSpan.FromMilliseconds(500)).Subscribe(args =>
+				.Throttle(TimeSpan.FromMilliseconds(500)).SubscribeOn(ThreadPoolScheduler.Instance).Subscribe(args =>
 				{
 					if (recognizer != null)
 						recognizer.ConfidenceMargin = (int)args.EventArgs.NewValue;
@@ -165,14 +166,19 @@ namespace Articulate
 				
 		public bool Enabled
 		{
-			get { return recognizer.Enabled; }
+			get { return recognizer.State == VoiceRecognizer.VoiceRecognizerState.Listening || recognizer.State == VoiceRecognizer.VoiceRecognizerState.ListeningOnce; }
 			set
 			{
-				recognizer.Enabled = value;
 				if (value)
+				{
+					recognizer.StartListening();
 					State = "LISTENING...";
+				}
 				else
+				{
+					recognizer.StopListening();
 					State = "WAITING...";
+				}
 			}
 		}
 
