@@ -62,15 +62,20 @@
 					Reducing this value can help increase responsiveness at the cost of accuracy
 				</TextBlock>
 				
-				<Label FontSize="16" Content="Push To Talk"/>
+				<Label FontSize="16" Content="Command Key"/>
 				<Button x:Name="PTTKey" Content="None" ToolTip="Click to change your PTT Key" Click="PTTKey_Click"/>
 				<TextBlock TextWrapping="Wrap">
-					Click the button to change your PTT Key, press Esc to disable PTT
+					Click the button to change your command key, press Esc to remove it.
 				</TextBlock>
-				<m:ToggleSwitch x:Name="PushToIgnore" Header="Push To Ignore" 
-								ToolTip="If enabled, Articulate will ignore commands issued while this key is pressed." 
-								Checked="PushToIgnore_Checked"
-								Unchecked="PushToIgnore_Checked"/>
+
+				<Label FontSize="16" Content="Listening Mode"/>
+				<ComboBox x:Name="ListenMode"
+						  SelectionChanged="ListenMode_Selected">
+					<ComboBoxItem>Continuous</ComboBoxItem>
+					<ComboBoxItem>Push To Talk</ComboBoxItem>
+					<ComboBoxItem>Push To Arm</ComboBoxItem>
+					<ComboBoxItem>Push To Ignore</ComboBoxItem>
+				</ComboBox>
 
 			</StackPanel>
 		</m:Flyout>

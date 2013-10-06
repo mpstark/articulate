@@ -10,6 +10,14 @@ using System.Diagnostics;
 
 namespace Articulate
 {
+	public enum ListenMode
+	{
+		Continuous = 0,
+		PushToTalk = 1,
+		PushToArm = 2,
+		PushToIgnore = 3
+	}
+
 	[Serializable]
 	public class Settings
 	{
@@ -19,14 +27,9 @@ namespace Articulate
 			ConfidenceMargin = 80;
 
 			PTTKey = System.Windows.Forms.Keys.None;
+			Mode = ListenMode.Continuous;
 
-			Applications = new List<string>(new[] {
-				"arma",
-				"arma2",
-				"arma2co",
-				"arma3",
-				"takeonh"
-			});
+			Applications = new List<string>();
 		}
 
 		#region File Handling
@@ -81,9 +84,9 @@ namespace Articulate
 		public System.Windows.Forms.Keys PTTKey
 		{ get; set; }
 
-		public bool PushToIgnore
+		public ListenMode Mode
 		{ get; set; }
-
+		
 		public List<string> Applications
 		{ get; set; }
 	}
