@@ -21,8 +21,10 @@ namespace Articulate
         /// </summary>
         private SpeechRecognitionEngine Engine { get; set; }
 
-        private bool ChangingConfidence = false;
+        private Object ConfidenceLock;
+        #endregion
 
+        #region Public Members
         /// <summary>
         /// Enum that exposes the state of the VoiceRecognizer
         /// </summary>
@@ -33,9 +35,7 @@ namespace Articulate
             ListeningOnce,
             Paused,
         }
-        #endregion
 
-        #region Public Members
         /// <summary>
         /// Ugly way of providing VoiceRecognizer status
         /// </summary>
@@ -62,9 +62,9 @@ namespace Articulate
 			get { return Engine != null ? (int)Engine.QueryRecognizerSetting("CFGConfidenceRejectionThreshold") : 90; }
 			set
 			{                
-				if(Engine != null && !ChangingConfidence)
+				if(Engine != null)
                 {
-                    // TODO: this may not be threadsafe and is basically horrible in everyway
+                    // TODO: this is not FIFO 
                     // roll off a thread to set it
                     Task.Factory.StartNew(() => ChangeConfidence(value));
                 }
@@ -86,6 +86,7 @@ namespace Articulate
 		{
             try
             {
+                ConfidenceLock = new Object();
                 State = VoiceRecognizerState.Paused;
                 CultureInfo cultureInfo = new CultureInfo("en-US");
 
@@ -185,9 +186,10 @@ namespace Articulate
         #region Private Methods
         private void ChangeConfidence(int value)
         {
-            ChangingConfidence = true;
-            Engine.UpdateRecognizerSetting("CFGConfidenceRejectionThreshold", value);
-            ChangingConfidence = false;
+            lock (ConfidenceLock)
+            {
+                Engine.UpdateRecognizerSetting("CFGConfidenceRejectionThreshold", value);
+            }
         }
         #endregion
 
