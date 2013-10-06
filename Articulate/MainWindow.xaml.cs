@@ -246,7 +246,7 @@ namespace Articulate
 				ListenMode.SelectedIndex = (int)settings.Mode;
 
 				Enabled = settings.Mode == Articulate.ListenMode.Continuous || settings.Mode == Articulate.ListenMode.PushToIgnore;
-				Task.Factory.StartNew(() => settings.Save());
+				settings.Save();
 
 				return;
 			}
@@ -285,7 +285,7 @@ namespace Articulate
 			
 			Enabled = settings.Mode == Articulate.ListenMode.Continuous || settings.Mode == Articulate.ListenMode.PushToIgnore;
 
-			Task.Factory.StartNew(() => settings.Save());
+			settings.Save();
 		}
 		
 		#endregion

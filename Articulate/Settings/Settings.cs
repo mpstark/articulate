@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Xml.Serialization;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Articulate
 {
@@ -30,7 +31,11 @@ namespace Articulate
 			Mode = ListenMode.Continuous;
 
 			Applications = new List<string>();
+
+			FileLock = new object();
 		}
+
+		private object FileLock;
 
 		#region File Handling
 
@@ -57,23 +62,39 @@ namespace Articulate
 		public void Save()
 		{
 			var filePath = Environment.ExpandEnvironmentVariables(@"%AppData%\Articulate\Settings.xml");
-						
+
 			try
 			{
 				var parentDirectory = Environment.ExpandEnvironmentVariables(@"%AppData%\Articulate");
 				if (!Directory.Exists(parentDirectory))
 					Directory.CreateDirectory(parentDirectory);
-				
-				using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
+
+				ThreadPool.QueueUserWorkItem((state) =>
 				{
-					var serializer = new XmlSerializer(typeof(Settings));
-					serializer.Serialize(fs, this);
-				}
+					lock (FileLock)
+					{
+						try
+						{
+
+							using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
+							{
+								var serializer = new XmlSerializer(typeof(Settings));
+								serializer.Serialize(fs, state);
+							}
+						}
+						catch (Exception ex)
+						{
+							Trace.Write(ex.Message);
+						}
+					}
+				}, this);
 			}
-			catch(Exception ex)
+			catch
 			{
-				Trace.Write(ex.Message);
+
 			}
+
+			
 		}
 
 		#endregion
