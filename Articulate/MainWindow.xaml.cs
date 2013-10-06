@@ -210,6 +210,7 @@ namespace Articulate
 			if(settings.PTTKey == System.Windows.Forms.Keys.None || e.KeyCode != settings.PTTKey) return;
 
 			if (settings.Mode == Articulate.ListenMode.PushToArm) return; // Don't disable if we're armed
+			if (settings.Mode == Articulate.ListenMode.Continuous) return;
 
 			Enabled = settings.Mode == Articulate.ListenMode.Continuous || settings.Mode == Articulate.ListenMode.PushToIgnore;
 		}
@@ -238,6 +239,7 @@ namespace Articulate
 			}
 
 			if (settings.PTTKey == System.Windows.Forms.Keys.None || e.KeyCode != settings.PTTKey) return;
+			if (settings.Mode == Articulate.ListenMode.Continuous) return;
 
 			Enabled = settings.Mode == Articulate.ListenMode.PushToTalk || settings.Mode == Articulate.ListenMode.PushToArm;
 		}
