@@ -55,7 +55,7 @@ namespace Articulate
 			#region Rx Event Handlers
 
 			Observable.FromEventPattern<RoutedPropertyChangedEventArgs<double>>(ConfidenceMargin, "ValueChanged")
-				.Throttle(TimeSpan.FromMilliseconds(500)).SubscribeOn(ThreadPoolScheduler.Instance).Subscribe(args =>
+				.Sample(TimeSpan.FromMilliseconds(500)).ObserveOn(ThreadPoolScheduler.Instance).Subscribe(args =>
 				{
 					if (recognizer != null)
 						recognizer.ConfidenceMargin = (int)args.EventArgs.NewValue;
