@@ -7,6 +7,7 @@ using System.Speech.Recognition;
 using System.Speech.Recognition.SrgsGrammar;
 using System.Globalization;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Articulate
 {
@@ -22,6 +23,9 @@ namespace Articulate
 		private SpeechRecognitionEngine Engine { get; set; }
 
 		private Object ConfidenceLock;
+
+		private bool StartPending = false;
+
 		#endregion
 
 		#region Public Members
@@ -78,6 +82,13 @@ namespace Articulate
 				}
 			}
 		}
+		#endregion
+
+		#region Events
+
+		public event EventHandler SpeechRecognized = null;
+		public event EventHandler SpeechRejected = null;
+
 		#endregion
 
 		#region Constructor
@@ -142,9 +153,23 @@ namespace Articulate
 		{
 			if (Engine != null && State == VoiceRecognizerState.Paused)
 			{
-				// Start listening in multiple mode (that is, don't quit after a single recongition)
-				Engine.RecognizeAsync(RecognizeMode.Multiple);
-				State = VoiceRecognizerState.Listening;
+				// Don't queue up multiple start requests
+				if (StartPending) return;
+
+				StartPending = true;
+				Task.Factory.StartNew(() =>
+				{
+					// Wait for engine to finish listening
+					while (Engine.AudioState != AudioState.Stopped && StartPending) Thread.Sleep(100);
+
+					// Just in case we cancel
+					if (!StartPending) return;
+
+					// Start listening in multiple mode (that is, don't quit after a single recongition)
+					Engine.RecognizeAsync(RecognizeMode.Multiple);
+					State = VoiceRecognizerState.Listening;
+					StartPending = false;
+				});
 			}
 		}
 
@@ -155,6 +180,8 @@ namespace Articulate
 		{
 			if (Engine != null && (State == VoiceRecognizerState.Listening || State == VoiceRecognizerState.ListeningOnce))
 			{
+				StartPending = false;
+
 				// Stop listening gracefully
 				Engine.RecognizeAsyncStop();
 				State = VoiceRecognizerState.Paused;
@@ -168,6 +195,8 @@ namespace Articulate
 		{
 			if (Engine != null && (State == VoiceRecognizerState.Listening || State == VoiceRecognizerState.ListeningOnce))
 			{
+				StartPending = false;
+
 				Engine.RecognizeAsyncCancel();
 				State = VoiceRecognizerState.Paused;
 			}
@@ -180,9 +209,23 @@ namespace Articulate
 		{
 			if (Engine != null && State == VoiceRecognizerState.Paused)
 			{
-				// only listen for a single utterance
-				Engine.RecognizeAsync(RecognizeMode.Single);
-				State = VoiceRecognizerState.ListeningOnce;
+				// Don't queue up multiple start requests
+				if (StartPending) return;
+
+				StartPending = true;
+				Task.Factory.StartNew(() =>
+				{
+					// Wait for engine to finish listening
+					while (Engine.AudioState != AudioState.Stopped && StartPending) Thread.Sleep(100);
+
+					// Just in case we cancel
+					if (!StartPending) return;
+
+					// Start listening in single mode (that is, quit after a single recongition)
+					Engine.RecognizeAsync(RecognizeMode.Single);
+					State = VoiceRecognizerState.Listening;
+					StartPending = false;
+				});
 			}
 		}
 		#endregion
@@ -204,6 +247,8 @@ namespace Articulate
 		private void sre_SpeechRecognized(object sender, SpeechRecognizedEventArgs recognizedPhrase)
 		{
 			Trace.WriteLine("Recognized with confidence: " + recognizedPhrase.Result.Confidence);
+			
+			if (SpeechRecognized != null) SpeechRecognized(this, new EventArgs());
 
 			var activeApplication = ForegroundProcess.ExecutableName;
 
@@ -215,6 +260,7 @@ namespace Articulate
 
 			// Get a thread from the thread pool to deal with it
 			Task.Factory.StartNew(() => CommandPool.Execute(recognizedPhrase.Result.Semantics));
+
 		}
 
 		/// <summary>
@@ -223,6 +269,8 @@ namespace Articulate
 		private void sre_SpeechRecognitionRejected(object sender, SpeechRecognitionRejectedEventArgs recognizedPhrase)
 		{
 			Trace.WriteLine("Rejected with confidence: " + recognizedPhrase.Result.Confidence);
+
+			if (SpeechRejected != null) SpeechRejected(this, new EventArgs());
 		}
 		#endregion
 
