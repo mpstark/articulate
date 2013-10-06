@@ -7,6 +7,7 @@ using System.Speech.Recognition;
 using System.Speech.Recognition.SrgsGrammar;
 using System.Globalization;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Articulate
 {
@@ -21,8 +22,17 @@ namespace Articulate
         /// </summary>
         private SpeechRecognitionEngine Engine { get; set; }
 
+        /// <summary>
+        /// A lock for Condfidence so that only a single thread can modify it at once
+        /// </summary>
         private Object ConfidenceLock;
+
+        /// <summary>
+        /// Signaled when the RecognizeCompleted event happens
+        /// </summary>
+        private AutoResetEvent EngineShutingDown;
         #endregion
+
 
         #region Public Members
         /// <summary>
@@ -34,6 +44,7 @@ namespace Articulate
             Listening,
             ListeningOnce,
             Paused,
+            Pausing,
         }
 
         /// <summary>
@@ -61,20 +72,17 @@ namespace Articulate
 		{
 			get { return Engine != null ? (int)Engine.QueryRecognizerSetting("CFGConfidenceRejectionThreshold") : 90; }
 			set
-			{                
-				if(Engine != null)
+			{
+                if(Engine != null)
                 {
                     // TODO: this is not FIFO 
                     // roll off a thread to set it
                     Task.Factory.StartNew(() => ChangeConfidence(value));
                 }
-                else
-                {
-                    Trace.WriteLine("Can't change confidence");
-                }
 			}
 		}
         #endregion
+
 
         #region Constructor
         /// <summary>
@@ -87,6 +95,8 @@ namespace Articulate
             try
             {
                 ConfidenceLock = new Object();
+                EngineShutingDown = new AutoResetEvent(false);
+
                 State = VoiceRecognizerState.Paused;
                 CultureInfo cultureInfo = new CultureInfo("en-US");
 
@@ -115,8 +125,9 @@ namespace Articulate
 				Engine.LoadGrammar(g);
 
                 // Register a handlers for the SpeechRecognized and SpeechRecognitionRejected event
-				Engine.SpeechRecognized += new EventHandler<SpeechRecognizedEventArgs>(sre_SpeechRecognized);
-				Engine.SpeechRecognitionRejected += new EventHandler<SpeechRecognitionRejectedEventArgs>(sre_SpeechRecognitionRejected);
+				Engine.SpeechRecognized += sre_SpeechRecognized;
+				Engine.SpeechRecognitionRejected += sre_SpeechRecognitionRejected;
+                Engine.RecognizeCompleted += sre_RecognizeCompleted;
 
                 StartListening();
 			}
@@ -130,12 +141,17 @@ namespace Articulate
 		}
         #endregion
 
+
         #region Public Methods
         /// <summary>
         /// Starts Async listening.
         /// </summary>
         public void StartListening()
         {
+            // if pausing, block until it is paused
+            if (State == VoiceRecognizerState.Pausing)
+                EngineShutingDown.WaitOne();
+
             if (Engine != null && State == VoiceRecognizerState.Paused)
             {
                 // Start listening in multiple mode (that is, don't quit after a single recongition)
@@ -153,7 +169,7 @@ namespace Articulate
             {
                 // Stop listening gracefully
                 Engine.RecognizeAsyncStop();
-                State = VoiceRecognizerState.Paused;
+                State = VoiceRecognizerState.Pausing;
             }
         }
 
@@ -165,7 +181,7 @@ namespace Articulate
             if (Engine != null && (State == VoiceRecognizerState.Listening || State == VoiceRecognizerState.ListeningOnce))
             {
                 Engine.RecognizeAsyncCancel();
-                State = VoiceRecognizerState.Paused;
+                State = VoiceRecognizerState.Pausing;
             }
         }
 
@@ -174,6 +190,10 @@ namespace Articulate
         /// </summary>
         public void ListenOnce()
         {
+            // if pausing, block until it is paused
+            if (State == VoiceRecognizerState.Pausing)
+                EngineShutingDown.WaitOne();
+
             if (Engine != null && State == VoiceRecognizerState.Paused)
             {
                 // only listen for a single utterance
@@ -182,6 +202,7 @@ namespace Articulate
             }
         }
         #endregion
+
 
         #region Private Methods
         private void ChangeConfidence(int value)
@@ -192,6 +213,7 @@ namespace Articulate
             }
         }
         #endregion
+
 
         #region SpeechRecognitionEngine Events
         /// <summary>
@@ -212,7 +234,20 @@ namespace Articulate
 		{
 			Trace.WriteLine("Rejected with confidence: " + recognizedPhrase.Result.Confidence);
 		}
+
+        /// <summary>
+        /// An async recognize has completed.
+        /// </summary>
+        private void sre_RecognizeCompleted(object sender, RecognizeCompletedEventArgs args)
+        {
+            State = VoiceRecognizerState.Paused;
+
+            // Signal that async recognize has completed
+            EngineShutingDown.Set();
+            
+        }
         #endregion
+
 
         #region IDispose Implementation
         /// <summary>

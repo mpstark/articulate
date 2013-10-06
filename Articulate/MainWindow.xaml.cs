@@ -19,6 +19,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Reactive.Concurrency;
 
 namespace Articulate
 {
@@ -45,8 +46,8 @@ namespace Articulate
 					this.WindowState = WindowState.Normal;
 				};
 
-			Observable.FromEventPattern<RoutedPropertyChangedEventArgs<double>>(ConfidenceMargin, "ValueChanged")
-				.Throttle(TimeSpan.FromMilliseconds(500)).Subscribe(args =>
+            Observable.FromEventPattern<RoutedPropertyChangedEventArgs<double>>(ConfidenceMargin, "ValueChanged")
+			    .Throttle(TimeSpan.FromMilliseconds(500)).Subscribe(args =>
 				{
 					if (recognizer != null)
 						recognizer.ConfidenceMargin = (int)args.EventArgs.NewValue;
@@ -135,7 +136,8 @@ namespace Articulate
 		
 		#endregion
 
-		public void Dispose()
+        #region IDispose Implementation
+        public void Dispose()
 		{
 			if (recognizer != null)
 			{
@@ -149,6 +151,7 @@ namespace Articulate
 				ni.Dispose();
 				ni = null;
 			}
-		}
-	}
+        }
+        #endregion
+    }
 }
