@@ -21,6 +21,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using SierraLib.GlobalHooks;
 using System.Reactive.Concurrency;
+using System.Threading;
 
 namespace Articulate
 {
@@ -37,9 +38,13 @@ namespace Articulate
 		IObservable<EventPattern<RoutedPropertyChangedEventArgs<double>>> ConfidenceObserver;
 		IDisposable ConfidenceObserverSubscription;
 
+		AutoResetEvent PushToTalkRelease;
+
 		public MainWindow()
 		{
 			InitializeComponent();
+
+			PushToTalkRelease = new AutoResetEvent(false);
 
 			ni = new System.Windows.Forms.NotifyIcon();
 
@@ -218,6 +223,8 @@ namespace Articulate
 			}
 		}
 
+
+		
 		void HookManager_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
 		{
 			if(settings.PTTKey == System.Windows.Forms.Keys.None || e.KeyCode != settings.PTTKey) return;
@@ -225,7 +232,16 @@ namespace Articulate
 			if (settings.Mode == Articulate.ListenMode.PushToArm) return; // Don't disable if we're armed
 			if (settings.Mode == Articulate.ListenMode.Continuous) return;
 
-			Enabled = settings.Mode == Articulate.ListenMode.Continuous || settings.Mode == Articulate.ListenMode.PushToIgnore;
+			PushToTalkRelease.Reset();
+
+			ThreadPool.RegisterWaitForSingleObject(PushToTalkRelease, (state, completed) =>
+			{
+				if (completed)
+					Dispatcher.Invoke(() =>
+					{
+						Enabled = settings.Mode == Articulate.ListenMode.Continuous || settings.Mode == Articulate.ListenMode.PushToIgnore;
+					});
+			}, null, 500, true);
 		}
 
 		void HookManager_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
@@ -253,6 +269,8 @@ namespace Articulate
 
 			if (settings.PTTKey == System.Windows.Forms.Keys.None || e.KeyCode != settings.PTTKey) return;
 			if (settings.Mode == Articulate.ListenMode.Continuous) return;
+
+			PushToTalkRelease.Set();
 
 			Enabled = settings.Mode == Articulate.ListenMode.PushToTalk || settings.Mode == Articulate.ListenMode.PushToArm;
 		}
