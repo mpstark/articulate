@@ -159,8 +159,8 @@ namespace Articulate
 			{
 				recognizer.ConfidenceMargin = settings.ConfidenceMargin;
 				recognizer.MonitoredExecutables.AddRange(settings.Applications);
-				recognizer.SpeechRecognized += recognizer_SpeechRecognized;
-				recognizer.SpeechRejected += recognizer_SpeechRejected;
+                recognizer.CommandAccepted += recognizer_CommandAccepted;
+				recognizer.CommandRejected += recognizer_CommandRejected;
 
 
 				Enabled = settings.Mode == Articulate.ListenMode.Continuous || settings.Mode == Articulate.ListenMode.PushToIgnore;
@@ -274,14 +274,18 @@ namespace Articulate
 
 			Enabled = settings.Mode == Articulate.ListenMode.PushToTalk || settings.Mode == Articulate.ListenMode.PushToArm;
 		}
-		
-		void recognizer_SpeechRecognized(object sender, EventArgs e)
+
+        void recognizer_CommandAccepted(object sender, CommandDetectedEventArgs e)
 		{
+            Trace.WriteLine("Accepted command: " + e.Phrase + " " + e.Confidence);
+
 			if (settings.Mode == Articulate.ListenMode.PushToArm) Enabled = false;
 		}
 
-		void recognizer_SpeechRejected(object sender, EventArgs e)
+        void recognizer_CommandRejected(object sender, CommandDetectedEventArgs e)
 		{
+            Trace.WriteLine("Rejected command: " + e.Phrase + " " + e.Confidence);
+
 			// TODO: Decide whether or not Push To Arm should keep trying until it gets a match
 			if (settings.Mode == Articulate.ListenMode.PushToArm) Enabled = false;
 		}
