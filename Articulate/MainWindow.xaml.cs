@@ -167,6 +167,23 @@ namespace Articulate
 			}
 		}
 
+		void recognizer_CommandAccepted(object sender, CommandDetectedEventArgs e)
+		{
+			Trace.WriteLine("Accepted command: " + e.Phrase + " " + e.Confidence);
+
+			LastCommand.Content = e.Phrase;
+
+			if (settings.Mode == Articulate.ListenMode.PushToArm) Enabled = false;
+		}
+
+		void recognizer_CommandRejected(object sender, CommandDetectedEventArgs e)
+		{
+			Trace.WriteLine("Rejected command: " + e.Phrase + " " + e.Confidence);
+
+			// TODO: Decide whether or not Push To Arm should keep trying until it gets a match
+			if (settings.Mode == Articulate.ListenMode.PushToArm) Enabled = false;
+		}
+
 		#endregion
 
 		#region Window Command Buttons
@@ -273,21 +290,6 @@ namespace Articulate
 			PushToTalkRelease.Set();
 
 			Enabled = settings.Mode == Articulate.ListenMode.PushToTalk || settings.Mode == Articulate.ListenMode.PushToArm;
-		}
-
-        void recognizer_CommandAccepted(object sender, CommandDetectedEventArgs e)
-		{
-            Trace.WriteLine("Accepted command: " + e.Phrase + " " + e.Confidence);
-
-			if (settings.Mode == Articulate.ListenMode.PushToArm) Enabled = false;
-		}
-
-        void recognizer_CommandRejected(object sender, CommandDetectedEventArgs e)
-		{
-            Trace.WriteLine("Rejected command: " + e.Phrase + " " + e.Confidence);
-
-			// TODO: Decide whether or not Push To Arm should keep trying until it gets a match
-			if (settings.Mode == Articulate.ListenMode.PushToArm) Enabled = false;
 		}
 
 		#endregion

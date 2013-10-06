@@ -8,7 +8,7 @@
 		Width="525" MinWidth="525" MaxWidth="525"
 		Loaded="Window_Loaded"
 			   Closing="Window_Closing"
-					   
+					 
 		Template="{StaticResource WindowTemplateKey}"               
 		Resources="{StaticResource WindowResources}" ResizeMode="CanMinimize" 
 			   ShowIconOnTitleBar="True" 
@@ -105,8 +105,16 @@
 				<RowDefinition Height="*"/>
 				<RowDefinition Height="Auto"/>
 			</Grid.RowDefinitions>
-
-			<Label Grid.Row="0" Content="{Binding State,ElementName=this}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="64"/>
+			
+			<StackPanel Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+				<Label Content="{Binding State,ElementName=this}" HorizontalAlignment="Center" FontSize="64"/>
+				<m:TransitioningContentControl 
+					x:Name="LastCommand" 
+					FontSize="26" 
+					HorizontalAlignment="Center" 
+					Foreground="White"
+					/>
+			</StackPanel>
 			
 			<TextBlock Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="12"
 					   TextAlignment="Center"
