@@ -11,7 +11,35 @@ using System.Threading;
 
 namespace Articulate
 {
-	/// <summary>
+    #region PhrasedRecognizedEvent Declarations
+    /// <summary>
+    /// A delegate for the PhraseRecognizedEvent
+    /// </summary>
+    /// <param name="sender">Sender</param>
+    /// <param name="e">Event args</param>
+    public delegate void CommandDectectedEventHandler(object sender, CommandDetectedEventArgs e);
+
+    public class CommandDetectedEventArgs : EventArgs
+    {
+        public CommandDetectedEventArgs(string phrase, float confidence) : base()
+        {
+            Phrase = phrase;
+            Confidence = confidence;
+        }
+
+        /// <summary>
+        /// The phrase that was recognized.
+        /// </summary>
+        public string Phrase { get; private set; }
+
+        /// <summary>
+        /// The confidence that the phrase was recognized at.
+        /// </summary>
+        public float Confidence { get; private set; }
+    }
+    #endregion
+
+    /// <summary>
 	/// Object that listens for user voice input (as setup by the CommandPool) and then passes the execution to CommandPool.
 	/// </summary>
 	class VoiceRecognizer : IDisposable
@@ -83,14 +111,6 @@ namespace Articulate
 				if(Engine != null)
 				{
 					ChangeConfidence(value);
-
-					// TODO: this is not FIFO 
-					// roll off a thread to set it
-					//Task.Factory.StartNew(() => ChangeConfidence(value));
-				}
-				else
-				{
-					Trace.WriteLine("Can't change confidence");
 				}
 			}
 		}
@@ -99,8 +119,17 @@ namespace Articulate
 
 		#region Events
 
-		public event EventHandler SpeechRecognized = null;
 		public event EventHandler SpeechRejected = null;
+
+        /// <summary>
+        /// Fired when a phrase is recognized and accepted
+        /// </summary>
+        public event CommandDectectedEventHandler CommandAccepted;
+
+        /// <summary>
+        /// Fired when a phrase is recognized and rejected or simply rejected
+        /// </summary>
+        public event CommandDectectedEventHandler CommandRejected;
 
 		#endregion
 
@@ -169,6 +198,34 @@ namespace Articulate
 				Engine.UpdateRecognizerSetting("CFGConfidenceRejectionThreshold", value);
 			}
 		}
+
+        /// <summary>
+        /// Triggers the PhraseRecognizedEvent if it has any subscribers
+        /// </summary>
+        /// <param name="phrase">The phrase that was recognized</param>
+        /// <param name="confidence">The confidence that the phrase was recognized with.</param>
+        private void TriggerCommandAccepted(string phrase, float confidence)
+        {
+            // if we have subscribers, trigger the event
+            if (CommandAccepted != null)
+            {
+                CommandAccepted(this, new CommandDetectedEventArgs(phrase, confidence));
+            }
+        }
+
+        /// <summary>
+        /// Triggers the PhraseRecognizedEvent if it has any subscribers
+        /// </summary>
+        /// <param name="phrase">The phrase that was rejected (best match)</param>
+        /// <param name="confidence">The confidence that the phrase was rejected with.</param>
+        private void TriggerCommandRejected(string phrase, float confidence)
+        {
+            // if we have subscribers, trigger the event
+            if (CommandRejected != null)
+            {
+                CommandRejected(this, new CommandDetectedEventArgs(phrase, confidence));
+            }
+        }
 		#endregion
 		
         #region Public Methods
@@ -231,17 +288,17 @@ namespace Articulate
             }
         }
         #endregion
-		
+
         #region SpeechRecognitionEngine Events
         /// <summary>
 		/// Some speech was recognized by the voiceEngine.
 		/// </summary>
 		private void sre_SpeechRecognized(object sender, SpeechRecognizedEventArgs recognizedPhrase)
 		{
-			Trace.WriteLine("Recognized with confidence: " + recognizedPhrase.Result.Confidence);
-			
-			if (SpeechRecognized != null) SpeechRecognized(this, new EventArgs());
+            // Trigger the event for command recoginized 
+            TriggerCommandAccepted(recognizedPhrase.Result.Words.Aggregate("", (phraseSoFar, word) => phraseSoFar + word.Text + " "), recognizedPhrase.Result.Confidence);
 
+            // Makes sure that the active application is valid for input
 			var activeApplication = ForegroundProcess.ExecutableName;
 
 			if (!MonitoredExecutables.Any(x => x.Equals(activeApplication, StringComparison.OrdinalIgnoreCase)))
@@ -250,7 +307,7 @@ namespace Articulate
 				return;
 			}
 
-			// Get a thread from the thread pool to deal with it
+			// Get a thread from the thread pool to execute the command
 			Task.Factory.StartNew(() => CommandPool.Execute(recognizedPhrase.Result.Semantics));
 
 		}
@@ -260,9 +317,7 @@ namespace Articulate
 		/// </summary>
 		private void sre_SpeechRecognitionRejected(object sender, SpeechRecognitionRejectedEventArgs recognizedPhrase)
 		{
-			Trace.WriteLine("Rejected with confidence: " + recognizedPhrase.Result.Confidence);
-
-			if (SpeechRejected != null) SpeechRejected(this, new EventArgs());
+            TriggerCommandRejected(recognizedPhrase.Result.Words.Aggregate("", (phraseSoFar, word) => phraseSoFar + word.Text + " "), recognizedPhrase.Result.Confidence);
 		}
 		
         /// <summary>
@@ -274,7 +329,6 @@ namespace Articulate
 
             // Signal that async recognize has completed
             EngineShutingDown.Set();
-            
         }
 
 		#endregion
