@@ -34,6 +34,9 @@ namespace Articulate
 
 		Settings settings;
 
+		IObservable<EventPattern<RoutedPropertyChangedEventArgs<double>>> ConfidenceObserver;
+		IDisposable ConfidenceObserverSubscription;
+
 		public MainWindow()
 		{
 			InitializeComponent();
@@ -54,14 +57,16 @@ namespace Articulate
 
 			#region Rx Event Handlers
 
-			Observable.FromEventPattern<RoutedPropertyChangedEventArgs<double>>(ConfidenceMargin, "ValueChanged")
-				.Sample(TimeSpan.FromMilliseconds(500)).ObserveOn(ThreadPoolScheduler.Instance).Subscribe(args =>
+			ConfidenceObserver = Observable.FromEventPattern<RoutedPropertyChangedEventArgs<double>>(ConfidenceMargin, "ValueChanged")
+				.Sample(TimeSpan.FromMilliseconds(500)).ObserveOn(ThreadPoolScheduler.Instance);
+
+			ConfidenceObserverSubscription = ConfidenceObserver.Subscribe(args =>
 				{
 					if (recognizer != null)
 						recognizer.ConfidenceMargin = (int)args.EventArgs.NewValue;
 
 					settings.ConfidenceMargin = (int)args.EventArgs.NewValue;
-					Task.Factory.StartNew(() => settings.Save());
+					settings.Save();
 				});
 
 			#endregion
@@ -140,6 +145,9 @@ namespace Articulate
 		{
 			if (ni != null)
 				ni.Visible = false;
+
+			if(ConfidenceObserverSubscription != null)
+				ConfidenceObserverSubscription.Dispose();
 		}
 
 		#endregion
