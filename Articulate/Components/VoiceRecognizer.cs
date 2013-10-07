@@ -11,7 +11,7 @@ using System.Threading;
 
 namespace Articulate
 {
-    #region PhrasedRecognizedEvent Declarations
+    #region CommandDetectedEvent Declarations
     /// <summary>
     /// A delegate for the PhraseRecognizedEvent
     /// </summary>
@@ -19,6 +19,9 @@ namespace Articulate
     /// <param name="e">Event args</param>
     public delegate void CommandDectectedEventHandler(object sender, CommandDetectedEventArgs e);
 
+    /// <summary>
+    /// Event args for CommandDetectedEventHandler type events.
+    /// </summary>
     public class CommandDetectedEventArgs : EventArgs
     {
         public CommandDetectedEventArgs(string phrase, float confidence) : base()
@@ -119,8 +122,6 @@ namespace Articulate
 
 		#region Events
 
-		public event EventHandler SpeechRejected = null;
-
         /// <summary>
         /// Fired when a phrase is recognized and accepted
         /// </summary>
@@ -139,15 +140,34 @@ namespace Articulate
 		/// 
 		/// Namely, default options are: en-US, default input device, listen always, confidence level at .90
 		/// </summary>
-		public VoiceRecognizer()
+        public VoiceRecognizer()
 		{
             try
             {
+                // detect the system locale and use the best recognizer for the job.
+                CultureInfo cultureInfo = null;
+                foreach (RecognizerInfo ri in SpeechRecognitionEngine.InstalledRecognizers())
+                {
+                    // TODO: change to support more languages as they get added in
+                    if (ri.Culture.Equals(CultureInfo.CurrentCulture) && ri.Culture.TwoLetterISOLanguageName.Equals("en"))
+                    {
+                        Trace.WriteLine(CultureInfo.CurrentCulture.DisplayName);
+                        Trace.WriteLine("Selected " + ri.Culture.DisplayName + " as the recognizer's culture");
+                        cultureInfo = ri.Culture;
+                    }
+                }
+
+                // default to en-US
+                if (cultureInfo == null)
+                {
+                    cultureInfo = new CultureInfo("en-US");
+                    Trace.WriteLine("Defaulted to " + cultureInfo.DisplayName + " as the recognizer's culture");
+                }
+                
+                // Setup members
                 ConfidenceLock = new Object();
                 EngineShutingDown = new AutoResetEvent(false);
-
                 State = VoiceRecognizerState.Paused;
-                CultureInfo cultureInfo = new CultureInfo("en-US");
 
 				// Create a new SpeechRecognitionEngine instance.
 				Engine = new SpeechRecognitionEngine(cultureInfo);
@@ -309,7 +329,6 @@ namespace Articulate
 
 			// Get a thread from the thread pool to execute the command
 			Task.Factory.StartNew(() => CommandPool.Execute(recognizedPhrase.Result.Semantics));
-
 		}
 
 		/// <summary>
