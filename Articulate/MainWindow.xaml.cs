@@ -112,7 +112,7 @@ namespace Articulate
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-			PTTKey.Content = settings.PTTKey.ToString();
+			PTTKey.Content = settings.PTTKey != System.Windows.Forms.Keys.None ? settings.PTTKey.ToString() : settings.PTTButton.ToString();
 			ListenMode.SelectedIndex = (int)settings.Mode;
 			ConfidenceMargin.Value = settings.ConfidenceMargin;
 
