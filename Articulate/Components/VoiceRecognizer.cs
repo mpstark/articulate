@@ -13,13 +13,6 @@ namespace Articulate
 {
     #region CommandDetectedEvent Declarations
     /// <summary>
-    /// A delegate for the PhraseRecognizedEvent
-    /// </summary>
-    /// <param name="sender">Sender</param>
-    /// <param name="e">Event args</param>
-    public delegate void CommandDectectedEventHandler(object sender, CommandDetectedEventArgs e);
-
-    /// <summary>
     /// Event args for CommandDetectedEventHandler type events.
     /// </summary>
     public class CommandDetectedEventArgs : EventArgs
@@ -125,12 +118,12 @@ namespace Articulate
         /// <summary>
         /// Fired when a phrase is recognized and accepted
         /// </summary>
-        public event CommandDectectedEventHandler CommandAccepted;
+        public event EventHandler<CommandDetectedEventArgs> CommandAccepted;
 
         /// <summary>
         /// Fired when a phrase is recognized and rejected or simply rejected
         /// </summary>
-        public event CommandDectectedEventHandler CommandRejected;
+		public event EventHandler<CommandDetectedEventArgs> CommandRejected;
 
 		#endregion
 
