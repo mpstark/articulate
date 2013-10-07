@@ -35,8 +35,7 @@ namespace Articulate
 
 		Settings settings;
 
-		IObservable<EventPattern<RoutedPropertyChangedEventArgs<double>>> ConfidenceObserver;
-		IDisposable ConfidenceObserverSubscription;
+		Stack<IDisposable> RxSubscriptions = new Stack<IDisposable>();
 
 		AutoResetEvent PushToTalkRelease;
 
@@ -56,28 +55,45 @@ namespace Articulate
 					this.Show();
 					this.WindowState = WindowState.Normal;
 				};
-			
+
 			settings = Articulate.Settings.Load();
 
 			#region Rx Event Handlers
 
 			var ConfidenceEvent = Observable.FromEventPattern<RoutedPropertyChangedEventArgs<double>>(ConfidenceMargin, "ValueChanged");
 
-			ConfidenceObserver = ConfidenceEvent.Sample(TimeSpan.FromMilliseconds(500)).ObserveOn(ThreadPoolScheduler.Instance);
-			ConfidenceEvent.Sample(TimeSpan.FromMilliseconds(50)).ObserveOnDispatcher().Subscribe(args =>
-			{
-				ConfidenceMarginNumber.Content = Math.Floor(args.EventArgs.NewValue).ToString();
-			});
-
-			ConfidenceObserverSubscription = ConfidenceObserver.Subscribe(args =>
+			RxSubscriptions.Push(ConfidenceEvent.Skip(1).Distinct().Sample(TimeSpan.FromMilliseconds(500)).Subscribe(args =>
 			{
 				settings.ConfidenceMargin = (int)args.EventArgs.NewValue;
-				settings.Save();
 
-					if (recognizer != null)
-						recognizer.ConfidenceMargin = (int)args.EventArgs.NewValue;
-				});
+				if (recognizer != null)
+					recognizer.ConfidenceMargin = (int)args.EventArgs.NewValue;
+			}));
 
+			RxSubscriptions.Push(ConfidenceEvent.Skip(1).Distinct().Sample(TimeSpan.FromMilliseconds(50)).ObserveOnDispatcher().Subscribe(args =>
+			{
+				ConfidenceMarginNumber.Content = Math.Floor(args.EventArgs.NewValue).ToString();
+			}));
+
+			var CommandPauseEvent = Observable.FromEventPattern<RoutedPropertyChangedEventArgs<double>>(EndCommandPause, "ValueChanged");
+
+			RxSubscriptions.Push(CommandPauseEvent.Skip(1).Distinct().Sample(TimeSpan.FromMilliseconds(50)).ObserveOnDispatcher().Subscribe(args =>
+			{
+				EndCommandPauseNumber.Content = Math.Floor(args.EventArgs.NewValue).ToString();
+			}));
+
+			RxSubscriptions.Push(CommandPauseEvent.Skip(1).Distinct().Sample(TimeSpan.FromMilliseconds(500)).Subscribe(args =>
+			{
+				settings.EndCommandPause = (int)args.EventArgs.NewValue;
+
+				if (recognizer != null)
+					recognizer.EndSilenceTimeout = (int)args.EventArgs.NewValue;
+			}));
+
+			RxSubscriptions.Push(SettingsFlyout.ToObservable<bool>(Flyout.IsOpenProperty).Skip(1).Distinct().ObserveOn(ThreadPoolScheduler.Instance).Subscribe(args =>
+			{
+				if (!args) settings.Save();
+			}));
 			#endregion
 		}
 
@@ -88,14 +104,14 @@ namespace Articulate
 		public string State
 		{
 			get { return (string)GetValue(ArticulateStateProperty); }
-			set { SetValue(ArticulateStateProperty, value); }
+			set { Dispatcher.Invoke(() => SetValue(ArticulateStateProperty, value)); }
 		}
 
 		public static DependencyProperty ArticulateErrorMessageProperty = DependencyProperty.Register("ErrorMessage", typeof(string), typeof(MainWindow), new PropertyMetadata(""));
 		public string ErrorMessage
 		{
 			get { return (string)GetValue(ArticulateErrorMessageProperty); }
-			set { SetValue(ArticulateErrorMessageProperty, value); }
+			set { Dispatcher.Invoke(() => SetValue(ArticulateErrorMessageProperty, value)); }
 		}
 
 		#endregion
@@ -114,7 +130,11 @@ namespace Articulate
 		{
 			PTTKey.Content = settings.PTTKey != System.Windows.Forms.Keys.None ? settings.PTTKey.ToString() : settings.PTTButton.ToString();
 			ListenMode.SelectedIndex = (int)settings.Mode;
+
 			ConfidenceMargin.Value = settings.ConfidenceMargin;
+			ConfidenceMarginNumber.Content = settings.ConfidenceMargin;
+			EndCommandPause.Value = settings.EndCommandPause;
+			EndCommandPauseNumber.Content = settings.EndCommandPause;
 
 			if (!settings.Applications.Any())
 				settings.Applications.AddRange(new[] {
@@ -125,8 +145,8 @@ namespace Articulate
 					"arma3"
 				});
 
-			LoadRecognizer();
-			
+			Task.Factory.StartNew(LoadRecognizer);
+
 			HookManager.KeyDown += HookManager_KeyDown;
 			HookManager.KeyUp += HookManager_KeyUp;
 			HookManager.MouseDown += HookManager_MouseDown;
@@ -137,14 +157,14 @@ namespace Articulate
 		{
 			if (ni != null)
 				ni.Visible = false;
-			
+
 			HookManager.KeyDown -= HookManager_KeyDown;
 			HookManager.KeyUp -= HookManager_KeyUp;
 			HookManager.MouseDown -= HookManager_MouseDown;
 			HookManager.MouseUp -= HookManager_MouseUp;
 
-			if(ConfidenceObserverSubscription != null)
-				ConfidenceObserverSubscription.Dispose();
+			while (RxSubscriptions.Any())
+				RxSubscriptions.Pop().Dispose();
 		}
 
 		#endregion
@@ -158,15 +178,21 @@ namespace Articulate
 			// something happened with the setup of the VoiceRecognizer (no mic, etc.)
 			if (recognizer.State == VoiceRecognizer.VoiceRecognizerState.Error)
 			{
-				State = "FAILED";
-				ErrorMessage = recognizer.SetupError;
-				ErrorFlyout.IsOpen = true;
+				Dispatcher.Invoke(() =>
+				{
+					State = "FAILED";
+					ErrorMessage = recognizer.SetupError;
+					ErrorFlyout.IsOpen = true;
+				});
 			}
 			else
 			{
 				recognizer.ConfidenceMargin = settings.ConfidenceMargin;
+				recognizer.EndSilenceTimeout = settings.EndCommandPause;
+
 				recognizer.MonitoredExecutables.AddRange(settings.Applications);
-                recognizer.CommandAccepted += recognizer_CommandAccepted;
+
+				recognizer.CommandAccepted += recognizer_CommandAccepted;
 				recognizer.CommandRejected += recognizer_CommandRejected;
 
 
@@ -178,7 +204,7 @@ namespace Articulate
 		{
 			Trace.WriteLine("Accepted command: " + e.Phrase + " " + e.Confidence);
 
-			LastCommand.Content = e.Phrase;
+			Dispatcher.Invoke(() => LastCommand.Content = e.Phrase);
 
 			if (settings.Mode == Articulate.ListenMode.PushToArm) Enabled = false;
 		}
@@ -187,7 +213,7 @@ namespace Articulate
 		{
 			Trace.WriteLine("Rejected command: " + e.Phrase + " " + e.Confidence);
 
-			LastCommand.Content = "What was that?";
+			Dispatcher.Invoke(() => LastCommand.Content = "What was that?");
 
 			// TODO: Decide whether or not Push To Arm should keep trying until it gets a match
 			if (settings.Mode == Articulate.ListenMode.PushToArm) Enabled = false;
@@ -226,7 +252,7 @@ namespace Articulate
 		#endregion
 
 		#region PTT
-				
+
 		public bool Enabled
 		{
 			get { return recognizer.State == VoiceRecognizer.VoiceRecognizerState.Listening || recognizer.State == VoiceRecognizer.VoiceRecognizerState.ListeningOnce; }
@@ -239,12 +265,12 @@ namespace Articulate
 					if (settings.Mode == Articulate.ListenMode.PushToArm) recognizer.ListenOnce();
 					else recognizer.StartListening();
 
-					State = "LISTENING";
+					Dispatcher.Invoke(() => State = "LISTENING");
 				}
 				else
 				{
 					recognizer.StopListening();
-					State = "OFFLINE";
+					Dispatcher.Invoke(() => State = "OFFLINE");
 				}
 			}
 		}
@@ -326,10 +352,10 @@ namespace Articulate
 			}, null, 500, true);
 		}
 
-		
+
 		void HookManager_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
 		{
-			if(settings.PTTKey == System.Windows.Forms.Keys.None || e.KeyCode != settings.PTTKey) return;
+			if (settings.PTTKey == System.Windows.Forms.Keys.None || e.KeyCode != settings.PTTKey) return;
 
 			OnPushToTalkUp();
 		}
@@ -366,16 +392,16 @@ namespace Articulate
 		private void ListenMode_Selected(object sender, RoutedEventArgs e)
 		{
 			settings.Mode = (Articulate.ListenMode)(ListenMode.SelectedIndex);
-			
+
 			Enabled = settings.Mode == Articulate.ListenMode.Continuous || settings.Mode == Articulate.ListenMode.PushToIgnore;
 
 			settings.Save();
 		}
-		
+
 		#endregion
 
-        #region IDispose Implementation
-        public void Dispose()
+		#region IDispose Implementation
+		public void Dispose()
 		{
 			if (recognizer != null)
 			{
@@ -388,7 +414,7 @@ namespace Articulate
 				ni.Dispose();
 				ni = null;
 			}
-        }
-        #endregion
-    }
+		}
+		#endregion
+	}
 }

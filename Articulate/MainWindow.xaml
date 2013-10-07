@@ -15,7 +15,7 @@
 			   ShowMaxRestoreButton="False" 
 			   Icon="Main.ico"
 			   TitleCaps="False" >
-	
+
 	<m:MetroWindow.WindowCommands>
 		<m:WindowCommands>
 			<Button x:Name="Settings"
@@ -32,7 +32,7 @@
 			</Button>
 		</m:WindowCommands>
 	</m:MetroWindow.WindowCommands>
-	
+
 	<m:MetroWindow.Flyouts>
 		<m:Flyout x:Name="AboutFlyout" Header="About" Position="Right">
 			<TextBlock
@@ -54,37 +54,55 @@
 			</TextBlock>
 		</m:Flyout>
 		<m:Flyout x:Name="SettingsFlyout" Header="Settings" Position="Right">
-			<StackPanel Margin="30 0" Width="300">
+			<ScrollViewer 
+					Margin="30 0" Width="300"
+					ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+					ScrollViewer.VerticalScrollBarVisibility="Hidden">
+				<StackPanel
+					Margin="0 0 0 10">
 
-				<Label FontSize="16" Content="Listening Mode"/>
-				<ComboBox x:Name="ListenMode"
+					<Label FontSize="16" Content="Listening Mode"/>
+					<ComboBox x:Name="ListenMode"
 						  SelectionChanged="ListenMode_Selected">
-					<ComboBoxItem>Continuous</ComboBoxItem>
-					<ComboBoxItem>Push To Talk</ComboBoxItem>
-					<ComboBoxItem>Push To Arm</ComboBoxItem>
-					<ComboBoxItem>Push To Ignore</ComboBoxItem>
-				</ComboBox>
-				
-				<Label FontSize="16" Content="Command Key"/>
-				<Button x:Name="PTTKey" Content="None" ToolTip="Click to change your PTT Key" Click="PTTKey_Click"/>
-				<TextBlock TextWrapping="Wrap">
+						<ComboBoxItem>Continuous</ComboBoxItem>
+						<ComboBoxItem>Push To Talk</ComboBoxItem>
+						<ComboBoxItem>Push To Arm</ComboBoxItem>
+						<ComboBoxItem>Push To Ignore</ComboBoxItem>
+					</ComboBox>
+
+					<Label FontSize="16" Content="Command Key"/>
+					<Button x:Name="PTTKey" Content="None" ToolTip="Click to change your PTT Key" Click="PTTKey_Click"/>
+					<TextBlock TextWrapping="Wrap">
 					Click the button to change your command key, press Esc to remove it.
-				</TextBlock>
+					</TextBlock>
 
-				<Grid>
-					<Label FontSize="16" Content="Confidence Margin" HorizontalAlignment="Left"/>
-					<Label x:Name="ConfidenceMarginNumber" FontSize="16" HorizontalAlignment="Right" 
+					<Grid>
+						<Label FontSize="16" Content="Confidence Margin" HorizontalAlignment="Left"/>
+						<Label x:Name="ConfidenceMarginNumber" FontSize="16" HorizontalAlignment="Right" 
 						   Content="80" />
-				</Grid>
-				<Slider x:Name="ConfidenceMargin"
+					</Grid>
+					<Slider x:Name="ConfidenceMargin"
 						Value="80" Minimum="65" Maximum="95"/>
-				<TextBlock TextWrapping="Wrap">
+					<TextBlock TextWrapping="Wrap">
 					Reducing this value can help increase responsiveness at the cost of accuracy
-				</TextBlock>
+					</TextBlock>
 
-			</StackPanel>
+					<Grid>
+						<Label FontSize="16" Content="Command Termination Pause" HorizontalAlignment="Left"/>
+						<Label x:Name="EndCommandPauseNumber" FontSize="16" HorizontalAlignment="Right" 
+						   Content="80" />
+					</Grid>
+					<Slider x:Name="EndCommandPause"
+						Value="500" Minimum="250" Maximum="1000"/>
+					<TextBlock TextWrapping="Wrap">
+					Reducing this value will allow you to give commands with shorter breaks in between,
+					but will also reduce your ability to pause in the middle of a command.
+					</TextBlock>
+
+				</StackPanel>
+			</ScrollViewer>
 		</m:Flyout>
-		
+
 		<m:Flyout x:Name="ErrorFlyout" Header="Error" Position="Right">
 			<StackPanel Margin="30 0" Width="300"
 					DataContext="{Binding ElementName=this}">
@@ -98,14 +116,14 @@
 			</StackPanel>
 		</m:Flyout>
 	</m:MetroWindow.Flyouts>
-	
+
 	<m:MetroContentControl>
 		<Grid>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="*"/>
 				<RowDefinition Height="Auto"/>
 			</Grid.RowDefinitions>
-			
+
 			<StackPanel Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">
 				<Label Content="{Binding State,ElementName=this}" HorizontalAlignment="Center" FontSize="64"/>
 				<m:TransitioningContentControl 
@@ -115,7 +133,7 @@
 					Foreground="White"
 					/>
 			</StackPanel>
-			
+
 			<TextBlock Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="12"
 					   TextAlignment="Center"
 					   Margin="0,0,0,5">  

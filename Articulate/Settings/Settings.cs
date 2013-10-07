@@ -27,6 +27,8 @@ namespace Articulate
 			// Initialize default settings
 			ConfidenceMargin = 80;
 
+			EndCommandPause = 500;
+
 			PTTKey = System.Windows.Forms.Keys.None;
 			Mode = ListenMode.Continuous;
 
@@ -100,6 +102,9 @@ namespace Articulate
 		#endregion
 
 		public int ConfidenceMargin
+		{ get; set; }
+
+		public int EndCommandPause
 		{ get; set; }
 
 		public System.Windows.Forms.Keys PTTKey

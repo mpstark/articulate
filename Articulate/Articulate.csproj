@@ -128,6 +128,7 @@
     <Compile Include="CommandChunks\Command.cs" />
     <Compile Include="Components\ForegroundProcess.cs" />
     <Compile Include="Components\VoiceRecognizer.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
