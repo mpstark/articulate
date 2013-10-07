@@ -129,12 +129,19 @@ namespace Articulate
 			
 			HookManager.KeyDown += HookManager_KeyDown;
 			HookManager.KeyUp += HookManager_KeyUp;
+			HookManager.MouseDown += HookManager_MouseDown;
+			HookManager.MouseUp += HookManager_MouseUp;
 		}
 
 		private void Window_Closing(object sender, CancelEventArgs e)
 		{
 			if (ni != null)
 				ni.Visible = false;
+			
+			HookManager.KeyDown -= HookManager_KeyDown;
+			HookManager.KeyUp -= HookManager_KeyUp;
+			HookManager.MouseDown -= HookManager_MouseDown;
+			HookManager.MouseUp -= HookManager_MouseUp;
 
 			if(ConfidenceObserverSubscription != null)
 				ConfidenceObserverSubscription.Dispose();
@@ -243,11 +250,67 @@ namespace Articulate
 		}
 
 
-		
-		void HookManager_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
+		void OnPushToTalkDown(System.Windows.Forms.MouseButtons button)
 		{
-			if(settings.PTTKey == System.Windows.Forms.Keys.None || e.KeyCode != settings.PTTKey) return;
+			if (ListeningForNewPTT)
+			{
+				ListeningForNewPTT = false;
 
+				settings.PTTKey = System.Windows.Forms.Keys.None;
+				settings.PTTButton = button;
+
+				PTTKey.Content = settings.PTTButton.ToString();
+				ListenMode.SelectedIndex = (int)settings.Mode;
+
+				Enabled = settings.Mode == Articulate.ListenMode.Continuous || settings.Mode == Articulate.ListenMode.PushToIgnore;
+				settings.Save();
+
+				return;
+			}
+
+			if (settings.PTTButton == System.Windows.Forms.MouseButtons.None || button != settings.PTTButton) return;
+			if (settings.Mode == Articulate.ListenMode.Continuous) return;
+
+			PushToTalkRelease.Set();
+
+			Enabled = settings.Mode == Articulate.ListenMode.PushToTalk || settings.Mode == Articulate.ListenMode.PushToArm;
+		}
+
+		void OnPushToTalkDown(System.Windows.Forms.Keys key)
+		{
+			if (ListeningForNewPTT)
+			{
+				ListeningForNewPTT = false;
+
+				if (key == System.Windows.Forms.Keys.Escape)
+				{
+					settings.Mode = Articulate.ListenMode.Continuous;
+					settings.PTTKey = System.Windows.Forms.Keys.None;
+				}
+				else
+					settings.PTTKey = key;
+
+				settings.PTTButton = MouseButtons.None;
+
+				PTTKey.Content = settings.PTTKey.ToString();
+				ListenMode.SelectedIndex = (int)settings.Mode;
+
+				Enabled = settings.Mode == Articulate.ListenMode.Continuous || settings.Mode == Articulate.ListenMode.PushToIgnore;
+				settings.Save();
+
+				return;
+			}
+
+			if (settings.PTTKey == System.Windows.Forms.Keys.None || key != settings.PTTKey) return;
+			if (settings.Mode == Articulate.ListenMode.Continuous) return;
+
+			PushToTalkRelease.Set();
+
+			Enabled = settings.Mode == Articulate.ListenMode.PushToTalk || settings.Mode == Articulate.ListenMode.PushToArm;
+		}
+
+		void OnPushToTalkUp()
+		{
 			if (settings.Mode == Articulate.ListenMode.PushToArm) return; // Don't disable if we're armed
 			if (settings.Mode == Articulate.ListenMode.Continuous) return;
 
@@ -263,35 +326,30 @@ namespace Articulate
 			}, null, 500, true);
 		}
 
+		
+		void HookManager_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
+		{
+			if(settings.PTTKey == System.Windows.Forms.Keys.None || e.KeyCode != settings.PTTKey) return;
+
+			OnPushToTalkUp();
+		}
+
 		void HookManager_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
 		{
-			if (ListeningForNewPTT)
-			{
-				ListeningForNewPTT = false;
+			OnPushToTalkDown(e.KeyCode);
+		}
 
-				if (e.KeyCode == System.Windows.Forms.Keys.Escape)
-				{
-					settings.Mode = Articulate.ListenMode.Continuous;
-					settings.PTTKey = System.Windows.Forms.Keys.None;
-				}
-				else
-					settings.PTTKey = e.KeyCode;
 
-				PTTKey.Content = settings.PTTKey.ToString();
-				ListenMode.SelectedIndex = (int)settings.Mode;
+		void HookManager_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
+		{
+			if (settings.PTTButton == MouseButtons.None || e.Button != settings.PTTButton) return;
 
-				Enabled = settings.Mode == Articulate.ListenMode.Continuous || settings.Mode == Articulate.ListenMode.PushToIgnore;
-				settings.Save();
+			OnPushToTalkUp();
+		}
 
-				return;
-			}
-
-			if (settings.PTTKey == System.Windows.Forms.Keys.None || e.KeyCode != settings.PTTKey) return;
-			if (settings.Mode == Articulate.ListenMode.Continuous) return;
-
-			PushToTalkRelease.Set();
-
-			Enabled = settings.Mode == Articulate.ListenMode.PushToTalk || settings.Mode == Articulate.ListenMode.PushToArm;
+		void HookManager_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+		{
+			OnPushToTalkDown(e.Button);
 		}
 
 		#endregion

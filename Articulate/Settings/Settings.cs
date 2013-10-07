@@ -105,6 +105,9 @@ namespace Articulate
 		public System.Windows.Forms.Keys PTTKey
 		{ get; set; }
 
+		public System.Windows.Forms.MouseButtons PTTButton
+		{ get; set; }
+
 		public ListenMode Mode
 		{ get; set; }
 		
