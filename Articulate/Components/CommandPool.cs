@@ -43,7 +43,7 @@ namespace Articulate
             #region Commands
             #region Move (1)
             // return to formation (1)
-            Command returnToFormation = new Command("FORMUP", new string[] { "return to formation", "form up" }, new ushort[] { Keys.One, Keys.One }, subjectRef);
+            Command returnToFormation = new Command("FORMUP", new string[] { "return to formation", "form up", "fallback" }, new ushort[] { Keys.One, Keys.One }, subjectRef);
             commandObjects.Add("FORMUP", returnToFormation);
             commandSet.Add(returnToFormation.Item);
 
@@ -194,7 +194,7 @@ namespace Articulate
             commandSet.Add(combat.Item);
 
             // aware (3)
-            Command aware = new Command("AWARE", new string[] { "aware", "aware mode", "stay sharp", "stay frosty" }, new ushort[] { Keys.Seven, Keys.Three }, subjectRef);
+			Command aware = new Command("AWARE", new string[] { "aware", "alert", "aware mode", "stay sharp", "stay frosty", "stay alert" }, new ushort[] { Keys.Seven, Keys.Three }, subjectRef);
             commandObjects.Add("AWARE", aware);
             commandSet.Add(aware.Item);
 
@@ -226,47 +226,47 @@ namespace Articulate
 
             #region Formation (8)
             // column (1)
-            Command column = new Command("COLUMN", new string[] { "formation column", "form column", "column" }, new ushort[] { Keys.Eight, Keys.One }, subjectRef);
+            Command column = new Command("COLUMN", new string[] { "formation column", "form column"}, new ushort[] { Keys.Eight, Keys.One }, subjectRef);
             commandObjects.Add("COLUMN", column);
             commandSet.Add(column.Item);
 
             // staggered column (2)
-            Command staggeredColumn = new Command("STAGGEREDCOLUMN", new string[] { "formation staggered column", "form staggered column", "staggered column" }, new ushort[] { Keys.Eight, Keys.Two }, subjectRef);
+            Command staggeredColumn = new Command("STAGGEREDCOLUMN", new string[] { "formation staggered column", "form staggered column" }, new ushort[] { Keys.Eight, Keys.Two }, subjectRef);
             commandObjects.Add("STAGGEREDCOLUMN", staggeredColumn);
             commandSet.Add(staggeredColumn.Item);
 
             // wedge (3)
-            Command wedge = new Command("WEDGE", new string[] { "formation wedge", "form wedge", "wedge" }, new ushort[] { Keys.Eight, Keys.Three }, subjectRef);
+            Command wedge = new Command("WEDGE", new string[] { "formation wedge", "form wedge" }, new ushort[] { Keys.Eight, Keys.Three }, subjectRef);
             commandObjects.Add("WEDGE", wedge);
             commandSet.Add(wedge.Item);
 
             // echelon left (4)
-            Command echelonLeft = new Command("ECHELONLEFT", new string[] { "formation echelon left", "form echelon left", "echelon left" }, new ushort[] { Keys.Eight, Keys.Four }, subjectRef);
+            Command echelonLeft = new Command("ECHELONLEFT", new string[] { "formation echelon left", "form echelon left" }, new ushort[] { Keys.Eight, Keys.Four }, subjectRef);
             commandObjects.Add("ECHELONLEFT", echelonLeft);
             commandSet.Add(echelonLeft.Item);
 
             // echelon right (5)
-            Command echeloneRight = new Command("ECHELONRIGHT", new string[] { "formation echelon right", "form echelon right", "echelon right" }, new ushort[] { Keys.Eight, Keys.Five }, subjectRef);
+            Command echeloneRight = new Command("ECHELONRIGHT", new string[] { "formation echelon right", "form echelon right" }, new ushort[] { Keys.Eight, Keys.Five }, subjectRef);
             commandObjects.Add("ECHELONRIGHT", echeloneRight);
             commandSet.Add(echeloneRight.Item);
 
             // vee (6)
-            Command vee = new Command("VEE", new string[] { "formation vee", "form vee", "vee" }, new ushort[] { Keys.Eight, Keys.Six }, subjectRef);
+            Command vee = new Command("VEE", new string[] { "formation vee", "form vee" }, new ushort[] { Keys.Eight, Keys.Six }, subjectRef);
             commandObjects.Add("VEE", vee);
             commandSet.Add(vee.Item);
 
             // line (7)
-            Command line = new Command("LINE", new string[] { "formation line", "form line", "line" }, new ushort[] { Keys.Eight, Keys.Seven }, subjectRef);
+            Command line = new Command("LINE", new string[] { "formation line", "form line" }, new ushort[] { Keys.Eight, Keys.Seven }, subjectRef);
             commandObjects.Add("LINE", line);
             commandSet.Add(line.Item);
 
             // file (8)
-            Command file = new Command("FILE", new string[] { "formation file", "form file", "file" }, new ushort[] { Keys.Eight, Keys.Eight }, subjectRef);
+            Command file = new Command("FILE", new string[] { "formation file", "form file" }, new ushort[] { Keys.Eight, Keys.Eight }, subjectRef);
             commandObjects.Add("FILE", file);
             commandSet.Add(file.Item);
 
             // diamond (9)
-            Command diamond = new Command("DIAMOND", new string[] { "formation diamond", "form diamond", "diamond" }, new ushort[] { Keys.Eight, Keys.Nine }, subjectRef);
+            Command diamond = new Command("DIAMOND", new string[] { "formation diamond", "form diamond" }, new ushort[] { Keys.Eight, Keys.Nine }, subjectRef);
             commandObjects.Add("DIAMOND", diamond);
             commandSet.Add(diamond.Item);
             #endregion
@@ -353,7 +353,7 @@ namespace Articulate
                     Trace.WriteLine(subject);
                     if (subjectObject.KeyLookup.ContainsKey(subject))
                     {
-                        DirectInputEmulator.SendKeyPresses(subjectObject.KeyLookup[subject], 50);
+                        DirectInputEmulator.SendKeyPresses(subjectObject.KeyLookup[subject], 75);
                     }
                 }
             }
@@ -362,13 +362,13 @@ namespace Articulate
             {
                 // execute command keypresses
                 Trace.WriteLine(command);
-                DirectInputEmulator.SendKeyPresses(commandObjects[command].KeyLookup[command], 50);
+                DirectInputEmulator.SendKeyPresses(commandObjects[command].KeyLookup[command], 75);
 
                 // execute direct object keypresses (if needed)
                 if (directObject != null && directObject != "")
                 {
                     Trace.WriteLine(directObject);
-                    DirectInputEmulator.SendKeyPresses(commandObjects[command].KeyLookup[directObject], 50);
+                    DirectInputEmulator.SendKeyPresses(commandObjects[command].KeyLookup[directObject], 75);
                 }
             }
         }
