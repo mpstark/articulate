@@ -2,12 +2,12 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Articulate"
-#define MyAppVersion "0.1.0.4"
+#define MyAppVersion "0.2.0"
 #define MyAppPublisher "Articulate Team"
-#define MyAppURL "https://https://github.com/Mpstark/articulate"
+#define MyAppURL "https://github.com/Mpstark/articulate"
 #define MyAppExeName "Articulate.exe"
 #define SetupFileName "ArticulateSetup"
-#define Copyright "Copyright © Michael Starkweather 2013"
+#define Copyright "Copyright © 2013 Michael Starkweather, Benjamin Pannell, and other contributors."
 #define Mutex "Articulate"
 #define ReleaseType "Development Preview"
 
@@ -23,12 +23,12 @@ AppVersion={#MyAppVersion}
 AppVerName={#MyAppName} v{#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
-AppSupportURL="https://docs.google.com/forms/d/17Mpe3nCUXEQGAWjrR75tzwZjYNH4jk6Z5DRpzZfmT7Y/viewform"
+AppSupportURL="http://forums.bistudio.com/showthread.php?166228-Articulate-Squad-Voice-Command-Utility-for-Arma-3"
 AppUpdatesURL="https://github.com/Mpstark/articulate/releases"
 DefaultDirName={pf}\Articulate
 DefaultGroupName=Articulate
 AllowNoIcons=true
-LicenseFile=..\Licence.rtf
+LicenseFile=..\Licence.txt
 OutputBaseFilename={#SetupFileName}
 SetupIconFile=..\Articulate\Main.ico
 Compression=lzma2/Ultra
@@ -40,15 +40,14 @@ WizardImageStretch=false
 AppCopyright={#Copyright}
 AppMutex={#Mutex}
 OutputDir=..\Release
-MinVersion=,5.1.2600sp3
+MinVersion=5.1.2600sp3
 UninstallDisplayName={#MyAppName}
 AppComments=Remove {#MyAppName} from your computer
-AppContact=contact@sierrasoftworks.com
+AppContact=GitHub/BI Forums
 AppReadmeFile={app}\Readme.md
 UninstallDisplayIcon={app}\Articulate.exe
 VersionInfoVersion={#MyAppVersion}
-VersionInfoCompany=Sierra Softworks
-VersionInfoDescription=Provides access to the internet at Stellenbosch
+VersionInfoCompany=Articulate Team
 VersionInfoTextVersion=v{#MyAppVersion} {#ReleaseType}
 VersionInfoCopyright={#Copyright}
 VersionInfoProductName={#MyAppName}
@@ -58,7 +57,6 @@ UninstallLogMode=append
 UninstallFilesDir={app}
 InternalCompressLevel=Ultra
 VersionInfoProductTextVersion=v{#MyAppVersion} {#ReleaseType}
-ArchitecturesInstallIn64BitMode=x64
 
 [Languages]
 Name: "en"; MessagesFile: "compiler:Default.isl"
