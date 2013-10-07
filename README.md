@@ -22,12 +22,24 @@ You will generally be able to use Articulate by giving the same commands your in
 For a full list of available commands, take a look at the [wiki](https://github.com/Mpstark/articulate/wiki/Commands).
 For more information on improving the accuracy of Articulate's speech recognition, read [this page](https://github.com/Mpstark/articulate/wiki/Improving-Speech-Recognition).
 
+## Providing Feedback
+You can provide feedback to help improve Articulate by:
+
+* Using our [issue tracker on github](https://github.com/Mpstark/articulate/issues/)
+* Posting in our [BI forum post](http://forums.bistudio.com/showthread.php?166228-Articulate-Squad-Voice-Command-Utility-for-Arma-3)
+* Filling out our [feedback form](https://docs.google.com/forms/d/17Mpe3nCUXEQGAWjrR75tzwZjYNH4jk6Z5DRpzZfmT7Y/viewform).
+
+A list of known issues and some solutions is [here](https://github.com/Mpstark/Articulate/wiki/Known-Issues-and-Solutions).
+
 ## Upcoming Features
 You can read more about some of the exciting new features which will be arriving by visiting the wiki's [todo](https://github.com/Mpstark/articulate/wiki/Todo) page.
 
+## Helping Articulate
+If you are interested in helping develop Articulate: get in touch with us! There are many things in Articulate that are unfinished and we could use some help. [Here are some resources to help you get started.](https://github.com/Mpstark/Articulate/wiki/Team-Resources)
+
 ## Authors
 ### Michael Starkweather [github](https://github.com/Mpstark)
-Michael is the original creater of Articulate, and he has developed the framework on which it works.
+Michael is the original creator of Articulate, and he has developed the framework on which it works.
 
 ### Benjamin Pannell [github](https://github.com/SPARTAN563), [company](https://sierrasoftworks.com)
 Benjamin is responsible for the new user interface used by Articulate, as well as the Push To Talk and Confidence Margin systems.

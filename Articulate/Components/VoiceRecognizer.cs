@@ -144,8 +144,6 @@ namespace Articulate
                     // TODO: change to support more languages as they get added in
                     if (ri.Culture.Equals(CultureInfo.CurrentCulture) && ri.Culture.TwoLetterISOLanguageName.Equals("en"))
                     {
-                        Trace.WriteLine(CultureInfo.CurrentCulture.DisplayName);
-                        Trace.WriteLine("Selected " + ri.Culture.DisplayName + " as the recognizer's culture");
                         cultureInfo = ri.Culture;
                     }
                 }
@@ -154,7 +152,6 @@ namespace Articulate
                 if (cultureInfo == null)
                 {
                     cultureInfo = new CultureInfo("en-US");
-                    Trace.WriteLine("Defaulted to " + cultureInfo.DisplayName + " as the recognizer's culture");
                 }
                 
                 // Setup members
