@@ -34,15 +34,8 @@ namespace Articulate
             SrgsItem ten = GetNewNode(new string[] { "ten" }, "TEN");
 
             SrgsOneOf squadNumbersChoice = new SrgsOneOf(one, two, three, four, five, six, seven, eight, nine, ten);
-            SrgsItem squadNumbersConcatChoice = new SrgsItem(squadNumbersChoice, new SrgsItem(0, 1, "and"));
-            squadNumbersConcatChoice.SetRepeat(1, 10);
-            SrgsRule squadNumbers = new SrgsRule("squadNumbers");
-            squadNumbers.Add(squadNumbersConcatChoice);
-            RuleList.Add(squadNumbers);
-            SrgsRule squadMembers = new SrgsRule("squadSelections");
-            squadMembers.Add(new SrgsRuleRef(squadNumbers));
-            squadMembers.Add(new SrgsSemanticInterpretationTag("out=rules.squadNumbers;"));
-            RuleList.Add(squadMembers);
+            SrgsItem squadNumbers = new SrgsItem(squadNumbersChoice, new SrgsItem(0, 1, "and"));
+            squadNumbers.SetRepeat(1, 10);
 
             // TEAM
             SrgsItem red = GetNewNode(new string[] { "red" }, "RED");
@@ -52,27 +45,16 @@ namespace Articulate
             SrgsItem green = GetNewNode(new string[] { "green" }, "GREEN");
 
             SrgsOneOf teamColorsChoice = new SrgsOneOf(blue, green, white, yellow, red);
-            SrgsRule teamColors = new SrgsRule("teamColors");
-            teamColors.Add(teamColorsChoice);
-            RuleList.Add(teamColors);
-
-            SrgsRule teams = new SrgsRule("teams");
-            teams.Add(new SrgsItem("team"));
-            teams.Add(new SrgsRuleRef(teamColors));
-            teams.Add(new SrgsSemanticInterpretationTag("out=rules.teamColors;"));
-            RuleList.Add(teams);
+            SrgsItem teamColors = new SrgsItem(new SrgsItem("team"), teamColorsChoice);
 
             // ALL
-            SrgsItem allItems = GetNewNode(new string[] { "all", "everyone", "team", "squad" }, "ALL");
-            SrgsRule all = new SrgsRule("all");
-            all.Add(allItems);
-            RuleList.Add(all);
+            SrgsItem all = GetNewNode(new string[] { "all", "everyone", "team", "squad" }, "ALL");
 
             // ALL TOGETHER NOW
             SrgsOneOf subjectChoice = new SrgsOneOf();
-            subjectChoice.Add(new SrgsItem(new SrgsRuleRef(teams)));
-            subjectChoice.Add(new SrgsItem(new SrgsRuleRef(squadMembers)));
-            subjectChoice.Add(new SrgsItem(new SrgsRuleRef(all)));
+            subjectChoice.Add(squadNumbers);
+            subjectChoice.Add(teamColors);
+            subjectChoice.Add(all);
 
             SrgsRule subject = new SrgsRule("subject");
             subject.Add(subjectChoice);

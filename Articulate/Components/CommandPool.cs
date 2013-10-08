@@ -331,6 +331,11 @@ namespace Articulate
             document.Rules.Add(commands);
             document.Root = commands;
 
+            // write grammar out for debugging purposes
+            System.Xml.XmlWriter xWriter = System.Xml.XmlWriter.Create("grammar.xml");
+            document.WriteSrgs(xWriter);
+            xWriter.Close();
+
             return document;
         }
         
@@ -399,6 +404,12 @@ namespace Articulate
             return null;
         }
 
+        /// <summary>
+        /// Go through the semantics and generate a List that contains all of the semantics in a particular chunk
+        /// </summary>
+        /// <param name="key">The chuck to parse for</param>
+        /// <param name="semantic">The semantic list</param>
+        /// <returns>A List of all of the semantics in the SemanticValue under the key</returns>
         private static List<string> parseSemanticList(string key, SemanticValue semantic)
         {
             if (semantic.ContainsKey(key))

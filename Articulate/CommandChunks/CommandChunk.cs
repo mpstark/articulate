@@ -24,6 +24,7 @@ namespace Articulate
         /// <returns>true if keylist changed</returns>
         public bool ChangeKey(string semantic, List<ushort> keys)
         {
+            // TODO: make sure to save our changes
             if (KeyLookup.ContainsKey(semantic))
             {
                 KeyLookup[semantic] = keys;
