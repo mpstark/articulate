@@ -8,6 +8,8 @@ For more information on the commands currently available, take a look at the wik
 ## Download
 You can download the latest development preview of Articulate [here](https://github.com/Mpstark/articulate/wiki/Development-Preview). Please keep in mind that, being a development preview, it is likely to have bugs and may crash/hinder gameplay. We ask that you be patient, report any issues you encounter and give us the chance to develop the application you are looking for.
 
+**Warning** You will need the [.NET Framework v4.5](http://www.microsoft.com/en-za/download/details.aspx?id=30653) installed on your computer in order to run this application. The installer will check for, and offer to install, it for you however the Non-Installer version is incapable of doing this - if the application crashes on startup for you then please check your version of .NET before reporting an error.
+
 ## Advantages
 Compared to other voice recognition solutions, Articulate offers the following advantages.
 
