@@ -140,10 +140,13 @@ namespace Articulate
 				settings.Applications.AddRange(new[] {
 					"arma",
 					"arma2",
-					"arma2co",
+					"arma2oa",
 					"takeonh",
 					"arma3"
 				});
+
+			if (!settings.Applications.Any(x => x == "arma2oa"))
+				settings.Applications.Add("arma2oa");
 
 			Task.Factory.StartNew(LoadRecognizer);
 
