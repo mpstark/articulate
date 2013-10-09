@@ -135,7 +135,7 @@ namespace Articulate
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-			PTTKey.Content = settings.KeyBinds.Any() ? settings.KeyBinds.Select(x => x.ToString()).Aggregate((x,y) => x + ", " + y) : "None";
+			PTTKeys.ItemsSource = settings.KeyBinds;
 			ListenMode.SelectedIndex = (int)settings.Mode;
 
 			ConfidenceMargin.Value = settings.ConfidenceMargin;
@@ -303,7 +303,8 @@ namespace Articulate
 
 		void OnMappingCompleted(object sender, IEnumerable<CompoundKeyBind> e)
 		{
-			PTTKey.Content = settings.KeyBinds.Any() ? settings.KeyBinds.Select(x => x.ToString()).Aggregate((x, y) => x + ", " + y) : "None";
+			PTTKey.IsEnabled = true;
+			PTTKey.Content = "Add Key Bind";
 		}
 
 		#endregion
@@ -315,7 +316,23 @@ namespace Articulate
 			if (KeybindMonitor != null)
 			{
 				KeybindMonitor.BeginMapping();
+				PTTKey.IsEnabled = false;
 				PTTKey.Content = "Press Keys...";
+			}
+		}
+
+		private void PTTKeys_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+		{
+			if (PTTKeys.SelectedItem != null)
+			{
+				settings.KeyBinds.Remove((CompoundKeyBind)PTTKeys.SelectedItem);
+				
+				if (!settings.KeyBinds.Any())
+				{
+					settings.Mode = Articulate.ListenMode.Continuous;
+					ListenMode.SelectedIndex = (int)Articulate.ListenMode.Continuous;
+					Enabled = true;
+				}
 			}
 		}
 
