@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Articulate
 {
-	class KeyMonitor : IDisposable
+	public class KeyMonitor : IDisposable
 	{
 		public KeyMonitor(Settings settings)
 		{

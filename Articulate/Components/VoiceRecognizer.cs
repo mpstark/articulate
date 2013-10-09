@@ -39,7 +39,7 @@ namespace Articulate
 	/// <summary>
 	/// Object that listens for user voice input (as setup by the CommandPool) and then passes the execution to CommandPool.
 	/// </summary>
-	class VoiceRecognizer : IDisposable
+	public class VoiceRecognizer : IDisposable
 	{
 		#region Private Members
 
