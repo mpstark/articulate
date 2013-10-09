@@ -20,24 +20,26 @@ namespace Articulate
 	/// </summary>
 	public partial class AdvancedSettings : MetroWindow
 	{
-		public AdvancedSettings(Settings settings)
+		public AdvancedSettings(Core logic)
 		{
-			Settings = settings;
-
+			Logic = logic;
 			InitializeComponent();
 		}
 
-		public Settings Settings
-		{ get; private set; }
-
-		void Window_Loaded(object sender, RoutedEventArgs e)
+		public Core Logic
 		{
-
+			get;
+			private set;
 		}
 
-		void Window_Closing(object sender, RoutedEventArgs e)
+		void OnLoaded(object sender, RoutedEventArgs e)
 		{
+			
+		}
 
+		private void OnClosing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			Logic.Configuration.Save();
 		}
 	}
 }
