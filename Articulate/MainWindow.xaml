@@ -70,10 +70,12 @@
 						<ComboBoxItem>Push To Ignore</ComboBoxItem>
 					</ComboBox>
 
-					<Label FontSize="16" Content="Command Key"/>
-					<Button x:Name="PTTKey" Content="None" ToolTip="Click to change your PTT Key" Click="PTTKey_Click"/>
+					<Label FontSize="16" Content="Command Keys"/>
+					<ListBox x:Name="PTTKeys" Margin="5" MouseDoubleClick="PTTKeys_MouseDoubleClick"/>
+					<Button x:Name="PTTKey" Content="Add Keybind" ToolTip="Add a PTT Key" Click="PTTKey_Click"/>
 					<TextBlock TextWrapping="Wrap">
-					Click the button to change your command key, press Esc to remove it.
+						Click the button to change your command key, press Esc to cancel binding.
+						Double click on a command to remove it.
 					</TextBlock>
 
 					<Grid>
