@@ -9,6 +9,7 @@ using System.Xml.Serialization;
 using System.Diagnostics;
 using System.Threading;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Collections.ObjectModel;
 
 namespace Articulate
 {
@@ -33,7 +34,7 @@ namespace Articulate
 			Mode = ListenMode.Continuous;
 
 			Applications = new List<string>();
-			KeyBinds = new List<CompoundKeyBind>();
+			KeyBinds = new ObservableCollection<CompoundKeyBind>();
 
 			FileLock = new object();
 		}
@@ -108,7 +109,7 @@ namespace Articulate
 		public int EndCommandPause
 		{ get; set; }
 
-		public List<CompoundKeyBind> KeyBinds
+		public ObservableCollection<CompoundKeyBind> KeyBinds
 		{ get; set; }
 
 		public ListenMode Mode
