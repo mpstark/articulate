@@ -37,6 +37,7 @@ namespace Articulate
 
 		Stack<IDisposable> RxSubscriptions = new Stack<IDisposable>();
 
+		KeyMonitor KeybindMonitor;
 		AutoResetEvent PushToTalkRelease;
 
 		public MainWindow()
@@ -57,6 +58,13 @@ namespace Articulate
 				};
 
 			settings = Articulate.Settings.Load();
+			
+			KeybindMonitor = new KeyMonitor(settings);
+
+			KeybindMonitor.KeysPressed += OnKeysPressed;
+			KeybindMonitor.KeysReleased += OnKeysReleased;
+			KeybindMonitor.MappingCompleted += OnMappingCompleted;
+
 
 			#region Rx Event Handlers
 
@@ -97,7 +105,6 @@ namespace Articulate
 			#endregion
 		}
 
-
 		#region MVVM Properties
 
 		public static DependencyProperty ArticulateStateProperty = DependencyProperty.Register("State", typeof(string), typeof(MainWindow), new PropertyMetadata("LOADING..."));
@@ -128,7 +135,7 @@ namespace Articulate
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-			PTTKey.Content = settings.PTTKeys.Any() ? settings.PTTKeys.Select(x => x.ToString()).Aggregate((x, y) => x + " or " + y) : settings.PTTButton.ToString();
+			PTTKey.Content = settings.KeyBinds.Any() ? settings.KeyBinds.Select(x => x.ToString()).Aggregate((x,y) => x + ", " + y) : "None";
 			ListenMode.SelectedIndex = (int)settings.Mode;
 
 			ConfidenceMargin.Value = settings.ConfidenceMargin;
@@ -149,22 +156,12 @@ namespace Articulate
 				settings.Applications.Add("arma2oa");
 
 			Task.Factory.StartNew(LoadRecognizer);
-
-			HookManager.KeyDown += HookManager_KeyDown;
-			HookManager.KeyUp += HookManager_KeyUp;
-			HookManager.MouseDown += HookManager_MouseDown;
-			HookManager.MouseUp += HookManager_MouseUp;
 		}
 
 		private void Window_Closing(object sender, CancelEventArgs e)
 		{
 			if (ni != null)
 				ni.Visible = false;
-
-			HookManager.KeyDown -= HookManager_KeyDown;
-			HookManager.KeyUp -= HookManager_KeyUp;
-			HookManager.MouseDown -= HookManager_MouseDown;
-			HookManager.MouseUp -= HookManager_MouseUp;
 
 			while (RxSubscriptions.Any())
 				RxSubscriptions.Pop().Dispose();
@@ -277,68 +274,17 @@ namespace Articulate
 				}
 			}
 		}
-
-
-		void OnPushToTalkDown(System.Windows.Forms.MouseButtons button)
+		
+		void OnKeysPressed(object sender, CompoundKeyBind e)
 		{
-			if (ListeningForNewPTT)
-			{
-				ListeningForNewPTT = false;
-
-				settings.PTTKeys.Clear();
-				settings.PTTButton = button;
-
-				PTTKey.Content = settings.PTTButton.ToString();
-				ListenMode.SelectedIndex = (int)settings.Mode;
-
-				Enabled = settings.Mode == Articulate.ListenMode.Continuous || settings.Mode == Articulate.ListenMode.PushToIgnore;
-				settings.Save();
-
-				return;
-			}
-
-			if (settings.PTTButton == System.Windows.Forms.MouseButtons.None || button != settings.PTTButton) return;
 			if (settings.Mode == Articulate.ListenMode.Continuous) return;
 
 			PushToTalkRelease.Set();
 
 			Enabled = settings.Mode == Articulate.ListenMode.PushToTalk || settings.Mode == Articulate.ListenMode.PushToArm;
 		}
-
-		void OnPushToTalkDown(System.Windows.Forms.Keys key)
-		{
-			if (ListeningForNewPTT)
-			{
-				ListeningForNewPTT = false;
-
-				if (key == System.Windows.Forms.Keys.Escape)
-				{
-					settings.Mode = Articulate.ListenMode.Continuous;
-					settings.PTTKeys.Clear();
-				}
-				else
-					settings.PTTKeys = new List<System.Windows.Forms.Keys>(new [] { key });
-				
-				settings.PTTButton = MouseButtons.None;
-
-				PTTKey.Content = settings.PTTKeys.Select(x => x.ToString()).Aggregate((x,y) => x + " or " + y);
-				ListenMode.SelectedIndex = (int)settings.Mode;
-
-				Enabled = settings.Mode == Articulate.ListenMode.Continuous || settings.Mode == Articulate.ListenMode.PushToIgnore;
-				settings.Save();
-
-				return;
-			}
-
-			 if (!settings.PTTKeys.Any(x => x == key)) return;
-			if (settings.Mode == Articulate.ListenMode.Continuous) return;
-
-			PushToTalkRelease.Set();
-
-			Enabled = settings.Mode == Articulate.ListenMode.PushToTalk || settings.Mode == Articulate.ListenMode.PushToArm;
-		}
-
-		void OnPushToTalkUp()
+	
+		void OnKeysReleased(object sender, CompoundKeyBind e)
 		{
 			if (settings.Mode == Articulate.ListenMode.PushToArm) return; // Don't disable if we're armed
 			if (settings.Mode == Articulate.ListenMode.Continuous) return;
@@ -355,41 +301,22 @@ namespace Articulate
 			}, null, 500, true);
 		}
 
-
-		void HookManager_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
+		void OnMappingCompleted(object sender, IEnumerable<CompoundKeyBind> e)
 		{
-			if (!settings.PTTKeys.Any(x => x == e.KeyCode)) return;
-
-			OnPushToTalkUp();
-		}
-
-		void HookManager_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
-		{
-			OnPushToTalkDown(e.KeyCode);
-		}
-
-
-		void HookManager_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
-		{
-			if (settings.PTTButton == MouseButtons.None || e.Button != settings.PTTButton) return;
-
-			OnPushToTalkUp();
-		}
-
-		void HookManager_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
-		{
-			OnPushToTalkDown(e.Button);
+			PTTKey.Content = settings.KeyBinds.Any() ? settings.KeyBinds.Select(x => x.ToString()).Aggregate((x, y) => x + ", " + y) : "None";
 		}
 
 		#endregion
 
 		#region Settings
-
-		private bool ListeningForNewPTT = false;
-
+		
 		private void PTTKey_Click(object sender, RoutedEventArgs e)
 		{
-			ListeningForNewPTT = true;
+			if (KeybindMonitor != null)
+			{
+				KeybindMonitor.BeginMapping();
+				PTTKey.Content = "Press Keys...";
+			}
 		}
 
 		private void ListenMode_Selected(object sender, RoutedEventArgs e)
@@ -416,6 +343,12 @@ namespace Articulate
 			{
 				ni.Dispose();
 				ni = null;
+			}
+
+			if (KeybindMonitor != null)
+			{
+				KeybindMonitor.Dispose();
+				KeybindMonitor = null;
 			}
 		}
 		#endregion
