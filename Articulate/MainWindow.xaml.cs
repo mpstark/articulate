@@ -128,7 +128,7 @@ namespace Articulate
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-			PTTKey.Content = settings.PTTKey != System.Windows.Forms.Keys.None ? settings.PTTKey.ToString() : settings.PTTButton.ToString();
+			PTTKey.Content = settings.PTTKeys.Any() ? settings.PTTKeys.Select(x => x.ToString()).Aggregate((x, y) => x + " or " + y) : settings.PTTButton.ToString();
 			ListenMode.SelectedIndex = (int)settings.Mode;
 
 			ConfidenceMargin.Value = settings.ConfidenceMargin;
@@ -285,7 +285,7 @@ namespace Articulate
 			{
 				ListeningForNewPTT = false;
 
-				settings.PTTKey = System.Windows.Forms.Keys.None;
+				settings.PTTKeys.Clear();
 				settings.PTTButton = button;
 
 				PTTKey.Content = settings.PTTButton.ToString();
@@ -314,14 +314,14 @@ namespace Articulate
 				if (key == System.Windows.Forms.Keys.Escape)
 				{
 					settings.Mode = Articulate.ListenMode.Continuous;
-					settings.PTTKey = System.Windows.Forms.Keys.None;
+					settings.PTTKeys.Clear();
 				}
 				else
-					settings.PTTKey = key;
-
+					settings.PTTKeys = new List<System.Windows.Forms.Keys>(new [] { key });
+				
 				settings.PTTButton = MouseButtons.None;
 
-				PTTKey.Content = settings.PTTKey.ToString();
+				PTTKey.Content = settings.PTTKeys.Select(x => x.ToString()).Aggregate((x,y) => x + " or " + y);
 				ListenMode.SelectedIndex = (int)settings.Mode;
 
 				Enabled = settings.Mode == Articulate.ListenMode.Continuous || settings.Mode == Articulate.ListenMode.PushToIgnore;
@@ -330,7 +330,7 @@ namespace Articulate
 				return;
 			}
 
-			if (settings.PTTKey == System.Windows.Forms.Keys.None || key != settings.PTTKey) return;
+			 if (!settings.PTTKeys.Any(x => x == key)) return;
 			if (settings.Mode == Articulate.ListenMode.Continuous) return;
 
 			PushToTalkRelease.Set();
@@ -358,7 +358,7 @@ namespace Articulate
 
 		void HookManager_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
 		{
-			if (settings.PTTKey == System.Windows.Forms.Keys.None || e.KeyCode != settings.PTTKey) return;
+			if (!settings.PTTKeys.Any(x => x == e.KeyCode)) return;
 
 			OnPushToTalkUp();
 		}

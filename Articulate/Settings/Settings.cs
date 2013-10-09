@@ -29,7 +29,7 @@ namespace Articulate
 
 			EndCommandPause = 500;
 
-			PTTKey = System.Windows.Forms.Keys.None;
+			PTTKeys = new List<System.Windows.Forms.Keys>();
 			Mode = ListenMode.Continuous;
 
 			Applications = new List<string>();
@@ -107,7 +107,7 @@ namespace Articulate
 		public int EndCommandPause
 		{ get; set; }
 
-		public System.Windows.Forms.Keys PTTKey
+		public List<System.Windows.Forms.Keys> PTTKeys
 		{ get; set; }
 
 		public System.Windows.Forms.MouseButtons PTTButton
