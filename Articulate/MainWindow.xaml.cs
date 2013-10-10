@@ -281,7 +281,10 @@ namespace Articulate
 
 			PushToTalkRelease.Set();
 
-			Enabled = settings.Mode == Articulate.ListenMode.PushToTalk || settings.Mode == Articulate.ListenMode.PushToArm;
+			if (Enabled && settings.Mode == Articulate.ListenMode.PushToArm)
+				Enabled = false;
+			else 
+				Enabled = settings.Mode == Articulate.ListenMode.PushToTalk || settings.Mode == Articulate.ListenMode.PushToArm;
 		}
 	
 		void OnKeysReleased(object sender, CompoundKeyBind e)
