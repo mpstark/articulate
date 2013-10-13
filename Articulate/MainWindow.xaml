@@ -70,12 +70,6 @@
 						<ComboBoxItem>Push To Ignore</ComboBoxItem>
 					</ComboBox>
 
-					<Label FontSize="16" Content="Command Key"/>
-					<Button x:Name="PTTKey" Content="None" ToolTip="Click to change your PTT Key" Click="PTTKey_Click"/>
-					<TextBlock TextWrapping="Wrap">
-					Click the button to change your command key, press Esc to remove it.
-					</TextBlock>
-
 					<Grid>
 						<Label FontSize="16" Content="Confidence Margin" HorizontalAlignment="Left"/>
 						<Label x:Name="ConfidenceMarginNumber" FontSize="16" HorizontalAlignment="Right" 
@@ -87,18 +81,10 @@
 					Reducing this value can help increase responsiveness at the cost of accuracy
 					</TextBlock>
 
-					<Grid>
-						<Label FontSize="16" Content="Command Termination Pause" HorizontalAlignment="Left"/>
-						<Label x:Name="EndCommandPauseNumber" FontSize="16" HorizontalAlignment="Right" 
-						   Content="80" />
-					</Grid>
-					<Slider x:Name="EndCommandPause"
-						Value="500" Minimum="250" Maximum="1000"/>
-					<TextBlock TextWrapping="Wrap">
-					Reducing this value will allow you to give commands with shorter breaks in between,
-					but will also reduce your ability to pause in the middle of a command.
-					</TextBlock>
-
+					<Button Content="Advanced Settings"
+							Margin="20 10"
+							Click="AdvancedSettings_Click"/>
+					
 				</StackPanel>
 			</ScrollViewer>
 		</m:Flyout>

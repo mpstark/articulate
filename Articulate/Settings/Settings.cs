@@ -8,6 +8,8 @@ using System.IO;
 using System.Xml.Serialization;
 using System.Diagnostics;
 using System.Threading;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Collections.ObjectModel;
 
 namespace Articulate
 {
@@ -29,10 +31,10 @@ namespace Articulate
 
 			EndCommandPause = 500;
 
-			PTTKey = System.Windows.Forms.Keys.None;
 			Mode = ListenMode.Continuous;
 
 			Applications = new List<string>();
+			KeyBinds = new ObservableCollection<CompoundKeyBind>();
 
 			FileLock = new object();
 		}
@@ -43,14 +45,14 @@ namespace Articulate
 
 		public static Settings Load()
 		{
-			var filePath = Environment.ExpandEnvironmentVariables(@"%AppData%\Articulate\Settings.xml");
+			var filePath = Environment.ExpandEnvironmentVariables(@"%AppData%\Articulate\config.dat");
 			if (!File.Exists(filePath)) return new Settings();
 
 			try
 			{
 				using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
 				{
-					var serializer = new XmlSerializer(typeof(Settings));
+					var serializer = new BinaryFormatter();
 					return (Settings)serializer.Deserialize(fs);
 				}
 			}
@@ -63,7 +65,7 @@ namespace Articulate
 
 		public void Save()
 		{
-			var filePath = Environment.ExpandEnvironmentVariables(@"%AppData%\Articulate\Settings.xml");
+			var filePath = Environment.ExpandEnvironmentVariables(@"%AppData%\Articulate\config.dat");
 
 			try
 			{
@@ -80,7 +82,7 @@ namespace Articulate
 
 							using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
 							{
-								var serializer = new XmlSerializer(typeof(Settings));
+								var serializer = new BinaryFormatter();
 								serializer.Serialize(fs, state);
 							}
 						}
@@ -107,10 +109,7 @@ namespace Articulate
 		public int EndCommandPause
 		{ get; set; }
 
-		public System.Windows.Forms.Keys PTTKey
-		{ get; set; }
-
-		public System.Windows.Forms.MouseButtons PTTButton
+		public ObservableCollection<CompoundKeyBind> KeyBinds
 		{ get; set; }
 
 		public ListenMode Mode
