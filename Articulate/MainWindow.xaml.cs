@@ -40,6 +40,7 @@ namespace Articulate
 			InitializeComponent();
 
 			PushToTalkRelease = new AutoResetEvent(false);
+			Logic = new Core();
 
 			ni = new System.Windows.Forms.NotifyIcon();
 
@@ -54,7 +55,6 @@ namespace Articulate
 						
 			Logic.Keybinder.KeysPressed += OnKeysPressed;
 			Logic.Keybinder.KeysReleased += OnKeysReleased;
-			Logic.Keybinder.MappingCompleted += OnMappingCompleted;
 
 
 			#region Rx Event Handlers
@@ -73,22 +73,7 @@ namespace Articulate
 			{
 				ConfidenceMarginNumber.Content = Math.Floor(args.EventArgs.NewValue).ToString();
 			}));
-
-			var CommandPauseEvent = Observable.FromEventPattern<RoutedPropertyChangedEventArgs<double>>(EndCommandPause, "ValueChanged");
-
-			RxSubscriptions.Push(CommandPauseEvent.Skip(1).Distinct().Sample(TimeSpan.FromMilliseconds(50)).ObserveOnDispatcher().Subscribe(args =>
-			{
-				EndCommandPauseNumber.Content = Math.Floor(args.EventArgs.NewValue).ToString();
-			}));
-
-			RxSubscriptions.Push(CommandPauseEvent.Skip(1).Distinct().Sample(TimeSpan.FromMilliseconds(500)).Subscribe(args =>
-			{
-				Logic.Configuration.EndCommandPause = (int)args.EventArgs.NewValue;
-
-				if (Logic != null)
-					Logic.Recognizer.EndSilenceTimeout = (int)args.EventArgs.NewValue;
-			}));
-
+			
 			RxSubscriptions.Push(SettingsFlyout.ToObservable<bool>(Flyout.IsOpenProperty).Skip(1).Distinct().ObserveOn(ThreadPoolScheduler.Instance).Subscribe(args =>
 			{
 				if (!args) Logic.Configuration.Save();
@@ -133,13 +118,11 @@ namespace Articulate
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-			PTTKeys.ItemsSource = Logic.Configuration.KeyBinds;
 			ListenMode.SelectedIndex = (int)Logic.Configuration.Mode;
 
 			ConfidenceMargin.Value = Logic.Configuration.ConfidenceMargin;
 			ConfidenceMarginNumber.Content = Logic.Configuration.ConfidenceMargin;
-			EndCommandPause.Value = Logic.Configuration.EndCommandPause;
-			EndCommandPauseNumber.Content = Logic.Configuration.EndCommandPause;
+			
 
 			if (!Logic.Configuration.Applications.Any())
 				Logic.Configuration.Applications.AddRange(new[] {
@@ -242,6 +225,13 @@ namespace Articulate
 			e.Handled = true;
 		}
 
+		private void AdvancedSettings_Click(object sender, RoutedEventArgs e)
+		{
+			new AdvancedSettings(Logic).ShowDialog();
+
+			Enabled = Logic.Configuration.Mode == Articulate.ListenMode.Continuous || Logic.Configuration.Mode == Articulate.ListenMode.PushToIgnore;
+		}
+
 		#endregion
 
 		#region PTT
@@ -274,7 +264,10 @@ namespace Articulate
 
 			PushToTalkRelease.Set();
 
-			Enabled = Logic.Configuration.Mode == Articulate.ListenMode.PushToTalk || Logic.Configuration.Mode == Articulate.ListenMode.PushToArm;
+			if (Enabled && Logic.Configuration.Mode == Articulate.ListenMode.PushToArm)
+				Enabled = false;
+			else
+				Enabled = Logic.Configuration.Mode == Articulate.ListenMode.PushToTalk || Logic.Configuration.Mode == Articulate.ListenMode.PushToArm;
 		}
 	
 		void OnKeysReleased(object sender, CompoundKeyBind e)
@@ -294,48 +287,15 @@ namespace Articulate
 			}, null, 500, true);
 		}
 
-		void OnMappingCompleted(object sender, IEnumerable<CompoundKeyBind> e)
-		{
-			PTTKey.IsEnabled = true;
-			PTTKey.Content = "Add Key Bind";
-		}
-
 		#endregion
 
-		#region Settings
-		
-		private void PTTKey_Click(object sender, RoutedEventArgs e)
-		{
-			if (Logic != null)
-			{
-				Logic.Keybinder.BeginMapping();
-				PTTKey.IsEnabled = false;
-				PTTKey.Content = "Press Keys...";
-			}
-		}
-
-		private void PTTKeys_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-		{
-			if (PTTKeys.SelectedItem != null)
-			{
-				Logic.Configuration.KeyBinds.Remove((CompoundKeyBind)PTTKeys.SelectedItem);
-
-				if (!Logic.Configuration.KeyBinds.Any())
-				{
-					Logic.Configuration.Mode = Articulate.ListenMode.Continuous;
-					ListenMode.SelectedIndex = (int)Articulate.ListenMode.Continuous;
-					Enabled = true;
-				}
-			}
-		}
+		#region Settings 
 
 		private void ListenMode_Selected(object sender, RoutedEventArgs e)
 		{
 			Logic.Configuration.Mode = (Articulate.ListenMode)(ListenMode.SelectedIndex);
 
 			Enabled = Logic.Configuration.Mode == Articulate.ListenMode.Continuous || Logic.Configuration.Mode == Articulate.ListenMode.PushToIgnore;
-
-			Logic.Configuration.Save();
 		}
 
 		#endregion
@@ -356,5 +316,6 @@ namespace Articulate
 			}
 		}
 		#endregion
+
 	}
 }

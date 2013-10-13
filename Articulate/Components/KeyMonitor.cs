@@ -25,6 +25,13 @@ namespace Articulate
 		public Settings Configuration
 		{ get; private set; }
 
+		/// <summary>
+		/// Gets the <see cref="CompoundKeyBind"/> that is currently active
+		/// or <c>null</c> if no keybind is pressed.
+		/// </summary>
+		public CompoundKeyBind ActiveKeyBind
+		{ get; private set; }
+
 		#endregion
 
 		#region Public Methods
@@ -55,7 +62,6 @@ namespace Articulate
 		#region Local State
 
 		bool IsMapping = false;
-		CompoundKeyBind ActiveKeyBind = null;
 
 		List<System.Windows.Forms.Keys> ActiveKeyboardKeys = new List<System.Windows.Forms.Keys>();
 		List<System.Windows.Forms.MouseButtons> ActiveMouseButtons = new List<System.Windows.Forms.MouseButtons>();
