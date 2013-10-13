@@ -30,11 +30,7 @@ namespace Articulate
 	/// </summary>
 	public partial class MainWindow : MetroWindow, IDisposable
 	{
-		NotifyIcon ni;
-		VoiceRecognizer recognizer;
-
-		Settings settings;
-
+		NotifyIcon ni;		
 		Stack<IDisposable> RxSubscriptions = new Stack<IDisposable>();
 
 		AutoResetEvent PushToTalkRelease;
@@ -44,6 +40,7 @@ namespace Articulate
 			InitializeComponent();
 
 			PushToTalkRelease = new AutoResetEvent(false);
+			Logic = new Core();
 
 			ni = new System.Windows.Forms.NotifyIcon();
 
@@ -55,8 +52,10 @@ namespace Articulate
 					this.Show();
 					this.WindowState = WindowState.Normal;
 				};
+						
+			Logic.Keybinder.KeysPressed += OnKeysPressed;
+			Logic.Keybinder.KeysReleased += OnKeysReleased;
 
-			settings = Articulate.Settings.Load();
 
 			#region Rx Event Handlers
 
@@ -64,39 +63,30 @@ namespace Articulate
 
 			RxSubscriptions.Push(ConfidenceEvent.Skip(1).Distinct().Sample(TimeSpan.FromMilliseconds(500)).Subscribe(args =>
 			{
-				settings.ConfidenceMargin = (int)args.EventArgs.NewValue;
+				Logic.Configuration.ConfidenceMargin = (int)args.EventArgs.NewValue;
 
-				if (recognizer != null)
-					recognizer.ConfidenceMargin = (int)args.EventArgs.NewValue;
+				if (Logic != null)
+					Logic.Recognizer.ConfidenceMargin = (int)args.EventArgs.NewValue;
 			}));
 
 			RxSubscriptions.Push(ConfidenceEvent.Skip(1).Distinct().Sample(TimeSpan.FromMilliseconds(50)).ObserveOnDispatcher().Subscribe(args =>
 			{
 				ConfidenceMarginNumber.Content = Math.Floor(args.EventArgs.NewValue).ToString();
 			}));
-
-			var CommandPauseEvent = Observable.FromEventPattern<RoutedPropertyChangedEventArgs<double>>(EndCommandPause, "ValueChanged");
-
-			RxSubscriptions.Push(CommandPauseEvent.Skip(1).Distinct().Sample(TimeSpan.FromMilliseconds(50)).ObserveOnDispatcher().Subscribe(args =>
-			{
-				EndCommandPauseNumber.Content = Math.Floor(args.EventArgs.NewValue).ToString();
-			}));
-
-			RxSubscriptions.Push(CommandPauseEvent.Skip(1).Distinct().Sample(TimeSpan.FromMilliseconds(500)).Subscribe(args =>
-			{
-				settings.EndCommandPause = (int)args.EventArgs.NewValue;
-
-				if (recognizer != null)
-					recognizer.EndSilenceTimeout = (int)args.EventArgs.NewValue;
-			}));
-
+			
 			RxSubscriptions.Push(SettingsFlyout.ToObservable<bool>(Flyout.IsOpenProperty).Skip(1).Distinct().ObserveOn(ThreadPoolScheduler.Instance).Subscribe(args =>
 			{
-				if (!args) settings.Save();
+				if (!args) Logic.Configuration.Save();
 			}));
 			#endregion
 		}
 
+		#region Public Properties
+
+		public Core Logic
+		{ get; private set; }
+
+		#endregion
 
 		#region MVVM Properties
 
@@ -128,16 +118,14 @@ namespace Articulate
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-			PTTKey.Content = settings.PTTKey != System.Windows.Forms.Keys.None ? settings.PTTKey.ToString() : settings.PTTButton.ToString();
-			ListenMode.SelectedIndex = (int)settings.Mode;
+			ListenMode.SelectedIndex = (int)Logic.Configuration.Mode;
 
-			ConfidenceMargin.Value = settings.ConfidenceMargin;
-			ConfidenceMarginNumber.Content = settings.ConfidenceMargin;
-			EndCommandPause.Value = settings.EndCommandPause;
-			EndCommandPauseNumber.Content = settings.EndCommandPause;
+			ConfidenceMargin.Value = Logic.Configuration.ConfidenceMargin;
+			ConfidenceMarginNumber.Content = Logic.Configuration.ConfidenceMargin;
+			
 
-			if (!settings.Applications.Any())
-				settings.Applications.AddRange(new[] {
+			if (!Logic.Configuration.Applications.Any())
+				Logic.Configuration.Applications.AddRange(new[] {
 					"arma",
 					"arma2",
 					"arma2oa",
@@ -145,26 +133,13 @@ namespace Articulate
 					"arma3"
 				});
 
-			if (!settings.Applications.Any(x => x == "arma2oa"))
-				settings.Applications.Add("arma2oa");
-
 			Task.Factory.StartNew(LoadRecognizer);
-
-			HookManager.KeyDown += HookManager_KeyDown;
-			HookManager.KeyUp += HookManager_KeyUp;
-			HookManager.MouseDown += HookManager_MouseDown;
-			HookManager.MouseUp += HookManager_MouseUp;
 		}
 
 		private void Window_Closing(object sender, CancelEventArgs e)
 		{
 			if (ni != null)
 				ni.Visible = false;
-
-			HookManager.KeyDown -= HookManager_KeyDown;
-			HookManager.KeyUp -= HookManager_KeyUp;
-			HookManager.MouseDown -= HookManager_MouseDown;
-			HookManager.MouseUp -= HookManager_MouseUp;
 
 			while (RxSubscriptions.Any())
 				RxSubscriptions.Pop().Dispose();
@@ -176,30 +151,28 @@ namespace Articulate
 
 		private void LoadRecognizer()
 		{
-			recognizer = new VoiceRecognizer();
-
 			// something happened with the setup of the VoiceRecognizer (no mic, etc.)
-			if (recognizer.State == VoiceRecognizer.VoiceRecognizerState.Error)
+			if (Logic.Recognizer.State == VoiceRecognizer.VoiceRecognizerState.Error)
 			{
 				Dispatcher.Invoke(() =>
 				{
 					State = "FAILED";
-					ErrorMessage = recognizer.SetupError;
+					ErrorMessage = Logic.Recognizer.SetupError;
 					ErrorFlyout.IsOpen = true;
 				});
 			}
 			else
 			{
-				recognizer.ConfidenceMargin = settings.ConfidenceMargin;
-				recognizer.EndSilenceTimeout = settings.EndCommandPause;
+				Logic.Recognizer.ConfidenceMargin = Logic.Configuration.ConfidenceMargin;
+				Logic.Recognizer.EndSilenceTimeout = Logic.Configuration.EndCommandPause;
 
-				recognizer.MonitoredExecutables.AddRange(settings.Applications);
+				Logic.Recognizer.MonitoredExecutables = Logic.Configuration.Applications;
 
-				recognizer.CommandAccepted += recognizer_CommandAccepted;
-				recognizer.CommandRejected += recognizer_CommandRejected;
+				Logic.Recognizer.CommandAccepted += recognizer_CommandAccepted;
+				Logic.Recognizer.CommandRejected += recognizer_CommandRejected;
 
 
-				Enabled = settings.Mode == Articulate.ListenMode.Continuous || settings.Mode == Articulate.ListenMode.PushToIgnore;
+				Enabled = Logic.Configuration.Mode == Articulate.ListenMode.Continuous || Logic.Configuration.Mode == Articulate.ListenMode.PushToIgnore;
 			}
 		}
 
@@ -209,7 +182,7 @@ namespace Articulate
 
 			Dispatcher.Invoke(() => LastCommand.Content = e.Phrase);
 
-			if (settings.Mode == Articulate.ListenMode.PushToArm) Enabled = false;
+			if (Logic.Configuration.Mode == Articulate.ListenMode.PushToArm) Enabled = false;
 		}
 
 		void recognizer_CommandRejected(object sender, CommandDetectedEventArgs e)
@@ -219,7 +192,7 @@ namespace Articulate
 			Dispatcher.Invoke(() => LastCommand.Content = "What was that?");
 
 			// TODO: Decide whether or not Push To Arm should keep trying until it gets a match
-			if (settings.Mode == Articulate.ListenMode.PushToArm) Enabled = false;
+			if (Logic.Configuration.Mode == Articulate.ListenMode.PushToArm) Enabled = false;
 		}
 
 		#endregion
@@ -252,96 +225,55 @@ namespace Articulate
 			e.Handled = true;
 		}
 
+		private void AdvancedSettings_Click(object sender, RoutedEventArgs e)
+		{
+			new AdvancedSettings(Logic).ShowDialog();
+
+			Enabled = Logic.Configuration.Mode == Articulate.ListenMode.Continuous || Logic.Configuration.Mode == Articulate.ListenMode.PushToIgnore;
+		}
+
 		#endregion
 
 		#region PTT
 
 		public bool Enabled
 		{
-			get { return recognizer.State == VoiceRecognizer.VoiceRecognizerState.Listening || recognizer.State == VoiceRecognizer.VoiceRecognizerState.ListeningOnce; }
+			get { return Logic.Recognizer.State == VoiceRecognizer.VoiceRecognizerState.Listening || Logic.Recognizer.State == VoiceRecognizer.VoiceRecognizerState.ListeningOnce; }
 			set
 			{
-				if (recognizer == null) return;
+				if (Logic.Recognizer == null) return;
 
 				if (value)
 				{
-					if (settings.Mode == Articulate.ListenMode.PushToArm) recognizer.ListenOnce();
-					else recognizer.StartListening();
+					if (Logic.Configuration.Mode == Articulate.ListenMode.PushToArm) Logic.Recognizer.ListenOnce();
+					else Logic.Recognizer.StartListening();
 
 					Dispatcher.Invoke(() => State = "LISTENING");
 				}
 				else
 				{
-					recognizer.StopListening();
+					Logic.Recognizer.StopListening();
 					Dispatcher.Invoke(() => State = "OFFLINE");
 				}
 			}
 		}
-
-
-		void OnPushToTalkDown(System.Windows.Forms.MouseButtons button)
+		
+		void OnKeysPressed(object sender, CompoundKeyBind e)
 		{
-			if (ListeningForNewPTT)
-			{
-				ListeningForNewPTT = false;
-
-				settings.PTTKey = System.Windows.Forms.Keys.None;
-				settings.PTTButton = button;
-
-				PTTKey.Content = settings.PTTButton.ToString();
-				ListenMode.SelectedIndex = (int)settings.Mode;
-
-				Enabled = settings.Mode == Articulate.ListenMode.Continuous || settings.Mode == Articulate.ListenMode.PushToIgnore;
-				settings.Save();
-
-				return;
-			}
-
-			if (settings.PTTButton == System.Windows.Forms.MouseButtons.None || button != settings.PTTButton) return;
-			if (settings.Mode == Articulate.ListenMode.Continuous) return;
+			if (Logic.Configuration.Mode == Articulate.ListenMode.Continuous) return;
 
 			PushToTalkRelease.Set();
 
-			Enabled = settings.Mode == Articulate.ListenMode.PushToTalk || settings.Mode == Articulate.ListenMode.PushToArm;
+			if (Enabled && Logic.Configuration.Mode == Articulate.ListenMode.PushToArm)
+				Enabled = false;
+			else
+				Enabled = Logic.Configuration.Mode == Articulate.ListenMode.PushToTalk || Logic.Configuration.Mode == Articulate.ListenMode.PushToArm;
 		}
-
-		void OnPushToTalkDown(System.Windows.Forms.Keys key)
+	
+		void OnKeysReleased(object sender, CompoundKeyBind e)
 		{
-			if (ListeningForNewPTT)
-			{
-				ListeningForNewPTT = false;
-
-				if (key == System.Windows.Forms.Keys.Escape)
-				{
-					settings.Mode = Articulate.ListenMode.Continuous;
-					settings.PTTKey = System.Windows.Forms.Keys.None;
-				}
-				else
-					settings.PTTKey = key;
-
-				settings.PTTButton = MouseButtons.None;
-
-				PTTKey.Content = settings.PTTKey.ToString();
-				ListenMode.SelectedIndex = (int)settings.Mode;
-
-				Enabled = settings.Mode == Articulate.ListenMode.Continuous || settings.Mode == Articulate.ListenMode.PushToIgnore;
-				settings.Save();
-
-				return;
-			}
-
-			if (settings.PTTKey == System.Windows.Forms.Keys.None || key != settings.PTTKey) return;
-			if (settings.Mode == Articulate.ListenMode.Continuous) return;
-
-			PushToTalkRelease.Set();
-
-			Enabled = settings.Mode == Articulate.ListenMode.PushToTalk || settings.Mode == Articulate.ListenMode.PushToArm;
-		}
-
-		void OnPushToTalkUp()
-		{
-			if (settings.Mode == Articulate.ListenMode.PushToArm) return; // Don't disable if we're armed
-			if (settings.Mode == Articulate.ListenMode.Continuous) return;
+			if (Logic.Configuration.Mode == Articulate.ListenMode.PushToArm) return; // Don't disable if we're armed
+			if (Logic.Configuration.Mode == Articulate.ListenMode.Continuous) return;
 
 			PushToTalkRelease.Reset();
 
@@ -350,55 +282,20 @@ namespace Articulate
 				if (completed)
 					Dispatcher.Invoke(() =>
 					{
-						Enabled = settings.Mode == Articulate.ListenMode.Continuous || settings.Mode == Articulate.ListenMode.PushToIgnore;
+						Enabled = Logic.Configuration.Mode == Articulate.ListenMode.Continuous || Logic.Configuration.Mode == Articulate.ListenMode.PushToIgnore;
 					});
 			}, null, 500, true);
 		}
 
-
-		void HookManager_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
-		{
-			if (settings.PTTKey == System.Windows.Forms.Keys.None || e.KeyCode != settings.PTTKey) return;
-
-			OnPushToTalkUp();
-		}
-
-		void HookManager_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
-		{
-			OnPushToTalkDown(e.KeyCode);
-		}
-
-
-		void HookManager_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
-		{
-			if (settings.PTTButton == MouseButtons.None || e.Button != settings.PTTButton) return;
-
-			OnPushToTalkUp();
-		}
-
-		void HookManager_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
-		{
-			OnPushToTalkDown(e.Button);
-		}
-
 		#endregion
 
-		#region Settings
-
-		private bool ListeningForNewPTT = false;
-
-		private void PTTKey_Click(object sender, RoutedEventArgs e)
-		{
-			ListeningForNewPTT = true;
-		}
+		#region Settings 
 
 		private void ListenMode_Selected(object sender, RoutedEventArgs e)
 		{
-			settings.Mode = (Articulate.ListenMode)(ListenMode.SelectedIndex);
+			Logic.Configuration.Mode = (Articulate.ListenMode)(ListenMode.SelectedIndex);
 
-			Enabled = settings.Mode == Articulate.ListenMode.Continuous || settings.Mode == Articulate.ListenMode.PushToIgnore;
-
-			settings.Save();
+			Enabled = Logic.Configuration.Mode == Articulate.ListenMode.Continuous || Logic.Configuration.Mode == Articulate.ListenMode.PushToIgnore;
 		}
 
 		#endregion
@@ -406,18 +303,19 @@ namespace Articulate
 		#region IDispose Implementation
 		public void Dispose()
 		{
-			if (recognizer != null)
-			{
-				recognizer.Dispose();
-				recognizer = null;
-			}
-
 			if (ni != null)
 			{
 				ni.Dispose();
 				ni = null;
 			}
+
+			if (Logic != null)
+			{
+				Logic.Dispose();
+				Logic = null;
+			}
 		}
 		#endregion
+
 	}
 }

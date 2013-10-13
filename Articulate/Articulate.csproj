@@ -117,17 +117,26 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="AdvancedSettings.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="AdvancedSettings.xaml.cs">
+      <DependentUpon>AdvancedSettings.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CommandChunks\CommandChunk.cs" />
     <Compile Include="CommandChunks\DirectObject.cs" />
     <Compile Include="CommandChunks\Subject.cs" />
     <Compile Include="Components\CommandPool.cs" />
     <Compile Include="CommandChunks\Command.cs" />
     <Compile Include="Components\ForegroundProcess.cs" />
+    <Compile Include="Components\KeyMonitor.cs" />
     <Compile Include="Components\VoiceRecognizer.cs" />
+    <Compile Include="Core.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Page Include="MainWindow.xaml">
