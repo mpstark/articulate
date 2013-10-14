@@ -43,7 +43,7 @@ namespace Articulate
             #region Commands
             #region Move (1)
             // return to formation (1)
-            Command returnToFormation = new Command("FORMUP", new string[] { "return to formation", "form up", "fallback" }, new ushort[] { Keys.One, Keys.One }, subjectRef);
+            Command returnToFormation = new Command("FORMUP", new string[] { "return to formation", "form up", "fall back", "regroup", "join up", "rally on me", "rally to me" }, new ushort[] { Keys.One, Keys.One }, subjectRef);
             commandObjects.Add("FORMUP", returnToFormation);
             commandSet.Add(returnToFormation.Item);
 
@@ -53,32 +53,32 @@ namespace Articulate
             commandSet.Add(advance.Item);
 
             // stay back (3)
-            Command stayBack = new Command("STAYBACK", new string[] { "stay back" }, new ushort[] { Keys.One, Keys.Three }, subjectRef);
+            Command stayBack = new Command("STAYBACK", new string[] { "stay back", "go back", "back up" }, new ushort[] { Keys.One, Keys.Three }, subjectRef);
             commandObjects.Add("STAYBACK", stayBack);
             commandSet.Add(stayBack.Item);
 
             // flank left (4)
-            Command flankLeft = new Command("FLANKLEFT", new string[] { "flank left" }, new ushort[] { Keys.One, Keys.Four }, subjectRef);
+            Command flankLeft = new Command("FLANKLEFT", new string[] { "flank left", "go left" }, new ushort[] { Keys.One, Keys.Four }, subjectRef);
             commandObjects.Add("FLANKLEFT", flankLeft);
             commandSet.Add(flankLeft.Item);
 
             // flank right (5)
-            Command flankRight = new Command("FLANKRIGHT", new string[] { "flank right" }, new ushort[] { Keys.One, Keys.Five }, subjectRef);
+            Command flankRight = new Command("FLANKRIGHT", new string[] { "flank right", "go right" }, new ushort[] { Keys.One, Keys.Five }, subjectRef);
             commandObjects.Add("FLANKRIGHT", flankRight);
             commandSet.Add(flankRight.Item);
 
             // stop (6)
-            Command stop = new Command("STOP", new string[] { "stop", "hold position", "halt" }, new ushort[] { Keys.One, Keys.Six }, subjectRef);
+            Command stop = new Command("STOP", new string[] { "stop", "hold position", "halt", "stay there", "stay here" }, new ushort[] { Keys.One, Keys.Six }, subjectRef);
             commandObjects.Add("STOP", stop);
             commandSet.Add(stop.Item);
 
             // Wait for me (7)
-            Command waitForMe = new Command("WAIT", new string[] { "wait for me", "wait up" }, new ushort[] { Keys.One, Keys.Seven }, subjectRef);
+            Command waitForMe = new Command("WAIT", new string[] { "wait for me", "wait up", "wait" }, new ushort[] { Keys.One, Keys.Seven }, subjectRef);
             commandObjects.Add("WAIT", waitForMe);
             commandSet.Add(waitForMe.Item);
 
             // Find cover (8)
-            Command cover = new Command("COVER", new string[] { "go for cover", "look for cover", "cover", "find cover" }, new ushort[] { Keys.One, Keys.Eight }, subjectRef);
+            Command cover = new Command("COVER", new string[] { "go for cover", "look for cover", "cover", "find cover", "get to cover", "hide" }, new ushort[] { Keys.One, Keys.Eight }, subjectRef);
             commandObjects.Add("COVER", cover);
             commandSet.Add(cover.Item);
 
@@ -90,7 +90,7 @@ namespace Articulate
 
             #region Target (2)
             // open menu
-            Command openTargetMenu = new Command("OPENTARGET", new string[] { "show targets", "target menu", "open target menu" }, new ushort[] { Keys.Two }, subjectRef);
+            Command openTargetMenu = new Command("OPENTARGET", new string[] { "show targets", "target menu", "open target menu", "targets" }, new ushort[] { Keys.Two }, subjectRef);
             commandObjects.Add("OPENTARGET", openTargetMenu);
             commandSet.Add(openTargetMenu.Item);
 
@@ -107,7 +107,7 @@ namespace Articulate
             commandSet.Add(openFire.Item);
 
             // hold fire (2)
-            Command holdFire = new Command("HOLDFIRE", new string[] { "hold fire", "go quiet" }, new ushort[] { Keys.Three, Keys.Two }, subjectRef);
+            Command holdFire = new Command("HOLDFIRE", new string[] { "hold fire", "go quiet", "cease fire" }, new ushort[] { Keys.Three, Keys.Two }, subjectRef);
             commandObjects.Add("HOLDFIRE", holdFire);
             commandSet.Add(holdFire.Item);
 
@@ -117,7 +117,7 @@ namespace Articulate
             commandSet.Add(fire.Item);
 
             // engage (4)
-            Command engage = new Command("ENGAGE", new string[] { "engage" }, new ushort[] { Keys.Three, Keys.Four }, subjectRef);
+            Command engage = new Command("ENGAGE", new string[] { "engage", "move to engage" }, new ushort[] { Keys.Three, Keys.Four }, subjectRef);
             commandObjects.Add("ENGAGE", engage);
             commandSet.Add(engage.Item);
 
@@ -165,7 +165,7 @@ namespace Articulate
 
             #region Mount (4)
             // open mount menu
-            Command openMountMenu = new Command("OPENMOUNT", new string[] { "show vehicles", "mount menu", "get in vehicle" }, new ushort[] { Keys.Four }, subjectRef);
+            Command openMountMenu = new Command("OPENMOUNT", new string[] { "show mount menu", "open mount menu", "show vehicles", "mount menu", "get in vehicle" }, new ushort[] { Keys.Four }, subjectRef);
             commandObjects.Add("OPENMOUNT", openMountMenu);
             commandSet.Add(openMountMenu.Item);
 
@@ -177,14 +177,14 @@ namespace Articulate
 
             #region Action (6)
             // open menu
-            Command openActionMenu = new Command("OPENACTION", new string[] { "show actions", "action menu", "perform action", "do action" }, new ushort[] { Keys.Six }, subjectRef);
+            Command openActionMenu = new Command("OPENACTION", new string[] { "show actions", "action menu", "perform action", "do action", "open action menu", "actions" }, new ushort[] { Keys.Six }, subjectRef);
             commandObjects.Add("OPENACTION", openActionMenu);
             commandSet.Add(openActionMenu.Item);
             #endregion
 
             #region Combat Mode (7)
             // stealth (1)
-            Command stealth = new Command("STEALTH", new string[] { "stealth", "stealthy", "stealth mode"}, new ushort[] { Keys.Seven, Keys.One }, subjectRef);
+            Command stealth = new Command("STEALTH", new string[] { "stealth", "stealthy", "stealth mode" }, new ushort[] { Keys.Seven, Keys.One }, subjectRef);
             commandObjects.Add("STEALTH", stealth);
             commandSet.Add(stealth.Item);
 
@@ -204,7 +204,7 @@ namespace Articulate
             commandSet.Add(relax.Item);
 
             // stand up (6)
-            Command standUp = new Command("STANDUP", new string[] { "stand up", "get up" }, new ushort[] { Keys.Seven, Keys.Six }, subjectRef);
+            Command standUp = new Command("STANDUP", new string[] { "stand up", "get up", "stand" }, new ushort[] { Keys.Seven, Keys.Six }, subjectRef);
             commandObjects.Add("STANDUP", standUp);
             commandSet.Add(standUp.Item);
             
@@ -214,7 +214,7 @@ namespace Articulate
             commandSet.Add(stayCrouched.Item);
 
             // go prone (8)
-            Command goProne = new Command("PRONE", new string[] { "go prone", "get down", "prone", "hit the dirt" }, new ushort[] { Keys.Seven, Keys.Eight }, subjectRef);
+            Command goProne = new Command("PRONE", new string[] { "go prone", "get down", "prone", "hit the dirt", "down" }, new ushort[] { Keys.Seven, Keys.Eight }, subjectRef);
             commandObjects.Add("PRONE", goProne);
             commandSet.Add(goProne.Item);
 
@@ -285,7 +285,7 @@ namespace Articulate
                 document.Rules.Add(rule);
             }
 
-            Command assignTeam = new Command("ASSIGN", new string[] { "assign", "assign to", "add to" }, new ushort[] { Keys.Nine }, subjectRef, team);
+            Command assignTeam = new Command("ASSIGN", new string[] { "assign", "assign to", "add to", "switch to" }, new ushort[] { Keys.Nine }, subjectRef, team);
             commandObjects.Add("ASSIGN", assignTeam);
             commandSet.Add(assignTeam.Item);
             #endregion
