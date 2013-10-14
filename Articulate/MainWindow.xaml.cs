@@ -230,6 +230,7 @@ namespace Articulate
 			new AdvancedSettings(Logic).ShowDialog();
 
 			Enabled = Logic.Configuration.Mode == Articulate.ListenMode.Continuous || Logic.Configuration.Mode == Articulate.ListenMode.PushToIgnore;
+			ListenMode.SelectedIndex = (int)Logic.Configuration.Mode;
 		}
 
 		#endregion
