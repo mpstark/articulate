@@ -138,6 +138,7 @@
     <Compile Include="Components\VoiceRecognizer.cs" />
     <Compile Include="Core.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Localization\FileBasedTranslation.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -210,6 +211,15 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="FodyWeavers.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Localization\en.slt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SierraLib.Translation\SierraLib.Translation.csproj">
+      <Project>{292c7945-e283-4e46-aed2-cc253673a80b}</Project>
+      <Name>SierraLib.Translation</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
