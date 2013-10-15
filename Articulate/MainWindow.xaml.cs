@@ -22,6 +22,9 @@ using System.Reactive.Linq;
 using SierraLib.GlobalHooks;
 using System.Reactive.Concurrency;
 using System.Threading;
+using SierraLib.Translation;
+using System.IO;
+using System.Globalization;
 
 namespace Articulate
 {
@@ -37,6 +40,18 @@ namespace Articulate
 
 		public MainWindow()
 		{
+			// Load translations			
+			try
+			{
+				using (var enStream = new MemoryStream(Properties.Resources.en))
+					TranslationManager.Instance.Translations.Add(new FileBasedTranslation(CultureInfo.GetCultureInfo("en"), enStream));
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex);
+				// Failed to load a translation file
+			}
+
 			InitializeComponent();
 
 			PushToTalkRelease = new AutoResetEvent(false);
@@ -46,7 +61,7 @@ namespace Articulate
 
 			ni.Icon = Properties.Resources.Main;
 			ni.Visible = true;
-			ni.Text = "Articulate";
+			ni.Text = TranslationManager.Instance["app_title"];
 			ni.DoubleClick += (sender, args) =>
 				{
 					this.Show();
@@ -156,7 +171,7 @@ namespace Articulate
 			{
 				Dispatcher.Invoke(() =>
 				{
-					State = "FAILED";
+					State = "state_error".Translate("FAILED");
 					ErrorMessage = Logic.Recognizer.SetupError;
 					ErrorFlyout.IsOpen = true;
 				});
@@ -189,7 +204,7 @@ namespace Articulate
 		{
 			Trace.WriteLine("Rejected command: " + e.Phrase + " " + e.Confidence);
 
-			Dispatcher.Invoke(() => LastCommand.Content = "What was that?");
+			Dispatcher.Invoke(() => LastCommand.Content = "state_recognition_failed".Translate("What was that?"));
 
 			// TODO: Decide whether or not Push To Arm should keep trying until it gets a match
 			if (Logic.Configuration.Mode == Articulate.ListenMode.PushToArm) Enabled = false;
@@ -249,12 +264,12 @@ namespace Articulate
 					if (Logic.Configuration.Mode == Articulate.ListenMode.PushToArm) Logic.Recognizer.ListenOnce();
 					else Logic.Recognizer.StartListening();
 
-					Dispatcher.Invoke(() => State = "LISTENING");
+					Dispatcher.Invoke(() => State = "state_online".Translate("LISTENING"));
 				}
 				else
 				{
 					Logic.Recognizer.StopListening();
-					Dispatcher.Invoke(() => State = "OFFLINE");
+					Dispatcher.Invoke(() => State = "state_offline".Translate("OFFLINE"));
 				}
 			}
 		}

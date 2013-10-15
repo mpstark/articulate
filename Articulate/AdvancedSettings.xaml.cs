@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using SierraLib.Translation;
 
 namespace Articulate
 {
@@ -77,7 +78,7 @@ namespace Articulate
 			{
 				Logic.Keybinder.BeginMapping();
 				PTTKey.IsEnabled = false;
-				PTTKey.Content = "Press Keys...";
+				PTTKey.Content = "settings_command_keys_bind_busy".Translate();
 			}
 		}
 
@@ -103,7 +104,7 @@ namespace Articulate
 		void OnMappingCompleted(object sender, IEnumerable<CompoundKeyBind> e)
 		{
 			PTTKey.IsEnabled = true;
-			PTTKey.Content = "Add Key Bind";
+			PTTKey.Content = "settings_command_keys_bind".Translate();
 		}
 	}
 }
