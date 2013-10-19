@@ -100,6 +100,29 @@ namespace SierraLib.Translation
             }
         }
 
+		/// <summary>
+		/// Loads the best available translation for the current thread's UI culture
+		/// </summary>
+		public void LoadBest()
+		{
+			LoadBest(Thread.CurrentThread.CurrentUICulture);
+		}
+
+		/// <summary>
+		/// Loads the best available translation for the specified culture
+		/// </summary>
+		/// <param name="targetCulture">The <see cref="CultureInfo"/> describing the ideal translation to use</param>
+		public void LoadBest(CultureInfo targetCulture)
+		{
+			if (targetCulture == CurrentLanguage)
+			{
+				RefreshCurrentTranslation();
+				OnLanguageChanged();
+			}
+			else
+				CurrentLanguage = targetCulture;
+		}
+
         void RefreshCurrentTranslation()
         {
             string current = Thread.CurrentThread.CurrentUICulture.Name;
