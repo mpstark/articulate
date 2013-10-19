@@ -19,17 +19,47 @@
 
 	<m:MetroWindow.WindowCommands>
 		<m:WindowCommands>
-			<Button x:Name="Settings"
-					DataContext="{Binding ElementName=this}"
-					ToolTip="{t:Translate settings_button_tooltip}"
-					Content="{t:Translate settings_button, Default=Settings}"
-					Click="Settings_Click">
+			<Button x:Name="Languages"
+                    ToolTip="{t:Translate languages_button_tooltip}"
+					Click="Languages_Click"
+					>
+				<Rectangle Width="12" Height="12">
+					<Rectangle.Resources>
+						<SolidColorBrush x:Key="BlackBrush">#fff</SolidColorBrush>
+					</Rectangle.Resources>
+					<Rectangle.Fill>
+						<VisualBrush Stretch="Uniform"
+                            	    Visual="{StaticResource appbar_flag_wavy}" />
+					</Rectangle.Fill>
+				</Rectangle>
 			</Button>
 			<Button x:Name="About"
 					DataContext="{Binding ElementName=this}"
 					ToolTip="{t:Translate about_button_tooltip}"
-					Content="{t:Translate about_button, Default=About}"
 					Click="About_Click">
+				<Rectangle Width="12" Height="12">
+					<Rectangle.Resources>
+						<SolidColorBrush x:Key="BlackBrush">#fff</SolidColorBrush>
+					</Rectangle.Resources>
+					<Rectangle.Fill>
+						<VisualBrush Stretch="Uniform"
+                            	    Visual="{StaticResource appbar_information_circle}" />
+					</Rectangle.Fill>
+				</Rectangle>
+			</Button>
+			<Button x:Name="Settings"
+					DataContext="{Binding ElementName=this}"
+					ToolTip="{t:Translate settings_button_tooltip}"
+					Click="Settings_Click">
+				<Rectangle Width="12" Height="12">
+					<Rectangle.Resources>
+						<SolidColorBrush x:Key="BlackBrush">#fff</SolidColorBrush>
+					</Rectangle.Resources>
+					<Rectangle.Fill>
+						<VisualBrush Stretch="Uniform"
+                            	    Visual="{StaticResource appbar_settings}" />
+					</Rectangle.Fill>
+				</Rectangle>
 			</Button>
 		</m:WindowCommands>
 	</m:MetroWindow.WindowCommands>
@@ -100,7 +130,23 @@
 				</StackPanel>
 			</ScrollViewer>
 		</m:Flyout>
+		<m:Flyout x:Name="LanguagesFlyout" Header="{t:Translate languages_header}" Position="Right">
+			<ScrollViewer 
+					Margin="30 0" Width="300"
+					ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+					ScrollViewer.VerticalScrollBarVisibility="Hidden">
+				<StackPanel
+					Margin="0 0 0 10">
 
+					<Label FontSize="16" Content="{t:Translate languages_combobox}"/>
+					<ComboBox x:Name="LanguageList"
+						  SelectionChanged="Languages_SelectionChanged">
+					</ComboBox>
+					<TextBlock TextWrapping="Wrap"
+							   Text="{t:Translate languages_description}"/>
+				</StackPanel>
+			</ScrollViewer>
+		</m:Flyout>
 		<m:Flyout x:Name="ErrorFlyout" Header="{t:Translate error_header}" Position="Right">
 			<StackPanel Margin="30 0" Width="300"
 					DataContext="{Binding ElementName=this}">

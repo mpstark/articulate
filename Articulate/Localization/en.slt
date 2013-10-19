@@ -9,8 +9,15 @@ state_online = LISTENING
 state_error = FAILED
 state_recognition_failed = What was that?
 
+languages_button_tooltip = Change Language
+languages_header = Languages
+languages_combobox = Language
+languages_description = 
+	Choose the language you would like to use Articulate in. If your language
+	doesn't appear here then you can help by contributing a translation through
+	our GitHub wiki.
+
 settings_title = Settings
-settings_button = Settings
 settings_button_tooltip = Configure Articulate
 settings_header = Settings
 
@@ -43,7 +50,6 @@ error_header = Error
 error_title = Error Message
 error_reload = Retry
 
-about_button = About
 about_button_tooltip = Information about Articulate
 about_header = About
 about_title = Welcome to Articulate!

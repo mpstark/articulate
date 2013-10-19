@@ -49,19 +49,24 @@ namespace Articulate
 				foreach (var file in new DirectoryInfo(Environment.CurrentDirectory).GetFiles("*.slt"))
 				{
 					using (var fs = file.OpenRead())
-						TranslationManager.Instance.Translations.Add(new FileBasedTranslation(CultureInfo.GetCultureInfo(file.Name), fs));
+						TranslationManager.Instance.Translations.Add(new FileBasedTranslation(CultureInfo.GetCultureInfo(System.IO.Path.GetFileNameWithoutExtension(file.Name)), fs));
 				}
 			}
 			catch (Exception ex)
 			{
 				Debug.WriteLine(ex);
+
 				// Failed to load a translation file
+#if !DEBUG
+				App.HandleError(ex);		
+#endif
 			}
 
 			InitializeComponent();
 
 			PushToTalkRelease = new AutoResetEvent(false);
 			Logic = new Core();
+			TranslationManager.Instance.CurrentLanguage = new CultureInfo(Logic.Configuration.Language ?? "en");
 
 			ni = new System.Windows.Forms.NotifyIcon();
 
@@ -96,6 +101,11 @@ namespace Articulate
 			}));
 			
 			RxSubscriptions.Push(SettingsFlyout.ToObservable<bool>(Flyout.IsOpenProperty).Skip(1).Distinct().ObserveOn(ThreadPoolScheduler.Instance).Subscribe(args =>
+			{
+				if (!args) Logic.Configuration.Save();
+			}));
+
+			RxSubscriptions.Push(LanguagesFlyout.ToObservable<bool>(Flyout.IsOpenProperty).Skip(1).Distinct().ObserveOn(ThreadPoolScheduler.Instance).Subscribe(args =>
 			{
 				if (!args) Logic.Configuration.Save();
 			}));
@@ -153,6 +163,9 @@ namespace Articulate
 					"takeonh",
 					"arma3"
 				});
+
+			LanguageList.ItemsSource = TranslationManager.Instance.Translations.Select(x => x.Culture.DisplayName);
+			LanguageList.SelectedItem = TranslationManager.Instance.CurrentLanguage.DisplayName;
 
 			Task.Factory.StartNew(LoadRecognizer);
 		}
@@ -318,6 +331,18 @@ namespace Articulate
 			Logic.Configuration.Mode = (Articulate.ListenMode)(ListenMode.SelectedIndex);
 
 			Enabled = Logic.Configuration.Mode == Articulate.ListenMode.Continuous || Logic.Configuration.Mode == Articulate.ListenMode.PushToIgnore;
+		}
+
+		private void Languages_Click(object sender, RoutedEventArgs e)
+		{
+			LanguagesFlyout.IsOpen = true;
+		}
+
+		private void Languages_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			var translation = TranslationManager.Instance.Translations.Find(x => x.Culture.DisplayName == LanguageList.SelectedItem.ToString());
+
+			Logic.Configuration.Language = (TranslationManager.Instance.CurrentLanguage = translation.Culture).Name;
 		}
 
 		#endregion
