@@ -95,10 +95,10 @@ namespace Articulate
 			}
 		}
 
-		async void ProcessFile(Stream file)
+		void ProcessFile(Stream file)
 		{
 			var sr = new StreamReader(file);
-			var data = await sr.ReadToEndAsync();
+			var data = sr.ReadToEnd();
 			
 			var RootToken = new Token();
 			var ActiveToken = RootToken;
@@ -130,7 +130,7 @@ namespace Articulate
 						}
 						else if (ActiveToken.Type == LexerToken.Key)
 							ActiveStringBuilder.Append(data[i]);
-						else throw new InvalidOperationException("Invalid state transitions in translation file lexer");
+						else throw new InvalidOperationException("Invalid state transitions in translation file lexer, a key cannot appear after a " + ActiveToken.Type.ToString());
 						break;
 					case LexerToken.Value:
 						if (ActiveToken.Type == LexerToken.BeginValue)
@@ -140,7 +140,7 @@ namespace Articulate
 						}
 						else if (ActiveToken.Type == LexerToken.Value)
 							ActiveStringBuilder.Append(data[i]);
-						else throw new InvalidOperationException("Invalid state transitions in translation file lexer");
+						else throw new InvalidOperationException("Invalid state transitions in translation file lexer, a value cannot appear after a " + ActiveToken.Type.ToString());
 						break;
 					case LexerToken.Invalid:
 						throw new FileFormatException("Bad file format near '" + data.Substring(Math.Max(0, i - 10), Math.Min(20, data.Length - 20)) + "'");
@@ -159,7 +159,7 @@ namespace Articulate
 				ActiveToken = ActiveToken.Next;
 
 				if (ActiveToken == null)
-					throw new FileFormatException("Expected a Value field but found nothing, file may not be complete.");
+					throw new FileFormatException("Expected a Value field but found nothing, file may be incomplete or corrupted.");
 				if (ActiveToken.Type != LexerToken.Value)
 					throw new FileFormatException("Expected a Value field but found a " + ActiveToken.Type.ToString() + " token instead. File may be missing a value for a key");
 
