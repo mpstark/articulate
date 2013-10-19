@@ -1,0 +1,69 @@
+﻿translation_language = English
+translation_author = Benjamin Pannell
+translation_website = https://github.com/SPARTAN563
+
+app_title = Articulate
+
+state_offline = OFFLINE
+state_online = LISTENING
+state_error = FAILED
+state_recognition_failed = What was that?
+
+languages_button_tooltip = Change Language
+languages_header = Languages
+languages_combobox = Language
+languages_description = 
+	Choose the language you would like to use Articulate in. If your language
+	doesn't appear here then you can help by contributing a translation through
+	our GitHub wiki.
+
+settings_title = Settings
+settings_button_tooltip = Configure Articulate
+settings_header = Settings
+
+settings_listening_mode = Listening Mode
+listening_mode_continuous = Continuous
+listening_mode_ptt = Push To Talk
+listening_mode_pta = Push To Arm
+listening_mode_pti = Push To Ignore
+
+settings_confidence = Confidence Margin
+settings_confidence_explanation = 
+	Reducing this value can help increase reponsiveness at the cost of accuracy
+
+settings_command_keys = Command Keys
+settings_command_keys_bind = Add Keybind
+settings_command_keys_bind_busy = Press and Release Keys
+settings_command_keys_bind_tooltip = Add a PTT Key
+settings_command_keys_explanation =
+	Click the button to change your command key, press Esc to cancel binding. 
+	Double click on a command to remove it.
+
+settings_end_command_pause = Command Termination Pause
+settings_end_command_pause_explanation =
+	Reducing this value will allow you to give commands with shorter breaks in between, 
+	but will also reduce your ability to pause in the middle of a command.
+
+settings_advanced_button = Advanced Settings
+
+error_header = Error
+error_title = Error Message
+error_reload = Retry
+
+about_button_tooltip = Information about Articulate
+about_header = About
+about_title = Welcome to Articulate!
+about_text = 
+	Articulate is a brilliant tool for ArmA players designed to make commanding 
+	your squad as easy as possible.\n
+	Anybody who's played ArmA knows that the commanding menu, while being incredibly 
+	powerful, is one of the most confusing and time consuming aspects of squad control. 
+	Articulate has been designed to make commanding your squad as simple as possible, 
+	allowing you to use your microphone to give them commands.
+about_authors_title = Authors
+
+main_preview_warning = 
+	This is an extremely early build for preview and feedback. Experiences will vary.
+main_bi_post = [BI Forum Post]
+main_feedback = [Provide Feedback]
+main_wiki = [GitHub Wiki]
