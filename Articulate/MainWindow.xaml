@@ -44,8 +44,27 @@
 				<Run Text="{t:Translate about_text}"/>				
 				<LineBreak/>
 				<Run FontSize="20" Text="{t:Translate about_authors_title}"/><LineBreak/>
-				 - Michael Starkweather<LineBreak/>
-				 - Benjamin Pannell
+				 - <Hyperlink
+					 NavigateUri="https://github.com/Mpstark"
+					 RequestNavigate="Hyperlink_RequestNavigate"
+					 Foreground="White">
+					 Michael Starkweather
+				 </Hyperlink>
+				<LineBreak/>
+				 - <Hyperlink
+					 NavigateUri="https://sierrasoftworks.com"
+					 RequestNavigate="Hyperlink_RequestNavigate"
+					 Foreground="White">
+					 Benjamin Pannell
+				 </Hyperlink>
+				<LineBreak/>
+				- <Run Text="{t:Translate translation_language}"/> Translation by 
+				<Hyperlink 
+					NavigateUri="{t:Translate translation_website}"
+					RequestNavigate="Hyperlink_RequestNavigate"
+					Foreground="White">
+					<Run Text="{t:Translate translation_author}"/>
+				</Hyperlink>
 			</TextBlock>
 		</m:Flyout>
 		<m:Flyout x:Name="SettingsFlyout" Header="{t:Translate settings_header}" Position="Right">
