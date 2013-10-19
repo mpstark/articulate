@@ -45,6 +45,12 @@ namespace Articulate
 			{
 				using (var enStream = new MemoryStream(Properties.Resources.en))
 					TranslationManager.Instance.Translations.Add(new FileBasedTranslation(CultureInfo.GetCultureInfo("en"), enStream));
+
+				foreach (var file in new DirectoryInfo(Environment.CurrentDirectory).GetFiles("*.slt"))
+				{
+					using (var fs = file.OpenRead())
+						TranslationManager.Instance.Translations.Add(new FileBasedTranslation(CultureInfo.GetCultureInfo(file.Name), fs));
+				}
 			}
 			catch (Exception ex)
 			{
