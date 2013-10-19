@@ -26,7 +26,8 @@ namespace Articulate
 
 		public string Author
 		{
-			get { return "Sierra Softworks"; }
+			get;
+			private set;
 		}
 
 		private Dictionary<string, string> FileData = new Dictionary<string, string>();
@@ -164,6 +165,14 @@ namespace Articulate
 
 				var value = ActiveToken.Value.Replace("\\r", "\r").Replace("\\n", "\n");
 				ActiveToken = ActiveToken.Next;
+
+				switch(key)
+				{
+					case "translation_author":
+						Author = value;
+						break;
+				}
+
 				FileData.Add(key, value);
 
 				Trace.WriteLine("!!!" + key + " -> '" + value + "'");

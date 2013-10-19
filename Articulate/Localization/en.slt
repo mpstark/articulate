@@ -1,4 +1,8 @@
-﻿app_title = Articulate
+﻿translation_language = English
+translation_author = Benjamin Pannell
+translation_website = https://github.com/SPARTAN563
+
+app_title = Articulate
 
 state_offline = OFFLINE
 state_online = LISTENING
