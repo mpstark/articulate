@@ -42,6 +42,9 @@ namespace Articulate
         public const ushort Ten = 0x0B;
 
         public const ushort Tilde = 0x29;
+
+		public const uint KeyUp = 0x1000;
+		public const uint KeyDown = 0x2000;
     }
 
     /// <summary>
@@ -78,16 +81,28 @@ namespace Articulate
             KEYEVENTF_SCANCODE = 0x0008,
         }
 
+		/// <summary>
+		/// Sends a series of keypresses in order from a List with an optional delay. This is a blocking operation.
+		/// </summary>
+		/// <param name="keys">The keypresses to send.</param>
+		/// <param name="delay">The delay to wait between each keypress.</param>
+		public static void SendKeyPresses(IEnumerable<ushort> keys, int delay = 0)
+		{
+			SendKeyPresses(keys.Select(x => (ushort)x), delay);
+		}
+
         /// <summary>
         /// Sends a series of keypresses in order from a List with an optional delay. This is a blocking operation.
         /// </summary>
         /// <param name="keys">The keypresses to send.</param>
         /// <param name="delay">The delay to wait between each keypress.</param>
-        public static void SendKeyPresses(List<ushort> keys, int delay = 0)
+		public static void SendKeyPresses(IEnumerable<uint> keys, int delay = 0)
         {
-            foreach (ushort key in keys)
+            foreach (uint key in keys)
             {
-                SendKeyPress(key);
+				if ((key & Keys.KeyUp) != 0) SendKeyUp((ushort)(key & 0xff));
+				else if ((key & Keys.KeyDown) != 0) SendKeyDown((ushort)(key & 0xff));
+				else SendKeyPress((ushort)(key & 0xff));
 
                 if (delay > 0)
                     Thread.Sleep(delay);
