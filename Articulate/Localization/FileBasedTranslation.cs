@@ -23,6 +23,17 @@ namespace Articulate
 		{
 			get 
 			{
+				if (key.StartsWith("keyboard_"))
+				{
+					var keyCode = Convert.ToInt32(key.Substring("keyboard_".Length));
+					return this[key, ((System.Windows.Forms.Keys)keyCode).ToString()];
+				}
+				else if (key.StartsWith("mouse_"))
+				{
+					var keyCode = Convert.ToInt32(key.Substring("mouse_".Length));
+					return this[key, ((System.Windows.Forms.MouseButtons)keyCode).ToString()];
+				}
+
 				return this[key, "!!!" + key];
 			}
 		}
@@ -31,18 +42,7 @@ namespace Articulate
 		{
 			get 
 			{
-				if (FileData.ContainsKey(key)) return FileData[key];
-				else if (key.StartsWith("keyboard_"))
-				{
-					var keyCode = Convert.ToInt32(key.Substring("keyboard_".Length));
-					return ((System.Windows.Forms.Keys)keyCode).ToString();
-				}
-				else if (key.StartsWith("mouse_"))
-				{
-					var keyCode = Convert.ToInt32(key.Substring("mouse_".Length));
-					return ((System.Windows.Forms.MouseButtons)keyCode).ToString();
-				}
-				else return defaultValue;
+				return FileData.ContainsKey(key) ? FileData[key] : defaultValue;
 			}
 		}
 
