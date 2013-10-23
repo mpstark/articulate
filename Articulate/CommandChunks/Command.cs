@@ -13,19 +13,19 @@ namespace Articulate
     {
         public SrgsItem Item { get; private set; }
 
-        public Command(string semantic, string[] alternates, ushort[] keyList)
+		public Command(string semantic, string[] alternates, uint[] keyList)
         {
             GenerateRuleList(semantic, alternates);
             GenerateKeyLookup(semantic, keyList);
         }
 
-        public Command(string semantic, string[] alternates, ushort[] keyList, SrgsRuleRef subjectRef)
+        public Command(string semantic, string[] alternates, uint[] keyList, SrgsRuleRef subjectRef)
         {
             GenerateRuleList(semantic, alternates, subjectRef);
             GenerateKeyLookup(semantic, keyList);
         }
 
-        public Command(string semantic, string[] alternates, ushort[] keyList, SrgsRuleRef subjectRef, DirectObject directObject)
+        public Command(string semantic, string[] alternates, uint[] keyList, SrgsRuleRef subjectRef, DirectObject directObject)
         {
             GenerateRuleList(semantic, alternates, subjectRef, directObject);
             GenerateKeyLookup(semantic, keyList, directObject);
@@ -61,20 +61,20 @@ namespace Articulate
             RootRule = rule;
         }
 
-        private void GenerateKeyLookup(string semantic, ushort[] keyList, DirectObject directObject = null)
+        private void GenerateKeyLookup(string semantic, uint[] keyList, DirectObject directObject = null)
         {
-            List<ushort> keys = new List<ushort>();
-            foreach (ushort key in keyList)
+            var keys = new List<uint>();
+            foreach (var key in keyList)
             {
                 keys.Add(key);
             }
 
-            KeyLookup = new Dictionary<string, List<ushort>>();
+            KeyLookup = new Dictionary<string, List<uint>>();
             KeyLookup.Add(semantic, keys);
 
             if (directObject != null)
             {
-                foreach(KeyValuePair<string, List<ushort>> entry in directObject.KeyLookup)
+				foreach (var entry in directObject.KeyLookup)
                 {
                     KeyLookup.Add(entry.Key, entry.Value);
                 }

@@ -83,55 +83,55 @@ namespace Articulate
 
         private void GenerateKeyLookup()
         {
-            KeyLookup = new Dictionary<string, List<ushort>>();
+            KeyLookup = new Dictionary<string, List<uint>>();
 
-            List<ushort> one = new List<ushort>();
+            var one = new List<uint>();
             one.Add(Keys.F1);
-            List<ushort> two = new List<ushort>();
+			var two = new List<uint>();
             two.Add(Keys.F2);
-            List<ushort> three = new List<ushort>();
+			var three = new List<uint>();
             three.Add(Keys.F3);
-            List<ushort> four = new List<ushort>();
+			var four = new List<uint>();
             four.Add(Keys.F4);
-            List<ushort> five = new List<ushort>();
+			var five = new List<uint>();
             five.Add(Keys.F5);
-            List<ushort> six = new List<ushort>();
+			var six = new List<uint>();
             six.Add(Keys.F6);
-            List<ushort> seven = new List<ushort>();
+			var seven = new List<uint>();
             seven.Add(Keys.F7);
-            List<ushort> eight = new List<ushort>();
+			var eight = new List<uint>();
             eight.Add(Keys.F8);
-            List<ushort> nine = new List<ushort>();
+			var nine = new List<uint>();
             nine.Add(Keys.F9);
-            List<ushort> ten = new List<ushort>();
+			var ten = new List<uint>();
             ten.Add(Keys.F10);
 
-            List<ushort> red = new List<ushort>();
+			var red = new List<uint>();
             red.Add(Keys.Nine);
             red.Add(Keys.Nine);
             red.Add(Keys.One);
 
-            List<ushort> green = new List<ushort>();
+			var green = new List<uint>();
             green.Add(Keys.Nine);
             green.Add(Keys.Nine);
             green.Add(Keys.Two);
 
-            List<ushort> blue = new List<ushort>();
+			var blue = new List<uint>();
             blue.Add(Keys.Nine);
             blue.Add(Keys.Nine);
             blue.Add(Keys.Three);
 
-            List<ushort> yellow = new List<ushort>();
+			var yellow = new List<uint>();
             yellow.Add(Keys.Nine);
             yellow.Add(Keys.Nine);
             yellow.Add(Keys.Four);
 
-            List<ushort> white = new List<ushort>();
+			var white = new List<uint>();
             white.Add(Keys.Nine);
             white.Add(Keys.Nine);
             white.Add(Keys.Five);
 
-            List<ushort> everyone = new List<ushort>();
+			var everyone = new List<uint>();
             everyone.Add(Keys.Tilde);
 
             // SQUAD SELECTION
