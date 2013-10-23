@@ -40,28 +40,6 @@ namespace Articulate
 
 		public MainWindow()
 		{
-			// Load translations			
-			try
-			{
-				using (var enStream = new MemoryStream(Properties.Resources.en))
-					TranslationManager.Instance.Translations.Add(new FileBasedTranslation(CultureInfo.GetCultureInfo("en"), enStream));
-
-				foreach (var file in new DirectoryInfo(Environment.CurrentDirectory).GetFiles("*.slt"))
-				{
-					using (var fs = file.OpenRead())
-						TranslationManager.Instance.Translations.Add(new FileBasedTranslation(CultureInfo.GetCultureInfo(System.IO.Path.GetFileNameWithoutExtension(file.Name)), fs));
-				}
-			}
-			catch (Exception ex)
-			{
-				Debug.WriteLine(ex);
-
-				// Failed to load a translation file
-#if !DEBUG
-				App.HandleError(ex);		
-#endif
-			}
-
 			InitializeComponent();
 
 			PushToTalkRelease = new AutoResetEvent(false);
@@ -72,7 +50,7 @@ namespace Articulate
 
 			ni.Icon = Properties.Resources.Main;
 			ni.Visible = true;
-			ni.Text = TranslationManager.Instance["app_title"];
+			ni.Text = "Articulate";
 			ni.DoubleClick += (sender, args) =>
 				{
 					this.Show();
@@ -149,6 +127,31 @@ namespace Articulate
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
+			// Load translations			
+			try
+			{
+				using (var enStream = new MemoryStream(Properties.Resources.en))
+					TranslationManager.Instance.Translations.Add(new FileBasedTranslation(CultureInfo.GetCultureInfo("en"), enStream));
+
+				foreach (var file in new DirectoryInfo(Environment.CurrentDirectory).GetFiles("*.slt"))
+				{
+					using (var fs = file.OpenRead())
+						TranslationManager.Instance.Translations.Add(new FileBasedTranslation(CultureInfo.GetCultureInfo(System.IO.Path.GetFileNameWithoutExtension(file.Name)), fs));
+				}
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex);
+
+				ErrorFlyout.IsOpen = true;
+				ErrorMessage = ex.Message;
+
+				// Failed to load a translation file
+#if !DEBUG
+				App.HandleError(ex);
+#endif
+			}
+
 			ListenMode.SelectedIndex = (int)Logic.Configuration.Mode;
 
 			ConfidenceMargin.Value = Logic.Configuration.ConfidenceMargin;
