@@ -20,6 +20,7 @@
 	<m:MetroWindow.WindowCommands>
 		<m:WindowCommands>
 			<Button x:Name="Languages"
+					DataContext="{Binding ElementName=this}"
                     ToolTip="{t:Translate languages_button_tooltip}"
 					Click="Languages_Click"
 					>
