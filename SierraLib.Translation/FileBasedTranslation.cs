@@ -105,6 +105,7 @@ namespace SierraLib.Translation
 					if(content[index] == '\r') return LexerToken.Ignore;
 					if (content[index] == '\n')
 					{
+						if (content.Length == index + 1) return LexerToken.Ignore;
 						if (content[index + 1] == '\t') return LexerToken.Ignore;
 						return LexerToken.BeginKey;
 					}
