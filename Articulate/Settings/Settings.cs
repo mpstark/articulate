@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections.ObjectModel;
+using System.Globalization;
 
 namespace Articulate
 {
@@ -35,6 +36,8 @@ namespace Articulate
 
 			Applications = new List<string>();
 			KeyBinds = new ObservableCollection<CompoundKeyBind>();
+
+			Language = (Thread.CurrentThread.CurrentUICulture ?? Thread.CurrentThread.CurrentCulture ?? new CultureInfo("en")).Name;
 
 			FileLock = new object();
 		}
@@ -116,6 +119,9 @@ namespace Articulate
 		{ get; set; }
 		
 		public List<string> Applications
+		{ get; set; }
+
+		public string Language
 		{ get; set; }
 	}
 }
