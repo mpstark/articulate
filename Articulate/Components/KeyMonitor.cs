@@ -1,4 +1,5 @@
 ﻿using SierraLib.GlobalHooks;
+using SierraLib.Translation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -242,9 +243,9 @@ namespace Articulate
 			switch (Type)
 			{
 				case KeyType.Keyboard:
-					return ((System.Windows.Forms.Keys)Code).ToString();
+					return TranslationManager.Instance["keyboard_" + Code, ((System.Windows.Forms.Keys)Code).ToString()];
 				case KeyType.Mouse:
-					return ((System.Windows.Forms.MouseButtons)Code).ToString();
+					return TranslationManager.Instance["mouse_" + Code, ((System.Windows.Forms.MouseButtons)Code).ToString()];
 				default: return "";
 			}
 		}
