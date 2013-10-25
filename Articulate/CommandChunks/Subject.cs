@@ -96,30 +96,11 @@ namespace Articulate
 			var nine = DirectInputEmulator.KeyPress(DirectInputKeys.F9);
 			var ten = DirectInputEmulator.KeyPress(DirectInputKeys.F10);
 
-			var red = new List<INPUT[]>();
-			red.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Nine));
-			red.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Nine));
-			red.Add(DirectInputEmulator.KeyPress(DirectInputKeys.One));
-
-			var green = new List<INPUT[]>();
-			green.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Nine));
-			green.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Nine));
-			green.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Two));
-
-			var blue = new List<INPUT[]>();
-			blue.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Nine));
-			blue.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Nine));
-			blue.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Three));
-
-			var yellow = new List<INPUT[]>();
-			yellow.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Nine));
-			yellow.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Nine));
-			yellow.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Four));
-
-			var white = new List<INPUT[]>();
-			white.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Nine));
-			white.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Nine));
-			white.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Five));
+			var red = DirectInputEmulator.KeyPress(DirectInputKeys.Shift, DirectInputKeys.F1);
+			var green = DirectInputEmulator.KeyPress(DirectInputKeys.Shift, DirectInputKeys.F2);
+			var blue = DirectInputEmulator.KeyPress(DirectInputKeys.Shift, DirectInputKeys.F3);
+			var yellow = DirectInputEmulator.KeyPress(DirectInputKeys.Shift, DirectInputKeys.F4);
+			var white = DirectInputEmulator.KeyPress(DirectInputKeys.Shift, DirectInputKeys.F5);
 
 			var everyone = new List<INPUT[]>();
 			everyone.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Tilde));
@@ -137,11 +118,11 @@ namespace Articulate
 			KeyLookup.Add("TEN", new List<INPUT[]>() { ten });
 
             // TEAM SELECTION
-            KeyLookup.Add("RED", red);
-            KeyLookup.Add("BLUE", blue);
-            KeyLookup.Add("YELLOW", yellow);
-            KeyLookup.Add("WHITE", white);
-            KeyLookup.Add("GREEN", green);
+            KeyLookup.Add("RED", new List<INPUT[]>() { red });
+            KeyLookup.Add("BLUE", new List<INPUT[]>() { blue });
+            KeyLookup.Add("YELLOW", new List<INPUT[]>() { yellow });
+            KeyLookup.Add("WHITE", new List<INPUT[]>() { white });
+			KeyLookup.Add("GREEN", new List<INPUT[]>() { green });
 
             // ALL
             KeyLookup.Add("ALL", everyone);
