@@ -83,68 +83,58 @@ namespace Articulate
 
         private void GenerateKeyLookup()
         {
-            KeyLookup = new Dictionary<string, List<uint>>();
+            KeyLookup = new Dictionary<string, List<INPUT[]>>();
 
-            var one = new List<uint>();
-            one.Add(Keys.F1);
-			var two = new List<uint>();
-            two.Add(Keys.F2);
-			var three = new List<uint>();
-            three.Add(Keys.F3);
-			var four = new List<uint>();
-            four.Add(Keys.F4);
-			var five = new List<uint>();
-            five.Add(Keys.F5);
-			var six = new List<uint>();
-            six.Add(Keys.F6);
-			var seven = new List<uint>();
-            seven.Add(Keys.F7);
-			var eight = new List<uint>();
-            eight.Add(Keys.F8);
-			var nine = new List<uint>();
-            nine.Add(Keys.F9);
-			var ten = new List<uint>();
-            ten.Add(Keys.F10);
+            var one = DirectInputEmulator.KeyPress(DirectInputKeys.F1);
+			var two = DirectInputEmulator.KeyPress(DirectInputKeys.F2);
+			var three = DirectInputEmulator.KeyPress(DirectInputKeys.F3);
+			var four = DirectInputEmulator.KeyPress(DirectInputKeys.F4);
+			var five = DirectInputEmulator.KeyPress(DirectInputKeys.F5);
+			var six = DirectInputEmulator.KeyPress(DirectInputKeys.F6);
+			var seven = DirectInputEmulator.KeyPress(DirectInputKeys.F7);
+			var eight = DirectInputEmulator.KeyPress(DirectInputKeys.F8);
+			var nine = DirectInputEmulator.KeyPress(DirectInputKeys.F9);
+			var ten = DirectInputEmulator.KeyPress(DirectInputKeys.F10);
 
-			var red = new List<uint>();
-            red.Add(Keys.Nine);
-            red.Add(Keys.Nine);
-            red.Add(Keys.One);
+			var red = new List<INPUT[]>();
+			red.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Nine));
+			red.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Nine));
+			red.Add(DirectInputEmulator.KeyPress(DirectInputKeys.One));
 
-			var green = new List<uint>();
-            green.Add(Keys.Nine);
-            green.Add(Keys.Nine);
-            green.Add(Keys.Two);
+			var green = new List<INPUT[]>();
+			green.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Nine));
+			green.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Nine));
+			green.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Two));
 
-			var blue = new List<uint>();
-            blue.Add(Keys.Nine);
-            blue.Add(Keys.Nine);
-            blue.Add(Keys.Three);
+			var blue = new List<INPUT[]>();
+			blue.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Nine));
+			blue.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Nine));
+			blue.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Three));
 
-			var yellow = new List<uint>();
-            yellow.Add(Keys.Nine);
-            yellow.Add(Keys.Nine);
-            yellow.Add(Keys.Four);
+			var yellow = new List<INPUT[]>();
+			yellow.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Nine));
+			yellow.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Nine));
+			yellow.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Four));
 
-			var white = new List<uint>();
-            white.Add(Keys.Nine);
-            white.Add(Keys.Nine);
-            white.Add(Keys.Five);
+			var white = new List<INPUT[]>();
+			white.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Nine));
+			white.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Nine));
+			white.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Five));
 
-			var everyone = new List<uint>();
-            everyone.Add(Keys.Tilde);
+			var everyone = new List<INPUT[]>();
+			everyone.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Tilde));
 
             // SQUAD SELECTION
-            KeyLookup.Add("ONE", one);
-            KeyLookup.Add("TWO", two);
-            KeyLookup.Add("THREE", three);
-            KeyLookup.Add("FOUR", four);
-            KeyLookup.Add("FIVE", five);
-            KeyLookup.Add("SIX", six);
-            KeyLookup.Add("SEVEN", seven);
-            KeyLookup.Add("EIGHT", eight);
-            KeyLookup.Add("NINE", nine);
-            KeyLookup.Add("TEN", ten);
+            KeyLookup.Add("ONE", new List<INPUT[]>() { one });
+			KeyLookup.Add("TWO", new List<INPUT[]>() { two });
+			KeyLookup.Add("THREE", new List<INPUT[]>() { three });
+			KeyLookup.Add("FOUR", new List<INPUT[]>() { four });
+			KeyLookup.Add("FIVE", new List<INPUT[]>() { five });
+			KeyLookup.Add("SIX", new List<INPUT[]>() { six });
+			KeyLookup.Add("SEVEN", new List<INPUT[]>() { seven });
+			KeyLookup.Add("EIGHT", new List<INPUT[]>() { eight });
+			KeyLookup.Add("NINE", new List<INPUT[]>() { nine });
+			KeyLookup.Add("TEN", new List<INPUT[]>() { ten });
 
             // TEAM SELECTION
             KeyLookup.Add("RED", red);
