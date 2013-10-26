@@ -225,7 +225,7 @@ namespace Articulate
 			{
 				// Something went wrong setting up the voiceEngine.
 				Trace.WriteLine(ex.Message);
-				SetupError = ex.ToString();
+				SetupError = String.Format("{0}\nCurrent Culture: {1}\nAvailable Recognizers: {2}\nStack Trace:\n{3}", ex.Message, CultureInfo.InstalledUICulture.Name, SpeechRecognitionEngine.InstalledRecognizers().Select(x => x.Culture.Name).Aggregate((x, y) => x + ", " + y), ex.StackTrace);
 				State = VoiceRecognizerState.Error;
 			}
 		}
