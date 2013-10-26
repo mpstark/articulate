@@ -14,7 +14,7 @@ namespace Articulate
         /// <summary>
         /// Semantic to KeyList lookup table
         /// </summary>
-        public Dictionary<string, List<uint>> KeyLookup { get; protected set; }
+        public Dictionary<string, List<INPUT[]>> KeyLookup { get; protected set; }
         
         /// <summary>
         /// Changes a CommandChunk's KeyList for a particular semantic
@@ -22,7 +22,7 @@ namespace Articulate
         /// <param name="semantic">Semantic to change the keylist for</param>
         /// <param name="keys">KeyList to change to</param>
         /// <returns>true if keylist changed</returns>
-        public bool ChangeKey(string semantic, List<uint> keys)
+        public bool ChangeKey(string semantic, List<INPUT[]> keys)
         {
             if (KeyLookup.ContainsKey(semantic))
             {
