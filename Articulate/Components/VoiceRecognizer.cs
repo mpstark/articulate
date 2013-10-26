@@ -179,6 +179,13 @@ namespace Articulate
 					cultureInfo = new CultureInfo("en-US");
 				}
 
+				if (!SpeechRecognitionEngine.InstalledRecognizers().Any(x => x.Culture.LCID == cultureInfo.LCID))
+				{
+					SetupError = String.Format("You don't appear to have the {0} Speech Recognizer installed. Articulate requires this recognizer to be present in order to function correctly.", cultureInfo.Name);
+					State = VoiceRecognizerState.Error;
+					return;
+				}
+
 				// Setup members
 				ConfidenceLock = new Object();
 				EngineShuttingDown = new AutoResetEvent(false);
