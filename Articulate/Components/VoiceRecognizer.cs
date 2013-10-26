@@ -153,6 +153,13 @@ namespace Articulate
 		/// </summary>
 		public VoiceRecognizer()
 		{
+			if (SpeechRecognitionEngine.InstalledRecognizers().Count == 0)
+			{
+				SetupError = "You don't appear to have any Microsoft Speech Recognizer packs installed on your system.";
+				State = VoiceRecognizerState.Error;
+				return;
+			}
+
 			try
 			{
 				// detect the system locale and use the best recognizer for the job.
@@ -160,7 +167,7 @@ namespace Articulate
 				foreach (RecognizerInfo ri in SpeechRecognitionEngine.InstalledRecognizers())
 				{
 					// TODO: change to support more languages as they get added in
-					if (ri.Culture.Equals(CultureInfo.CurrentCulture) && ri.Culture.TwoLetterISOLanguageName.Equals("en"))
+					if (ri.Culture.LCID == CultureInfo.InstalledUICulture.LCID && ri.Culture.TwoLetterISOLanguageName.Equals("en"))
 					{
 						cultureInfo = ri.Culture;
 					}
