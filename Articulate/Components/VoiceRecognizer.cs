@@ -162,26 +162,25 @@ namespace Articulate
 
 			try
 			{
-				// detect the system locale and use the best recognizer for the job.
-				CultureInfo cultureInfo = null;
-				foreach (RecognizerInfo ri in SpeechRecognitionEngine.InstalledRecognizers())
+				var installedRecognizers = SpeechRecognitionEngine.InstalledRecognizers();
+				RecognizerInfo speechRecognizer = null;
+
+				switch (CultureInfo.InstalledUICulture.Name)
 				{
-					// TODO: change to support more languages as they get added in
-					if (ri.Culture.LCID == CultureInfo.InstalledUICulture.LCID && ri.Culture.TwoLetterISOLanguageName.Equals("en"))
-					{
-						cultureInfo = ri.Culture;
-					}
+					case "en-GB":
+						speechRecognizer = (installedRecognizers.FirstOrDefault(x => x.Culture.Name == "en-GB") ?? installedRecognizers.FirstOrDefault(x => x.Culture.TwoLetterISOLanguageName == "en"));
+						break;
+
+					case "en-US":
+					default:
+						speechRecognizer = installedRecognizers.FirstOrDefault(x => x.Culture.TwoLetterISOLanguageName == "en");
+						break;
 				}
 
-				// default to en-US
-				if (cultureInfo == null)
-				{
-					cultureInfo = new CultureInfo("en-US");
-				}
 
-				if (!SpeechRecognitionEngine.InstalledRecognizers().Any(x => x.Culture.LCID == cultureInfo.LCID))
+				if (speechRecognizer == null)
 				{
-					SetupError = String.Format("You don't appear to have the {0} Speech Recognizer installed. Articulate requires this recognizer to be present in order to function correctly.", cultureInfo.Name);
+					SetupError = String.Format("You don't appear to have the {0} Speech Recognizer installed. Articulate requires this recognizer to be present in order to function correctly.", "English");
 					State = VoiceRecognizerState.Error;
 					return;
 				}
@@ -192,7 +191,7 @@ namespace Articulate
 				State = VoiceRecognizerState.Paused;
 
 				// Create a new SpeechRecognitionEngine instance.
-				Engine = new SpeechRecognitionEngine(cultureInfo);
+				Engine = new SpeechRecognitionEngine(speechRecognizer);
 
 				try
 				{
@@ -212,7 +211,7 @@ namespace Articulate
 				ConfidenceMargin = 90;
 
 				// Create the Grammar instance and load it into the speech recognition engine.
-				Grammar g = new Grammar(CommandPool.BuildSrgsGrammar(cultureInfo));
+				Grammar g = new Grammar(CommandPool.BuildSrgsGrammar(speechRecognizer.Culture));
 				Engine.LoadGrammar(g);
 
 				// Register a handlers for the SpeechRecognized and SpeechRecognitionRejected event
