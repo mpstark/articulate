@@ -44,6 +44,8 @@ namespace Articulate
 
 			PushToTalkRelease = new AutoResetEvent(false);
 			Logic = new Core();
+
+			TranslationManager.Instance.DefaultLanguage = new CultureInfo("en");
 			TranslationManager.Instance.CurrentLanguage = new CultureInfo(Logic.Configuration.Language ?? "en");
 
 			ni = new System.Windows.Forms.NotifyIcon();

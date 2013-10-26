@@ -37,6 +37,18 @@ namespace SierraLib.Translation
             }
         }
 
+		private CultureInfo _DefaultLanguage = new CultureInfo("en");
+		public CultureInfo DefaultLanguage
+		{
+			get { return _DefaultLanguage; }
+			set 
+			{
+				_DefaultLanguage = value;
+				RefreshCurrentTranslation();
+				OnLanguageChanged();
+			}
+		}
+
         public IEnumerable<CultureInfo> Languages
         {
             get
@@ -126,6 +138,7 @@ namespace SierraLib.Translation
         void RefreshCurrentTranslation()
         {
             string current = Thread.CurrentThread.CurrentUICulture.Name;
+
             //First, we attempt to find a translator for this exact dialect
             while (true)
             {
@@ -140,8 +153,8 @@ namespace SierraLib.Translation
                 //we will just resort to using the defaults specified, or showing keys
                 if (current.Length == 0)
                 {
-                    CurrentTranslation = new DesignerTranslation();
-                    return;
+					CurrentTranslation = Translations.FirstOrDefault(x => x.Culture == DefaultLanguage) ?? new DesignerTranslation();
+					return;
                 }
 
                 //If we get here it means we didn't find one, so lets try
