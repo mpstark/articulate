@@ -1,44 +1,31 @@
 # Articulate_Extension
-This extension provides Named Pipe command formatting and forwarding for ArmA games (> v1.61) to permit Articulate to perform more complex operations than are available using the standard keybinds.
+This extension provides forwarding of messages received on a named pipe to the currently active ArmA instance.
 
-When combined with Articulate's Addon, this extension makes it possible to send advanced commands to ArmA through a named pipe (\\.\pipe\Articulate) using a predetermined format.
+## Requirements
+This extension requires a version of ArmA with support for external extensions, this was implemented in ArmA 2 OA v1.61, and all variants of ArmA and Take on Helicopters released since have support for this functionality.
+This extension also requires a SQF script which calls the connect and read functions provided by this module in order to receive data from it.
 
-```cpp
-struct ArticulateCommand {
-	uint Subjects;
-	uint Command;
-}
+```
+error = "Articulate" callExtension "connect";
 
-#define ARTICULATE_SUBJECT_ALL 0x80000000
-#define ARTICULATE_SUBJECT_TEAM_RED 0x01000000
-#define ARTICULATE_SUBJECT_TEAM_BLUE 0x02000000
-#define ARTICULATE_SUBJECT_TEAM_GREEN 0x04000000
-#define ARTICULATE_SUBJECT_TEAM_YELLOW 0x08000000
-#define ARTICULATE_SUBJECT_TEAM_WHITE 0x10000000
-
-#define ARTICULATE_UNIT_2 0x2
-#define ARTICULATE_UNIT_3 0x4
-#define ARTICULATE_UNIT_4 0x8
-#define ARTICULATE_UNIT_5 0x10
-#define ARTICULATE_UNIT_6 0x20
-#define ARTICULATE_UNIT_7 0x40
-#define ARTICULATE_UNIT_8 0x80
-#define ARTICULATE_UNIT_9 0x100
-#define ARTICULATE_UNIT_10 0x200
-#define ARTICULATE_UNIT_11 0x400
-#define ARTICULATE_UNIT_12 0x800
-#define ARTICULATE_UNIT_13 0x1000
-#define ARTICULATE_UNIT_14 0x2000
-#define ARTICULATE_UNIT_15 0x4000
-#define ARTICULATE_UNIT_16 0x8000
-#define ARTICULATE_UNIT_17 0x10000
-#define ARTICULATE_UNIT_18 0x20000
-#define ARTICULATE_UNIT_19 0x40000
-#define ARTICULATE_UNIT_20 0x80000
-#define ARTICULATE_UNIT_21 0x100000
-#define ARTICULATE_UNIT_22 0x200000
-#define ARTICULATE_UNIT_23 0x400000
-#define ARTICULATE_UNIT_24 0x800000
+data = "Articulate" callExtension "read";
 ```
 
-The available commands list is still being finalized due to limitations in the available control over units using SQF functions. They will (hopefully) at some point be as complete as the standard command menu.
+## Error Codes
+
+- **404 Named Pipe Not Available**
+  The extension was unable to connect to the expected named pipe, this likely indicates that the named pipe server is not running or that there is a permission issue.
+
+- **409 Named Pipe Already Connected**
+  Indicates that a connection has already been made to the named pipe previously, this can be ignored or treated as an error depending on the implementation.
+
+- **204 No Data Available**
+  Indicates that the extension has not received any new messages from the server since the last read request.
+
+## Named Pipe Data Format
+In order to allow data to be sent to the requesting script in message format, without them being sent partial data, this extension requires all data sent over the named pipe to have messages terminated with a 0x01 byte.
+This byte will not be sent to the client script, however it should always be sent by the server to indicate the end of a message - failure to do so will result in the extension believing that a message continues indefinitely.
+
+```csharp
+namedSocket.Write("Some data\x1");
+```

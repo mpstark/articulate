@@ -5,6 +5,8 @@
 #include <iostream>
 #include <thread>
 #include <queue>
+#include <string>
+#include <memory>
 
 using namespace std;
 #define PLUGIN_VERSION "1.0"
@@ -30,14 +32,14 @@ void PipeListenerTask(HANDLE* namedPipe);
 * INTERNAL STRUCTURES
 **/
 
-std::queue<char*> PendingCommands;
+queue<auto_ptr<string>> PendingCommands;
 
 void __stdcall RVExtension(char* output, int outputSize, const char *function) {
 
 	if(!strcmp(function, "version")) strncpy(output, PLUGIN_VERSION, outputSize);
 	else if(!strcmp(function, "start")) {
 		if(namedPipe == NULL) {
-			strncpy_s(output, outputSize, "Already connected to Articulate", 32);
+			strncpy_s(output, outputSize, "409", 3);
 			return;
 		}
 
@@ -50,7 +52,7 @@ void __stdcall RVExtension(char* output, int outputSize, const char *function) {
 			NULL);
 
 		if(namedPipe == INVALID_HANDLE_VALUE) {
-			strncpy(output, "Articulate is not running", 25);
+			strncpy(output, "404", 3);
 			namedPipe = NULL;
 			return;
 		}
@@ -59,14 +61,16 @@ void __stdcall RVExtension(char* output, int outputSize, const char *function) {
 	}
 	else if(!strcmp(function, "read")) {
 		if(PendingCommands.empty()) {
-			strncpy_s(output, outputSize, "{}", 2);
+			strncpy_s(output, outputSize, "204", 3);
 			return;
 		}
 
-		char* currentCommand = PendingCommands.front();
+		auto_ptr<string> currentCommand = PendingCommands.front();
 		PendingCommands.pop();
-		strncpy_s(output, outputSize, currentCommand, strlen(currentCommand));
-		free(currentCommand);
+
+		currentCommand->copy(output, outputSize, 0);
+
+		currentCommand.release();
 	}
 }
 
@@ -74,14 +78,20 @@ void PipeListenerTask(HANDLE* namedPipe) {
 	char buffer[COMMAND_BUFFER_SIZE];
 	
 	DWORD bytesRead = 0;
+	
+	string pendingData;
 
 	while(*namedPipe) {
 		BOOL result = ReadFile(*namedPipe, buffer, COMMAND_BUFFER_SIZE, &bytesRead, NULL);
 
-		if(result) {
-			char* command = (char*)malloc(bytesRead);
-			strncpy(command, buffer, bytesRead);
-			PendingCommands.push(command);
+		if(result) {			
+			pendingData.append(buffer, bytesRead);
+
+			int commandEndIndex = pendingData.find('\1');
+			PendingCommands.push(auto_ptr<string>(new string(pendingData.substr(0, commandEndIndex))));
+
+			if(commandEndIndex == pendingData.length() - 1) pendingData.clear();
+			else pendingData = pendingData.substr(commandEndIndex + 1, pendingData.length() - commandEndIndex - 1);
 		} else {
 			CloseHandle(*namedPipe);
 			*namedPipe = NULL;
