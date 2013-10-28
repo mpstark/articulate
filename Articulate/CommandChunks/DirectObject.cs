@@ -19,7 +19,7 @@ namespace Articulate
         {
             public string semantic;
             public string[] alternates;
-			public IEnumerable<INPUT[]> keyList;
+			public IEnumerable<OutputBase> keyList;
         }
 
         public DirectObject(string name)
@@ -53,11 +53,11 @@ namespace Articulate
 
         private void GenerateKeyList()
         {
-            KeyLookup = new Dictionary<string, List<INPUT[]>>();
+			KeyLookup = new Dictionary<string, List<OutputBase>>();
 
             foreach (directObjectEntry entry in entries)
             {
-				var list = new List<INPUT[]>();
+				var list = new List<OutputBase>();
                 foreach(var key in entry.keyList)
                 {
                     list.Add(key);
@@ -68,7 +68,7 @@ namespace Articulate
             }
         }
 
-		public void Add(string[] alternates, string semantic, IEnumerable<INPUT[]> keyList)
+		public void Add(string[] alternates, string semantic, IEnumerable<OutputBase> keyList)
         {
             // create a new entry
             directObjectEntry newEntry;

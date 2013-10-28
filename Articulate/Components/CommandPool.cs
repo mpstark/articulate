@@ -353,7 +353,7 @@ namespace Articulate
                     Trace.WriteLine(subject);
                     if (subjectObject.KeyLookup.ContainsKey(subject))
                     {
-						DirectInputEmulator.SendInput(subjectObject.KeyLookup[subject], 75);
+						DirectInputEmulator.SendInput(subjectObject.KeyLookup[subject].SpaceOperations(75));
                     }
                 }
             }
@@ -362,13 +362,13 @@ namespace Articulate
             {
                 // execute command keypresses
                 Trace.WriteLine(command);
-                DirectInputEmulator.SendInput(commandObjects[command].KeyLookup[command], 75);
+				DirectInputEmulator.SendInput(commandObjects[command].KeyLookup[command].SpaceOperations(75));
 
                 // execute direct object keypresses (if needed)
                 if (directObject != null && directObject != "")
                 {
                     Trace.WriteLine(directObject);
-					DirectInputEmulator.SendInput(commandObjects[command].KeyLookup[directObject], 75);
+					DirectInputEmulator.SendInput(commandObjects[command].KeyLookup[directObject].SpaceOperations(75));
                 }
             }
         }
