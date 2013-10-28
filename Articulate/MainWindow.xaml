@@ -180,6 +180,7 @@
 
 			<TextBlock Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="12"
 					   TextAlignment="Center"
+					   TextWrapping="Wrap"
 					   Margin="0,0,0,5">  
 				<Run Text="{t:Translate main_preview_warning}"/>
 				<LineBreak/>
