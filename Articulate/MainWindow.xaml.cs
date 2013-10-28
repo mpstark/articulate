@@ -135,6 +135,9 @@ namespace Articulate
 				using (var enStream = new MemoryStream(Properties.Resources.en))
 					TranslationManager.Instance.Translations.Add(new FileBasedTranslation(CultureInfo.GetCultureInfo("en"), enStream));
 
+				using (var deStream = new MemoryStream(Properties.Resources.de))
+					TranslationManager.Instance.Translations.Add(new FileBasedTranslation(CultureInfo.GetCultureInfo("de"), deStream));
+
 				foreach (var file in new DirectoryInfo(Environment.CurrentDirectory).GetFiles("*.slt"))
 				{
 					using (var fs = file.OpenRead())
@@ -260,8 +263,9 @@ namespace Articulate
 
 		private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
 		{
-			Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
 			e.Handled = true;
+			if (!Uri.IsWellFormedUriString(e.Uri.OriginalString, UriKind.Absolute)) return;
+			Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
 		}
 
 		private void AdvancedSettings_Click(object sender, RoutedEventArgs e)
