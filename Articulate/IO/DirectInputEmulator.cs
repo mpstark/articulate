@@ -34,6 +34,16 @@ namespace Articulate
 				op.Execute();
 			}
 		}
+		public static async Task SendInputAsync(params OutputBase[] outputOperations)
+		{
+			foreach (var op in outputOperations)			
+				await op.ExecuteAsync();			
+		}
+		public static async Task SendInputAsync(IEnumerable<OutputBase> outputOperations)
+		{
+			foreach (var op in outputOperations)			
+				await op.ExecuteAsync();			
+		}
 				
 		/// <summary>
 		/// Creates a set of input operations to emulate pressing the given keys
