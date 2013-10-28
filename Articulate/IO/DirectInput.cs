@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -187,6 +188,18 @@ namespace Articulate
 
 	public abstract class DirectInputBase : OutputBase
 	{
+		protected DirectInputBase(string displayName, string serializationName)
+			: base(displayName, serializationName)
+		{
+
+		}
+
+		protected DirectInputBase(SerializationInfo info, StreamingContext context)
+			: base(info, context)
+		{
+
+		}
+
 		[DllImport("user32.dll")]
 		protected static extern UInt32 SendInput(UInt32 nInputs, [MarshalAs(UnmanagedType.LPArray, SizeConst = 1)] INPUT[] pInputs, Int32 cbSize);
 
@@ -214,7 +227,19 @@ namespace Articulate
 	#region Keyboard Outputs
 
 	public abstract class KeyboardOutputBase : DirectInputBase
-	{
+	{		
+		protected KeyboardOutputBase(string displayName, string serializationName)
+			: base(displayName, serializationName)
+		{
+
+		}
+
+		protected KeyboardOutputBase(SerializationInfo info, StreamingContext context)
+			: base(info, context)
+		{
+			Key = (DirectInputKeys)info.GetInt16("Key");
+		}
+
 		public virtual DirectInputKeys Key { get; protected set; }
 		
 		protected override INPUT[] ToDirectInput()
@@ -232,21 +257,42 @@ namespace Articulate
 				}
 			};
 		}
+
+		public override void GetObjectData(SerializationInfo info, StreamingContext context)
+		{
+			base.GetObjectData(info, context);
+
+			info.AddValue("Key", (Int16)Key);
+		}
 	}
 
 	public sealed class KeyDown : KeyboardOutputBase
 	{
 		public KeyDown(DirectInputKeys key)
+			: base("output_keydown", "KeyDown")
 		{
 			Key = key;
+		}
+
+		private KeyDown(SerializationInfo info, StreamingContext context)
+			: base(info, context)
+		{
+
 		}
 	}
 
 	public sealed class KeyUp : KeyboardOutputBase
 	{
 		public KeyUp(DirectInputKeys key)
+			: base("output_keyup", "KeyUp")
 		{
 			Key = key;
+		}
+
+		private KeyUp(SerializationInfo info, StreamingContext context)
+			: base(info, context)
+		{
+
 		}
 
 		protected override INPUT[] ToDirectInput()
@@ -260,8 +306,15 @@ namespace Articulate
 	public sealed class KeyPress : KeyboardOutputBase
 	{
 		public KeyPress(DirectInputKeys key)
+			: base("output_keypress", "KeyPress")
 		{
 			Key = key;
+		}
+
+		private KeyPress(SerializationInfo info, StreamingContext context)
+			: base(info, context)
+		{
+
 		}
 
 		protected override INPUT[] ToDirectInput()
@@ -280,6 +333,18 @@ namespace Articulate
 
 	public abstract class MouseOutputBase : DirectInputBase
 	{
+		protected MouseOutputBase(string displayName, string serializationName)
+			: base(displayName, serializationName)
+		{
+
+		}
+
+		protected MouseOutputBase(SerializationInfo info, StreamingContext context)
+			: base(info, context)
+		{
+			Button = (System.Windows.Forms.MouseButtons)info.GetInt32("Button");
+		}
+
 		public virtual System.Windows.Forms.MouseButtons Button
 		{ get; set; }
 
@@ -323,22 +388,43 @@ namespace Articulate
 
 			return new[] { input };
 		}
+		
+		public override void GetObjectData(SerializationInfo info, StreamingContext context)
+		{
+			base.GetObjectData(info, context);
+
+			info.AddValue("Button", (Int32)Button);
+		}
 	}
 
 
 	public sealed class MouseDown : MouseOutputBase
 	{
 		public MouseDown(System.Windows.Forms.MouseButtons button)
+			: base("output_mousedown", "MouseDown")
 		{
 			Button = button;
+		}
+
+		private MouseDown(SerializationInfo info, StreamingContext context)
+			: base(info, context)
+		{
+
 		}
 	}
 
 	public sealed class MouseUp : MouseOutputBase
 	{
 		public MouseUp(System.Windows.Forms.MouseButtons button)
+			: base("output_mouseup", "MouseUp")
 		{
 			Button = button;
+		}
+
+		private MouseUp(SerializationInfo info, StreamingContext context)
+			: base(info, context)
+		{
+
 		}
 
 		protected override INPUT[] ToDirectInput()
@@ -352,8 +438,15 @@ namespace Articulate
 	public sealed class MouseClick : MouseOutputBase
 	{
 		public MouseClick(System.Windows.Forms.MouseButtons button)
+			: base("output_mouseclick", "MouseClick")
 		{
 			Button = button;
+		}
+
+		private MouseClick(SerializationInfo info, StreamingContext context)
+			: base(info, context)
+		{
+
 		}
 
 		protected override INPUT[] ToDirectInput()
@@ -371,11 +464,23 @@ namespace Articulate
 
 	#region Utility "Outputs"
 
+	/// <summary>
+	/// Allows outputs to be grouped while still behaving like an <see cref="OutputBase"/>.
+	/// </summary>
 	public sealed class OutputGroup : OutputBase
 	{
-		public OutputGroup(IEnumerable<OutputBase> operations)
+		public OutputGroup(IEnumerable<OutputBase> operations) 
+			: base("output_group", "Group")
 		{
 			Operations = operations;
+		}
+
+		private OutputGroup(SerializationInfo info, StreamingContext context)
+			: base(info, context)
+		{
+			if (info == null) throw new ArgumentNullException("info");
+
+			Operations = (IEnumerable<OutputBase>)info.GetValue("Operations", typeof(IEnumerable<OutputBase>));
 		}
 
 		public IEnumerable<OutputBase> Operations
@@ -392,13 +497,31 @@ namespace Articulate
 			foreach (var op in Operations)
 				await op.ExecuteAsync();
 		}
+
+		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+		{
+			base.GetObjectData(info, context);
+			info.AddValue("Operations", Operations, typeof(IEnumerable<OutputBase>));
+		}
 	}
 
+	/// <summary>
+	/// Causes the program to delay the next <see cref="OutputBase"/> by the specified number of milliseconds
+	/// </summary>
 	public sealed class Sleep : OutputBase
 	{
 		public Sleep(int duration)
+			: base("output_sleep", "Sleep")
 		{
 			Duration = duration;
+		}
+
+		private Sleep(SerializationInfo info, StreamingContext context)
+			: base(info, context)
+		{
+			if (info == null) throw new ArgumentNullException("info");
+
+			Duration = info.GetInt32("Duration");
 		}
 
 		public int Duration
@@ -406,12 +529,21 @@ namespace Articulate
 
 		public override void Execute()
 		{
-			Thread.Sleep(Duration);
+			if(Duration > 0)
+				Thread.Sleep(Duration);
 		}
 
 		public override async Task ExecuteAsync()
 		{
-			await Task.Delay(Duration);
+			if(Duration > 0)
+				await Task.Delay(Duration);
+		}
+
+		public override void GetObjectData(SerializationInfo info, StreamingContext context)
+		{
+			base.GetObjectData(info, context);
+
+			info.AddValue("Duration", Duration);
 		}
 	}
 
