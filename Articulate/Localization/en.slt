@@ -68,6 +68,9 @@ main_bi_post = [BI Forum Post]
 main_feedback = [Provide Feedback]
 main_wiki = [GitHub Wiki]
 
+menu_show = Show
+menu_hide = Hide
+menu_exit = Exit
 
 mouse_1048576 = Left Mouse
 mouse_2097152 = Right Mouse

@@ -71,6 +71,9 @@ main_bi_post = [Beitrag im BI-Forum]
 main_feedback = [Feedback geben]
 main_wiki = [GitHub Wiki]
 
+menu_show = Ziegen
+menu_hide = Verstecken
+menu_exit = Schließen
 
 mouse_1048576 = Linke Maustaste
 mouse_2097152 = Rechte Maustaste
