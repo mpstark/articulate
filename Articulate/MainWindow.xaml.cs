@@ -118,6 +118,8 @@ namespace Articulate
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
+			TranslationManager.Instance.LanguageChanged += Translation_LanguageChanged;
+
 			// Load translations			
 			try
 			{
@@ -360,7 +362,41 @@ namespace Articulate
 		}
 
 		#endregion
+
+		#region Translation
 		
+		void Translation_LanguageChanged(object sender, TranslationChangedEventArgs e)
+		{
+			if (ni != null)
+			{
+				ni.ContextMenu.MenuItems.Clear();
+				ni.ContextMenu.MenuItems.Add("menu_show".Translate("Show"), (o, ee) => { Show(); WindowState = WindowState.Normal; });
+				ni.ContextMenu.MenuItems.Add("menu_hide".Translate("Hide"), (o, ee) => { Hide(); WindowState = WindowState.Normal; });
+				ni.ContextMenu.MenuItems.Add("menu_exit".Translate("Exit"), (o, ee) => Close());
+			}
+
+			if (Logic != null)
+			{
+				switch (Logic.Recognizer.State)
+				{
+					case VoiceRecognizer.VoiceRecognizerState.Error:
+						State = "state_error".Translate("ERROR");
+						break;
+					case VoiceRecognizer.VoiceRecognizerState.Listening:
+					case VoiceRecognizer.VoiceRecognizerState.ListeningOnce:
+						State = "state_online".Translate("LISTENING");
+						break;
+
+					case VoiceRecognizer.VoiceRecognizerState.Paused:
+					case VoiceRecognizer.VoiceRecognizerState.Pausing:
+						State = "state_offline".Translate("OFFLINE");
+						break;
+				}
+			}
+		}
+
+		#endregion
+
 		#region IDispose Implementation
 		public void Dispose()
 		{
