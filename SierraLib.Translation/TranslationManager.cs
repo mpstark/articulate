@@ -11,44 +11,108 @@ using System.Diagnostics.Contracts;
 
 namespace SierraLib.Translation
 {
-
+	/// <summary>
+	/// Provides translation support for applications which make use of WPF user interfaces or
+	/// require the ability to load translations from different sources.
+	/// </summary>
     public class TranslationManager
     {
-        public TranslationManager()
+        protected TranslationManager()
         {
             Translations = new TranslationList();
         }
 
-        private static TranslationManager _translationManager;
+		private static TranslationManager _translationManager;
 
-        public event EventHandler LanguageChanged;
+		#region Singleton
 
-        public CultureInfo CurrentLanguage
-        {
-            get { return Thread.CurrentThread.CurrentUICulture; }
-            set
-            {
-                if (value != Thread.CurrentThread.CurrentUICulture)
-                {
-                    Thread.CurrentThread.CurrentUICulture = value;
-                    RefreshCurrentTranslation();
-                    OnLanguageChanged();
-                }
-            }
-        }
-
-		private CultureInfo _DefaultLanguage = new CultureInfo("en");
-		public CultureInfo DefaultLanguage
+		/// <summary>
+		/// Gets the active singleton instance of this <see cref="TranslationManager"/> for use throughout
+		/// the application.
+		/// </summary>
+		public static TranslationManager Instance
 		{
-			get { return _DefaultLanguage; }
-			set 
+			get
 			{
-				_DefaultLanguage = value;
-				RefreshCurrentTranslation();
-				OnLanguageChanged();
+				if (_translationManager == null)
+					_translationManager = new TranslationManager();
+				return _translationManager;
 			}
 		}
 
+		#endregion
+
+		#region Public Events
+
+		/// <summary>
+		/// Triggered whenever the <see cref="CurrentTranslation"/> changes, allowing data
+		/// that is not bound to be updated.
+		/// </summary>
+		public event EventHandler<TranslationChangedEventArgs> LanguageChanged;
+
+		#endregion
+
+		#region Public Properties
+
+		/// <summary>
+		/// Gets or sets the <see cref="CultureInfo"/> describing the currently selected
+		/// language for translation.
+		/// </summary>
+		public CultureInfo CurrentLanguage
+		{
+			get { return Thread.CurrentThread.CurrentUICulture; }
+			set
+			{
+				if (value != Thread.CurrentThread.CurrentUICulture)
+				{
+					var currentTranslation = CurrentTranslation;
+
+					Thread.CurrentThread.CurrentUICulture = value;
+					RefreshCurrentTranslation();
+
+					if (CurrentTranslation != currentTranslation)
+						OnLanguageChanged(currentTranslation);
+				}
+			}
+		}
+
+		private CultureInfo _DefaultLanguage = new CultureInfo("en");
+		/// <summary>
+		/// Gets or sets the default <see cref="CultureInfo"/> to use if no translation for the
+		/// <see cref="CurrentLanguage"/> could be found.
+		/// </summary>
+		public CultureInfo DefaultLanguage
+		{
+			get { return _DefaultLanguage; }
+			set
+			{
+				var currentTranslation = CurrentTranslation;
+
+				_DefaultLanguage = value;
+				RefreshCurrentTranslation();
+
+				if (CurrentTranslation != currentTranslation)
+					OnLanguageChanged(currentTranslation);
+			}
+		}
+
+		/// <summary>
+		/// Gets the currently active <see cref="TranslationBase"/> used to provide translations.
+		/// </summary>
+		public TranslationBase CurrentTranslation
+		{
+			get;
+			private set;
+		}
+
+		#endregion
+
+		#region Public Collections
+
+		/// <summary>
+		/// Gets a collection of <see cref="CultureInfo"/> objects representing the languages
+		/// available for translation.
+		/// </summary>
         public IEnumerable<CultureInfo> Languages
         {
             get
@@ -56,38 +120,27 @@ namespace SierraLib.Translation
                 Contract.Ensures(Contract.Result<IEnumerable<CultureInfo>>() != null);
 
                 if (Translations != null)
-                    foreach (ITranslation translation in Translations)
+                    foreach (TranslationBase translation in Translations)
                         yield return translation.Culture;
             }
         }
-
-        public static TranslationManager Instance
-        {
-            get
-            {
-                if (_translationManager == null)
-                    _translationManager = new TranslationManager();
-                return _translationManager;
-            }
-        }
-
+		
+		/// <summary>
+		/// Gets the list of <see cref="TranslationBase"/> instances providing translations
+		/// for the current application.
+		/// </summary>
         public TranslationList Translations { get; private set; }
+		
+		#endregion
 
-        public ITranslation CurrentTranslation
-        {
-            get;
-            private set;
-        }
-        
-        private void OnLanguageChanged()
-        {
-            if (LanguageChanged != null)
-            {
-                LanguageChanged(this, EventArgs.Empty);
-            }
-        }
-        
-        public string this[string key]
+		#region Translation Accessors
+
+		/// <summary>
+		/// Method which retrieves the translation for the requested <paramref name="key"/> if one is available.
+		/// </summary>
+		/// <param name="key">The unique key used to identify the requested translated text</param>
+		/// <returns>Returns the translated text if it is available, or a predetermined default</returns>
+        public virtual string this[string key]
         {
             get
             {
@@ -95,7 +148,14 @@ namespace SierraLib.Translation
             }
         }
 
-        public string this[string key, string defaultValue]
+		/// <summary>
+		/// Method which retrieves the translation for the requested <paramref name="key"/> if one is available, 
+		/// using the provided <paramref name="defaultValue"/> if not.
+		/// </summary>
+		/// <param name="key">The unique key used to identify the requested translated text</param>
+		/// <param name="defaultValue">The text to return if a translated default couldn't be found</param>
+		/// <returns>Returns the translated text if it is available, or the specified <paramref name="defaultValue"/></returns>
+		public virtual string this[string key, string defaultValue]
         {
             get
             {
@@ -111,6 +171,10 @@ namespace SierraLib.Translation
                 return defaultValue;
             }
         }
+		
+		#endregion
+
+		#region Public Methods
 
 		/// <summary>
 		/// Loads the best available translation for the current thread's UI culture
@@ -119,7 +183,7 @@ namespace SierraLib.Translation
 		{
 			LoadBest(Thread.CurrentThread.CurrentUICulture);
 		}
-
+		
 		/// <summary>
 		/// Loads the best available translation for the specified culture
 		/// </summary>
@@ -128,12 +192,27 @@ namespace SierraLib.Translation
 		{
 			if (targetCulture == CurrentLanguage)
 			{
+				var currentTranslation = CurrentTranslation;
+
 				RefreshCurrentTranslation();
-				OnLanguageChanged();
+
+				if(currentTranslation != CurrentTranslation)
+					OnLanguageChanged(currentTranslation);
 			}
 			else
 				CurrentLanguage = targetCulture;
 		}
+
+		#endregion
+
+		private void OnLanguageChanged(TranslationBase oldTranslation)
+		{
+			if (LanguageChanged != null)
+			{
+				LanguageChanged(this, new TranslationChangedEventArgs(oldTranslation, CurrentTranslation));
+			}
+		}
+		
 
         void RefreshCurrentTranslation()
         {
@@ -142,7 +221,7 @@ namespace SierraLib.Translation
             //First, we attempt to find a translator for this exact dialect
             while (true)
             {
-                foreach (ITranslation translation in Translations)
+                foreach (TranslationBase translation in Translations)
                     if (translation.Culture.Name == current)
                     {
                         CurrentTranslation = translation;
@@ -186,14 +265,14 @@ namespace SierraLib.Translation
 
                     foreach (Type t in pluginTypes)
                     {
-                        if (typeof(ITranslation).IsAssignableFrom(t))
+                        if (typeof(TranslationBase).IsAssignableFrom(t))
                         {
                             if (!t.IsAbstract && t.IsPublic)
                             {
                                 //Load this plugin
                                 try
                                 {
-                                    ITranslation newTranslation = (ITranslation)assembly.CreateInstance(t.FullName);
+                                    TranslationBase newTranslation = (TranslationBase)assembly.CreateInstance(t.FullName);
                                     Translations.Add(newTranslation);
                                 }
                                 catch
@@ -211,5 +290,29 @@ namespace SierraLib.Translation
             return true;
         }
     }
+	
+	/// <summary>
+	/// Describes the changes to the active translation
+	/// </summary>
+	public sealed class TranslationChangedEventArgs : EventArgs
+	{
+		internal TranslationChangedEventArgs(TranslationBase oldTranslation, TranslationBase newTranslation)
+		{
+			Previous = oldTranslation;
+			Current = newTranslation;
+		}
+
+		/// <summary>
+		/// The previously active <see cref="TranslationBase"/> instance
+		/// </summary>
+		public TranslationBase Previous
+		{ get; private set; }
+
+		/// <summary>
+		/// The currently active <see cref="TranslationBase"/> instance providing translations
+		/// </summary>
+		public TranslationBase Current
+		{ get; private set; }
+	}
 }
 

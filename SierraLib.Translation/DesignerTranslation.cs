@@ -5,25 +5,25 @@ using System.Text;
 
 namespace SierraLib.Translation
 {
-    public class DesignerTranslation : ITranslation
+    public class DesignerTranslation : TranslationBase
     {
-        public System.Globalization.CultureInfo Culture
+		public override System.Globalization.CultureInfo Culture
         {
             get { return new System.Globalization.CultureInfo(""); }
         }
 
-        public string this[string key]
+        public override string this[string key]
         {
             get { return this[key, "!!!" + key]; }
         }
 
-        public string this[string key, string defaultValue]
+		public override string this[string key, string defaultValue]
         {
             get { return defaultValue; }
         }
 
 
-        public string Author
+		public override string Author
         {
             get { return "Sierra Softworks"; }
         }

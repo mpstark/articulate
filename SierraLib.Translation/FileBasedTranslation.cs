@@ -24,7 +24,7 @@ namespace SierraLib.Translation
 	///     are indented and there are 
 	///     no extra empty lines between values.
 	/// </remarks>
-	public class FileBasedTranslation : ITranslation
+	public class FileBasedTranslation : TranslationBase
 	{
 		/// <summary>
 		/// Loads a translation from the given stream, marking it as belonging to the given culture.
@@ -37,26 +37,14 @@ namespace SierraLib.Translation
 			ProcessFile(file);
 		}
 
-		public System.Globalization.CultureInfo Culture
-		{
-			get;
-			private set;
-		}
-
-		public string Author
-		{
-			get;
-			private set;
-		}
-
 		protected Dictionary<string, string> FileData = new Dictionary<string, string>();
 
-		public virtual string this[string key]
+		public override string this[string key]
 		{
 			get { return FileData.ContainsKey(key) ? FileData[key] : "!!!" + key; }
 		}
 
-		public virtual string this[string key, string defaultValue]
+		public override string this[string key, string defaultValue]
 		{
 			get { return FileData.ContainsKey(key) ? FileData[key] : defaultValue; }
 		}
