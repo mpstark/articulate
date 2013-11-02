@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using SierraLib.Translation;
+using System.Reactive.Concurrency;
 
 namespace Articulate
 {
@@ -50,7 +51,7 @@ namespace Articulate
 				EndCommandPauseNumber.Content = Math.Floor(args.EventArgs.NewValue).ToString();
 			}));
 
-			RxSubscriptions.Push(CommandPauseEvent.Skip(1).Distinct().Sample(TimeSpan.FromMilliseconds(500)).Subscribe(args =>
+			RxSubscriptions.Push(CommandPauseEvent.Skip(1).Distinct().Sample(TimeSpan.FromMilliseconds(500)).ObserveOn(ThreadPoolScheduler.Instance).Subscribe(args =>
 			{
 				Logic.Configuration.EndCommandPause = (int)args.EventArgs.NewValue;
 
@@ -106,5 +107,6 @@ namespace Articulate
 			PTTKey.IsEnabled = true;
 			PTTKey.Content = "settings_command_keys_bind".Translate();
 		}
+		
 	}
 }
