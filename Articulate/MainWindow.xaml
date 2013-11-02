@@ -175,6 +175,7 @@
 					FontSize="26" 
 					HorizontalAlignment="Center" 
 					Foreground="White"
+					Content="{Binding RecognizedCommand,ElementName=this, Converter={StaticResource Translate}}"
 					/>
 			</StackPanel>
 

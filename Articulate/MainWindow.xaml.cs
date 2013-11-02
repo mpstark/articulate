@@ -104,6 +104,13 @@ namespace Articulate
 			set { Dispatcher.Invoke(() => SetValue(ArticulateErrorMessageProperty, value)); }
 		}
 
+		public static DependencyProperty RecognizedCommandProperty = DependencyProperty.Register("RecognizedCommand", typeof(string), typeof(MainWindow), new PropertyMetadata(""));
+		public string RecognizedCommand
+		{
+			get { return (string)GetValue(RecognizedCommandProperty); }
+			set { Dispatcher.Invoke(() => SetValue(RecognizedCommandProperty, value)); }
+		}
+
 		#endregion
 
 		#region Window Events
@@ -229,7 +236,7 @@ namespace Articulate
 		{
 			Trace.WriteLine("Accepted command: " + e.Phrase + " " + e.Confidence);
 
-			Dispatcher.Invoke(() => LastCommand.Content = e.Phrase);
+			RecognizedCommand = e.Phrase;
 
 			if (Logic.Configuration.Mode == Articulate.ListenMode.PushToArm) Enabled = false;
 		}
@@ -238,7 +245,7 @@ namespace Articulate
 		{
 			Trace.WriteLine("Rejected command: " + e.Phrase + " " + e.Confidence);
 
-			Dispatcher.Invoke(() => LastCommand.Content = "state_recognition_failed".Translate("What was that?"));
+			RecognizedCommand = "state_recognition_failed";
 
 			// TODO: Decide whether or not Push To Arm should keep trying until it gets a match
 			if (Logic.Configuration.Mode == Articulate.ListenMode.PushToArm) Enabled = false;
@@ -393,6 +400,8 @@ namespace Articulate
 						break;
 				}
 			}
+
+			RecognizedCommand = "";
 		}
 
 		#endregion
