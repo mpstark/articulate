@@ -83,7 +83,7 @@ namespace Articulate
 
         private void GenerateKeyLookup()
         {
-            KeyLookup = new Dictionary<string, List<INPUT[]>>();
+            KeyLookup = new Dictionary<string, List<OutputBase>>();
 
             var one = DirectInputEmulator.KeyPress(DirectInputKeys.F1);
 			var two = DirectInputEmulator.KeyPress(DirectInputKeys.F2);
@@ -102,27 +102,27 @@ namespace Articulate
 			var yellow = DirectInputEmulator.KeyPress(DirectInputKeys.Shift, DirectInputKeys.F4);
 			var white = DirectInputEmulator.KeyPress(DirectInputKeys.Shift, DirectInputKeys.F5);
 
-			var everyone = new List<INPUT[]>();
+			var everyone = new List<OutputBase>();
 			everyone.Add(DirectInputEmulator.KeyPress(DirectInputKeys.Tilde));
 
             // SQUAD SELECTION
-            KeyLookup.Add("ONE", new List<INPUT[]>() { one });
-			KeyLookup.Add("TWO", new List<INPUT[]>() { two });
-			KeyLookup.Add("THREE", new List<INPUT[]>() { three });
-			KeyLookup.Add("FOUR", new List<INPUT[]>() { four });
-			KeyLookup.Add("FIVE", new List<INPUT[]>() { five });
-			KeyLookup.Add("SIX", new List<INPUT[]>() { six });
-			KeyLookup.Add("SEVEN", new List<INPUT[]>() { seven });
-			KeyLookup.Add("EIGHT", new List<INPUT[]>() { eight });
-			KeyLookup.Add("NINE", new List<INPUT[]>() { nine });
-			KeyLookup.Add("TEN", new List<INPUT[]>() { ten });
+			KeyLookup.Add("ONE", new List<OutputBase>() { one });
+			KeyLookup.Add("TWO", new List<OutputBase>() { two });
+			KeyLookup.Add("THREE", new List<OutputBase>() { three });
+			KeyLookup.Add("FOUR", new List<OutputBase>() { four });
+			KeyLookup.Add("FIVE", new List<OutputBase>() { five });
+			KeyLookup.Add("SIX", new List<OutputBase>() { six });
+			KeyLookup.Add("SEVEN", new List<OutputBase>() { seven });
+			KeyLookup.Add("EIGHT", new List<OutputBase>() { eight });
+			KeyLookup.Add("NINE", new List<OutputBase>() { nine });
+			KeyLookup.Add("TEN", new List<OutputBase>() { ten });
 
             // TEAM SELECTION
-            KeyLookup.Add("RED", new List<INPUT[]>() { red });
-            KeyLookup.Add("BLUE", new List<INPUT[]>() { blue });
-            KeyLookup.Add("YELLOW", new List<INPUT[]>() { yellow });
-            KeyLookup.Add("WHITE", new List<INPUT[]>() { white });
-			KeyLookup.Add("GREEN", new List<INPUT[]>() { green });
+            KeyLookup.Add("RED", new List<OutputBase>() { red });
+            KeyLookup.Add("BLUE", new List<OutputBase>() { blue });
+            KeyLookup.Add("YELLOW", new List<OutputBase>() { yellow });
+            KeyLookup.Add("WHITE", new List<OutputBase>() { white });
+			KeyLookup.Add("GREEN", new List<OutputBase>() { green });
 
             // ALL
             KeyLookup.Add("ALL", everyone);

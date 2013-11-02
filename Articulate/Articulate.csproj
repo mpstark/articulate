@@ -138,6 +138,8 @@
     <Compile Include="Components\VoiceRecognizer.cs" />
     <Compile Include="Core.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="IO\DirectInput.cs" />
+    <Compile Include="IO\OutputBase.cs" />
     <Compile Include="Localization\FileBasedTranslation.cs" />
     <Compile Include="Settings\Settings.cs" />
     <Page Include="MainWindow.xaml">
@@ -148,7 +150,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Components\DirectInputEmulator.cs" />
+    <Compile Include="IO\DirectInputEmulator.cs" />
     <Compile Include="GlobalHooks\GlobalEventProvider.cs">
       <SubType>Component</SubType>
     </Compile>

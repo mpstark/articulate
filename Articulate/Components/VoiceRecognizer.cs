@@ -349,7 +349,7 @@ namespace Articulate
 			}
 
 			// Get a thread from the thread pool to execute the command
-			Task.Factory.StartNew(() => CommandPool.Execute(recognizedPhrase.Result.Semantics));
+			CommandPool.ExecuteAsync(recognizedPhrase.Result.Semantics);
 		}
 
 		/// <summary>
