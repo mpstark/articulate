@@ -1,5 +1,5 @@
 ﻿translation_language = Spanish
-translation_author = Falcata
+translation_author = Dj Otacon
 translation_website = 
 
 app_title = Articulate
@@ -13,7 +13,7 @@ languages_button_tooltip = Cambiar el lenguaje
 languages_header = Lenguajes
 languages_combobox = Lenguaje
 languages_description = 
-	Elige el lenguaje que te gustaria usar en Articulate. Si tu lenguaje no aparece
+	Elige el lenguaje que te gustaría usar en Articulate. Si tu lenguaje no aparece
 	aqui considera colaborar traducciendolo en nuestro Github Wiki.
 	
 
@@ -29,11 +29,11 @@ listening_mode_pti = Pulsa para ignorar
 
 settings_confidence = Margen de confianza
 settings_confidence_explanation = 
-	Reducir este valor aumentara el rendimiento a costa de la exactitud
+	Reducir este valor aumentara el rendimiento a costa de la precisión
 
 settings_command_keys = Teclas de las ordenes
 settings_command_keys_bind = Añadir tecla enlazada
-settings_command_keys_bind_busy = Pulsa y liber la telca
+settings_command_keys_bind_busy = Pulsa y libera la tecla
 settings_command_keys_bind_tooltip = Añadir una tecla PTT
 settings_command_keys_explanation =
 	Pulsa en el botón para cambiar la tecla del comando, pulsa Escape para cancelar la asignacion. 
@@ -50,7 +50,7 @@ error_header = Error
 error_title = Mensaje de Error
 error_reload = Reintentar
 
-about_button_tooltip = Information about Articulate
+about_button_tooltip = Información acerca de Articulate
 about_header = Acerca
 about_title = Bienvenido a Articulate!
 about_text = 
