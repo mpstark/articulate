@@ -189,7 +189,7 @@ namespace Articulate
 					"arma3"
 				});
 
-			LanguageList.ItemsSource = TranslationManager.Instance.Translations.Select(x => x.Culture.DisplayName);
+			LanguageList.ItemsSource = TranslationManager.Instance.Translations.Select(x => x["translation_language"] ?? x.Culture.DisplayName);
 			LanguageList.SelectedItem = TranslationManager.Instance.CurrentLanguage.DisplayName;
 
 			Task.Factory.StartNew(LoadRecognizer);
