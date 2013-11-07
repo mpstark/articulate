@@ -144,6 +144,8 @@ namespace Articulate
 					using (var fs = file.OpenRead())
 						TranslationManager.Instance.Translations.Add(new FileBasedTranslation(CultureInfo.GetCultureInfo(System.IO.Path.GetFileNameWithoutExtension(file.Name)), fs));
 				}
+
+				TranslationManager.Instance.LoadBest();
 			}
 			catch (Exception ex)
 			{
@@ -190,7 +192,7 @@ namespace Articulate
 				});
 
 			LanguageList.ItemsSource = TranslationManager.Instance.Translations.Select(x => x["translation_language"] ?? x.Culture.DisplayName);
-			LanguageList.SelectedItem = TranslationManager.Instance.CurrentLanguage.DisplayName;
+			LanguageList.SelectedItem = TranslationManager.Instance.CurrentTranslation["translation_language"] ?? TranslationManager.Instance.CurrentLanguage.DisplayName;
 
 			Task.Factory.StartNew(LoadRecognizer);
 		}
