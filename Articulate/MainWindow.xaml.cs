@@ -44,19 +44,10 @@ namespace Articulate
 
 			PushToTalkRelease = new AutoResetEvent(false);
 			Logic = new Core();
+
+			TranslationManager.Instance.DefaultLanguage = new CultureInfo("en");
 			TranslationManager.Instance.CurrentLanguage = new CultureInfo(Logic.Configuration.Language ?? "en");
-
-			ni = new System.Windows.Forms.NotifyIcon();
-
-			ni.Icon = Properties.Resources.Main;
-			ni.Visible = true;
-			ni.Text = "Articulate";
-			ni.DoubleClick += (sender, args) =>
-				{
-					this.Show();
-					this.WindowState = WindowState.Normal;
-				};
-
+						
 			Logic.Keybinder.KeysPressed += OnKeysPressed;
 			Logic.Keybinder.KeysReleased += OnKeysReleased;
 
@@ -133,6 +124,9 @@ namespace Articulate
 				using (var enStream = new MemoryStream(Properties.Resources.en))
 					TranslationManager.Instance.Translations.Add(new FileBasedTranslation(CultureInfo.GetCultureInfo("en"), enStream));
 
+				using (var deStream = new MemoryStream(Properties.Resources.de))
+					TranslationManager.Instance.Translations.Add(new FileBasedTranslation(CultureInfo.GetCultureInfo("de"), deStream));
+
 				foreach (var file in new DirectoryInfo(Environment.CurrentDirectory).GetFiles("*.slt"))
 				{
 					using (var fs = file.OpenRead())
@@ -151,6 +145,22 @@ namespace Articulate
 				App.HandleError(ex);
 #endif
 			}
+			
+			ni = new System.Windows.Forms.NotifyIcon();
+
+			ni.Icon = Properties.Resources.Main;
+			ni.Visible = true;
+			ni.Text = "Articulate";
+			ni.DoubleClick += (o, ee) =>
+			{
+				this.Show();
+				this.WindowState = WindowState.Normal;
+			};
+
+			ni.ContextMenu = new System.Windows.Forms.ContextMenu();
+			ni.ContextMenu.MenuItems.Add("menu_show".Translate("Show"), (o, ee) => { Show(); WindowState = WindowState.Normal; });
+			ni.ContextMenu.MenuItems.Add("menu_hide".Translate("Hide"), (o, ee) => { Hide(); WindowState = WindowState.Normal; });
+			ni.ContextMenu.MenuItems.Add("menu_exit".Translate("Exit"), (o, ee) => Close());
 
 			ListenMode.SelectedIndex = (int)Logic.Configuration.Mode;
 
@@ -265,8 +275,9 @@ namespace Articulate
 
 		private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
 		{
-			Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
 			e.Handled = true;
+			if (!Uri.IsWellFormedUriString(e.Uri.OriginalString, UriKind.Absolute)) return;
+			Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
 		}
 
 		private void AdvancedSettings_Click(object sender, RoutedEventArgs e)
@@ -405,7 +416,7 @@ namespace Articulate
 		}
 
 		#endregion
-
+		
 		#region IDispose Implementation
 		public void Dispose()
 		{

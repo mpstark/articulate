@@ -13,8 +13,8 @@ languages_button_tooltip = Change Language
 languages_header = Languages
 languages_combobox = Language
 languages_description = 
-	Choose the language you would like to use Articulate in. If your language
-	doesn't appear here then you can help by contributing a translation through
+	Choose the language you would like to use Articulate in. If your language 
+	doesn't appear here then you can help by contributing a translation through 
 	our GitHub wiki.
 
 settings_title = Settings
@@ -73,6 +73,9 @@ main_bi_post = [BI Forum Post]
 main_feedback = [Provide Feedback]
 main_wiki = [GitHub Wiki]
 
+menu_show = Show
+menu_hide = Hide
+menu_exit = Exit
 
 mouse_1048576 = Left Mouse
 mouse_2097152 = Right Mouse
