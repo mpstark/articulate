@@ -410,11 +410,6 @@ namespace Articulate
 			}
 		}
 
-		private void SoundEffectBrowse_Click(object sender, RoutedEventArgs e)
-		{
-
-		}
-
 		#endregion
 		
 		#region IDispose Implementation
