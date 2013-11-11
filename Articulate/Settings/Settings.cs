@@ -123,5 +123,12 @@ namespace Articulate
 
 		public string Language
 		{ get; set; }
+
+		public SoundEffectsPlayer.EffectMode SoundEffectMode
+		{ get; set; }
+
+		public string SoundEffectFolder
+		{ get; set; }
+		
 	}
 }

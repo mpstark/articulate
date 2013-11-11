@@ -33,7 +33,7 @@ namespace Articulate
 	/// </summary>
 	public partial class MainWindow : MetroWindow, IDisposable
 	{
-		NotifyIcon ni;		
+		NotifyIcon ni;
 		Stack<IDisposable> RxSubscriptions = new Stack<IDisposable>();
 
 		AutoResetEvent PushToTalkRelease;
@@ -68,7 +68,7 @@ namespace Articulate
 			{
 				ConfidenceMarginNumber.Content = Math.Floor(args.EventArgs.NewValue).ToString();
 			}));
-			
+
 			RxSubscriptions.Push(SettingsFlyout.ToObservable<bool>(Flyout.IsOpenProperty).Skip(1).Distinct().ObserveOn(ThreadPoolScheduler.Instance).Subscribe(args =>
 			{
 				if (!args) Logic.Configuration.Save();
@@ -180,7 +180,7 @@ namespace Articulate
 
 			ConfidenceMargin.Value = Logic.Configuration.ConfidenceMargin;
 			ConfidenceMarginNumber.Content = Logic.Configuration.ConfidenceMargin;
-			
+
 
 			if (!Logic.Configuration.Applications.Any())
 				Logic.Configuration.Applications.AddRange(new[] {
@@ -193,6 +193,13 @@ namespace Articulate
 
 			LanguageList.ItemsSource = TranslationManager.Instance.Translations.Select(x => x["translation_language"] ?? x.Culture.DisplayName);
 			LanguageList.SelectedItem = TranslationManager.Instance.CurrentTranslation["translation_language"] ?? TranslationManager.Instance.CurrentLanguage.DisplayName;
+
+			SoundEffectMode.SelectedIndex = (int)Logic.Configuration.SoundEffectMode;
+			if (Logic.Configuration.SoundEffectMode == SoundEffectsPlayer.EffectMode.Files)
+			{
+				SoundEffectFolder.Text = Logic.Configuration.SoundEffectFolder;
+				SoundEffectFolder.Visibility = System.Windows.Visibility.Visible;
+			}
 
 			Task.Factory.StartNew(LoadRecognizer);
 		}
@@ -320,7 +327,7 @@ namespace Articulate
 				}
 			}
 		}
-		
+
 		void OnKeysPressed(object sender, CompoundKeyBind e)
 		{
 			if (Logic.Configuration.Mode == Articulate.ListenMode.Continuous) return;
@@ -332,7 +339,7 @@ namespace Articulate
 			else
 				Enabled = Logic.Configuration.Mode == Articulate.ListenMode.PushToTalk || Logic.Configuration.Mode == Articulate.ListenMode.PushToArm;
 		}
-	
+
 		void OnKeysReleased(object sender, CompoundKeyBind e)
 		{
 			if (Logic.Configuration.Mode == Articulate.ListenMode.PushToArm) return; // Don't disable if we're armed
@@ -352,7 +359,7 @@ namespace Articulate
 
 		#endregion
 
-		#region Settings 
+		#region Settings
 
 		private void ListenMode_Selected(object sender, RoutedEventArgs e)
 		{
@@ -371,6 +378,50 @@ namespace Articulate
 			var translation = TranslationManager.Instance.Translations.Find(x => x.Culture.DisplayName == LanguageList.SelectedItem.ToString());
 
 			Logic.Configuration.Language = (TranslationManager.Instance.CurrentLanguage = translation.Culture).Name;
+		}
+
+		private void SoundEffectMode_Selected(object sender, RoutedEventArgs e)
+		{
+			SoundEffectsPlayer.EffectMode oldMode = Logic.SoundPlayer.Mode;
+			SoundEffectsPlayer.EffectMode mode = (SoundEffectsPlayer.EffectMode)(SoundEffectMode.SelectedIndex);
+
+			if(oldMode == mode)
+			{
+				return;
+			}
+
+			string oldFolder = Logic.SoundPlayer.SoundFolder;
+
+			SoundEffectFolder.Visibility = System.Windows.Visibility.Collapsed;
+
+			if (mode == SoundEffectsPlayer.EffectMode.Files)
+			{
+				System.Windows.Forms.FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
+				if(folderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+				{
+					SoundEffectFolder.Text = folderBrowser.SelectedPath;
+					SoundEffectFolder.Visibility = System.Windows.Visibility.Visible;
+				}
+				else
+				{
+					// Revert the change if the user clicked cancel.
+					SoundEffectMode.SelectedIndex = (int)oldMode;
+					
+					if(oldMode == SoundEffectsPlayer.EffectMode.Files)
+					{
+						SoundEffectFolder.Text = oldFolder;
+					}
+				}
+
+				Logic.SoundPlayer.ChangeSource(mode, SoundEffectFolder.Text);
+				Logic.Configuration.SoundEffectMode = mode;
+				Logic.Configuration.SoundEffectFolder = SoundEffectFolder.Text;
+			}
+			else
+			{
+				Logic.SoundPlayer.ChangeSource(mode);
+				Logic.Configuration.SoundEffectMode = mode;
+			}
 		}
 
 		#endregion

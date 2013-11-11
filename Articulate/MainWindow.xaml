@@ -124,7 +124,16 @@
 						Value="80" Minimum="65" Maximum="95"/>
 					<TextBlock TextWrapping="Wrap" Text="{t:Translate settings_confidence_explanation}"/>
 
-					<Button Content="{t:Translate settings_advanced_button}"
+                    <Label FontSize="16" Content="{t:Translate settings_soundeffect_mode}"/>
+                    <ComboBox x:Name="SoundEffectMode"
+						  SelectionChanged="SoundEffectMode_Selected">
+                        <ComboBoxItem Content="{t:Translate settings_soundeffect_mode_none}"></ComboBoxItem>
+                        <ComboBoxItem Content="{t:Translate settings_soundeffect_mode_default}"></ComboBoxItem>
+                        <ComboBoxItem Content="{t:Translate settings_soundeffect_mode_files}"></ComboBoxItem>
+                    </ComboBox>
+                    <TextBox x:Name="SoundEffectFolder" IsReadOnly="True" Visibility="Collapsed"></TextBox>
+
+                    <Button Content="{t:Translate settings_advanced_button}"
 							Margin="20 10"
 							Click="AdvancedSettings_Click"/>
 					
