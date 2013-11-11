@@ -140,6 +140,11 @@
     <Compile Include="Core.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Localization\FileBasedTranslation.cs" />
+    <Compile Include="Resources\SoundEffects\SoundEffects.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SoundEffects.resx</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Settings.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -181,6 +186,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Resources\SoundEffects\SoundEffects.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SoundEffects.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <Resource Include="Resources\Entypo.ttf" />
     <Resource Include="Main.ico" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -229,6 +238,18 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Entypo-license.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SoundEffects\command_accepted.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SoundEffects\command_rejected.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SoundEffects\started_listening.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SoundEffects\stopped_listening.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

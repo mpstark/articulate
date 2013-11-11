@@ -39,8 +39,6 @@ namespace Articulate
 
 			Language = (Thread.CurrentThread.CurrentUICulture ?? Thread.CurrentThread.CurrentCulture ?? new CultureInfo("en")).Name;
 
-			SoundPackFolder = @"%AppData%\Articulate\Sounds\Default Sounds";
-
 			FileLock = new object();
 		}
 
@@ -126,7 +124,11 @@ namespace Articulate
 		public string Language
 		{ get; set; }
 
-		public string SoundPackFolder
+		public SoundEffectsPlayer.EffectMode SoundEffectMode
 		{ get; set; }
+
+		public string SoundEffectFolder
+		{ get; set; }
+		
 	}
 }

@@ -46,6 +46,11 @@ settings_end_command_pause_explanation =
 
 settings_advanced_button = Advanced Settings
 
+settings_soundeffect_mode = Sound Effect Mode
+settings_soundeffect_mode_default = Default
+settings_soundeffect_mode_files = Sound Pack
+settings_soundeffect_mode_none = None
+
 error_header = Error
 error_title = Error Message
 error_reload = Retry
