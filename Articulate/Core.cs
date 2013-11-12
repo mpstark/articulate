@@ -8,12 +8,26 @@ namespace Articulate
 {
 	public class Core : IDisposable
 	{
-		public Core()
+		private Core()
 		{
 			Configuration = Settings.Load();
 			Keybinder = new KeyMonitor(Configuration);
 			Recognizer = new VoiceRecognizer();
 		}
+
+		#region Singleton
+
+		private static Core _Instance = null;
+
+		public static Core Instance
+		{
+			get
+			{
+				return _Instance = (_Instance ?? new Core());
+			}
+		}
+
+		#endregion
 
 		#region Public Properties
 

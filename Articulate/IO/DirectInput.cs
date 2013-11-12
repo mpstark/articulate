@@ -303,27 +303,22 @@ namespace Articulate
 		}
 	}
 
-	public sealed class KeyPress : KeyboardOutputBase
+	public sealed class KeyPress : OutputGroup
 	{
 		public KeyPress(DirectInputKeys key)
 			: base("output_keypress", "KeyPress")
 		{
-			Key = key;
+			Operations = new OutputBase[] {
+				new KeyDown(key),
+				new Sleep(Core.Instance.Configuration.KeyReleaseDelay),
+				new KeyUp(key)
+			};
 		}
 
 		private KeyPress(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
 
-		}
-
-		protected override INPUT[] ToDirectInput()
-		{
-			return base.ToDirectInput().Union(base.ToDirectInput().Select(x =>
-			{
-				x.Keyboard.Flags |= KEYBOARDINPUT.KeyUp;
-				return x;
-			})).ToArray();
 		}
 	}
 	
@@ -435,27 +430,22 @@ namespace Articulate
 		}
 	}
 
-	public sealed class MouseClick : MouseOutputBase
+	public sealed class MouseClick : OutputGroup
 	{
 		public MouseClick(System.Windows.Forms.MouseButtons button)
 			: base("output_mouseclick", "MouseClick")
 		{
-			Button = button;
+			Operations = new OutputBase[] { 
+				new MouseDown(button),
+				new Sleep(Core.Instance.Configuration.MouseReleaseDelay),
+				new MouseUp(button)
+			};
 		}
 
 		private MouseClick(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
 
-		}
-
-		protected override INPUT[] ToDirectInput()
-		{
-			return base.ToDirectInput().Union(base.ToDirectInput().Select(x =>
-			{
-				x.Mouse.Flags <<= 1;
-				return x;
-			})).ToArray();
 		}
 	}
 	
@@ -467,15 +457,21 @@ namespace Articulate
 	/// <summary>
 	/// Allows outputs to be grouped while still behaving like an <see cref="OutputBase"/>.
 	/// </summary>
-	public sealed class OutputGroup : OutputBase
+	public class OutputGroup : OutputBase
 	{
+		protected OutputGroup(string displayName, string serializationName)
+			: base(displayName, serializationName)
+		{
+
+		}
+
 		public OutputGroup(IEnumerable<OutputBase> operations) 
 			: base("output_group", "Group")
 		{
 			Operations = operations;
 		}
 
-		private OutputGroup(SerializationInfo info, StreamingContext context)
+		protected OutputGroup(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
 			if (info == null) throw new ArgumentNullException("info");
@@ -484,7 +480,7 @@ namespace Articulate
 		}
 
 		public IEnumerable<OutputBase> Operations
-		{ get; private set; }
+		{ get; protected set; }
 
 		public override void Execute()
 		{

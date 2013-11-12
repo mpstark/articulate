@@ -43,7 +43,7 @@ namespace Articulate
 			InitializeComponent();
 
 			PushToTalkRelease = new AutoResetEvent(false);
-			Logic = new Core();
+			Logic = Core.Instance;
 
 			TranslationManager.Instance.DefaultLanguage = new CultureInfo("en");
 			TranslationManager.Instance.CurrentLanguage = new CultureInfo(Logic.Configuration.Language ?? "en");

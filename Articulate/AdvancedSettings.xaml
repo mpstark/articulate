@@ -59,6 +59,15 @@
 				<Slider x:Name="EndCommandPause"
 						Value="500" Minimum="250" Maximum="1000"/>
 				<TextBlock TextWrapping="Wrap" Text="{t:Translate settings_end_command_pause_explanation}"/>
+
+				<Grid>
+					<Label FontSize="16" Content="{t:Translate settings_key_release_pause}" HorizontalAlignment="Left"/>
+					<Label x:Name="KeyReleasePauseNumber" FontSize="16" HorizontalAlignment="Right" 
+						   Content="80" />
+				</Grid>
+				<Slider x:Name="KeyReleasePause"
+						Value="50" Minimum="10" Maximum="200"/>
+				<TextBlock TextWrapping="Wrap" Text="{t:Translate settings_key_release_pause_explanation}"/>
 			</StackPanel>
 		</Grid>
 	</m:MetroContentControl>

@@ -39,6 +39,10 @@ namespace Articulate
 
 			Language = (Thread.CurrentThread.CurrentUICulture ?? Thread.CurrentThread.CurrentCulture ?? new CultureInfo("en")).Name;
 
+			KeyPressDelay = 75;
+			KeyReleaseDelay = 25;
+			MouseReleaseDelay = 25;
+
 			FileLock = new object();
 		}
 
@@ -56,7 +60,9 @@ namespace Articulate
 				using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
 				{
 					var serializer = new BinaryFormatter();
-					return (Settings)serializer.Deserialize(fs);
+					var output = (Settings)serializer.Deserialize(fs);
+					output.EnsureRanges();
+					return output;
 				}
 			}
 			catch (Exception ex)
@@ -104,6 +110,13 @@ namespace Articulate
 			
 		}
 
+		public void EnsureRanges()
+		{
+			KeyPressDelay = Math.Max(Math.Min(KeyPressDelay, 200), 0);
+			KeyReleaseDelay = Math.Max(Math.Min(KeyReleaseDelay, 500), 10);
+			MouseReleaseDelay = Math.Max(Math.Min(MouseReleaseDelay, 500), 10);
+		}
+
 		#endregion
 
 		public int ConfidenceMargin
@@ -122,6 +135,15 @@ namespace Articulate
 		{ get; set; }
 
 		public string Language
+		{ get; set; }
+
+		public int KeyReleaseDelay
+		{ get; set; }
+
+		public int KeyPressDelay
+		{ get; set; }
+
+		public int MouseReleaseDelay
 		{ get; set; }
 	}
 }
