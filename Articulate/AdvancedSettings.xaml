@@ -32,7 +32,7 @@
 				<ComboBox	x:Name="ListenMode"
 							SelectionChanged="ListenMode_Selected"
 							HorizontalAlignment="Center"
-							Width="180">
+							MinWidth="180">
 					<ComboBoxItem Content="{t:Translate listening_mode_continuous}"></ComboBoxItem>
 					<ComboBoxItem Content="{t:Translate listening_mode_ptt}"></ComboBoxItem>
 					<ComboBoxItem Content="{t:Translate listening_mode_pta}"></ComboBoxItem>
@@ -45,7 +45,7 @@
 				<Button x:Name="PTTKey" Content="{t:Translate settings_command_keys_bind}" 
 						ToolTip="{t:Translate settings_command_keys_bind_tooltip}" Click="PTTKey_Click"
 						HorizontalAlignment="Center"
-						Width="180"/>
+						MinWidth="180"/>
 				<TextBlock TextWrapping="Wrap" Text="{t:Translate settings_command_keys_explanation}"/>
 			</StackPanel>
 			

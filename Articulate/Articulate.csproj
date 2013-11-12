@@ -191,6 +191,7 @@
     <None Include="Fody.targets" />
     <None Include="Localization\de.slt" />
     <None Include="Localization\es.slt" />
+    <None Include="Localization\fr.slt" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

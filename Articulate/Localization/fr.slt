@@ -13,9 +13,9 @@ languages_button_tooltip = Changer La Langue
 languages_header = Langues
 languages_combobox = Langue
 languages_description =
-    Choisissez la langue avec laquelle vous souhaitez utiliser Aticulate. Si votre langue 
-    n apparait pas vous pouvez nous aider en participant a la traduction via 
-    notre Wiki sur GitHub.
+	Choisissez la langue avec laquelle vous souhaitez utiliser Aticulate. Si votre langue 
+	n apparait pas vous pouvez nous aider en participant a la traduction via 
+	notre Wiki sur GitHub.
 
 settings_title = Parametres
 settings_button_tooltip = Configurer Articulate
@@ -29,20 +29,20 @@ listening_mode_pti = Appuyer Pour Desactiver Ecoute
 
 settings_confidence = Marge de Confiance
 settings_confidence_explanation =
-    Reduire cette valeur peut aider a ameliorer le temps de reponse au depens de la precision
+	Reduire cette valeur peut aider a ameliorer le temps de reponse au depens de la precision
 
 settings_command_keys = Touches de Commandes
 settings_command_keys_bind = Ajouter une Touche de Commande
 settings_command_keys_bind_busy = Appuyer et Relacher Touches
 settings_command_keys_bind_tooltip = Ajouter une touche PTT
 settings_command_keys_explanation =
-    Cliquez sur le bouton pour changer votre touche de commande, appuyer sur Echap pour annuler l attribution. 
-    Double Cliquez sur une Commande pour la supprimer.
+	Cliquez sur le bouton pour changer votre touche de commande, appuyer sur Echap pour annuler l attribution. 
+	Double Cliquez sur une Commande pour la supprimer.
 
 settings_end_command_pause = Pause en Fin de Commande
 settings_end_command_pause_explanation =
-    Réduire cette valeur vous permettra de faire de plus courtes pauses entre vos commandes, 
-    cependant cela reduira votre capacite a faire des pauses au milieu d une commande.
+	Réduire cette valeur vous permettra de faire de plus courtes pauses entre vos commandes, 
+	cependant cela reduira votre capacite a faire des pauses au milieu d une commande.
 
 settings_advanced_button = Parametres Avances
 
@@ -54,16 +54,16 @@ about_button_tooltip = Information a propos d Articulate
 about_header = A propos
 about_title = Bienvenue sur Articulate!
 about_text =
-    Articulate est un super outil qui permet aux joueurs d Arma de commander ses 
-    equipiers artificiels le plus facilement possible.\n
-    Tous ceux qui ont deja joue a Arma savent que le menu de commande est puissant 
-    mais est aussi tres confus et gache terriblement l immersion. 
-    Articulate a ete cree pour vous faciliter le commandement de vos troupe via votre 
-    microphone et ainsi préserver toute l'authenticite de vos instants de jeu.
+	Articulate est un super outil qui permet aux joueurs d Arma de commander ses 
+	equipiers artificiels le plus facilement possible.\n
+	Tous ceux qui ont deja joue a Arma savent que le menu de commande est puissant 
+	mais est aussi tres confus et gache terriblement l immersion. 
+	Articulate a ete cree pour vous faciliter le commandement de vos troupe via votre 
+	microphone et ainsi préserver toute l'authenticite de vos instants de jeu.
 about_authors_title = Auteurs
 
 main_preview_warning =
-    C est un prototype de presentation permettant l obtention de vos retours. Votre experimentation peut etre differente.
+	C est un prototype de presentation permettant l obtention de vos retours. Votre experimentation peut etre differente.
 main_bi_post = [BI Forum Post]
 main_feedback = [Provide Feedback]
 main_wiki = [GitHub Wiki]
