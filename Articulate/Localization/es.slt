@@ -43,6 +43,12 @@ settings_end_command_pause_explanation =
 	Reducir este parametro te permitira dar ordenes con pausas mas cortas, 
 	pero reducira el tiempo que tienes para hacer pausas entre ordenes.
 
+settings_key_release_pause = Botón Prensa Retardo
+settings_key_release_pause_explanation =
+	Reducing this will allow commands to be executed faster, however it may also result
+	in a loss of accuracy within ArmA. If your commands are not being executed correctly
+	this is the first setting you should adjust.
+
 settings_advanced_button = Ajustes avanzados
 
 error_header = Error

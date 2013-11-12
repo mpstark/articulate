@@ -47,6 +47,12 @@ settings_end_command_pause_explanation =
 	sprechen, aber dadurch werden Sprechpausen früher als Abbruch der 
 	Eingabe wahrgenommen.
 
+settings_key_release_pause = Tastendruck Verzögerung
+settings_key_release_pause_explanation =
+	Reducing this will allow commands to be executed faster, however it may also result
+	in a loss of accuracy within ArmA. If your commands are not being executed correctly
+	this is the first setting you should adjust.
+
 settings_advanced_button = Erweiterte Einstellungen
 
 error_header = Fehler

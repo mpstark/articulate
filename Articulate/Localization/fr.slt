@@ -44,6 +44,12 @@ settings_end_command_pause_explanation =
 	Réduire cette valeur vous permettra de faire de plus courtes pauses entre vos commandes, 
 	cependant cela reduira votre capacite a faire des pauses au milieu d une commande.
 
+settings_key_release_pause = Touches Appuyer Retard
+settings_key_release_pause_explanation =
+	Reducing this will allow commands to be executed faster, however it may also result
+	in a loss of accuracy within ArmA. If your commands are not being executed correctly
+	this is the first setting you should adjust.
+
 settings_advanced_button = Parametres Avances
 
 error_header = Erreur
