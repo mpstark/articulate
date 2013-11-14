@@ -145,5 +145,11 @@ namespace Articulate
 
 		public int MouseReleaseDelay
 		{ get; set; }
+
+		public SoundEffectsPlayer.EffectMode SoundEffectMode
+		{ get; set; }
+
+		public string SoundEffectFolder
+		{ get; set; }
 	}
 }

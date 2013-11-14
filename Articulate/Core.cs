@@ -13,6 +13,12 @@ namespace Articulate
 			Configuration = Settings.Load();
 			Keybinder = new KeyMonitor(Configuration);
 			Recognizer = new VoiceRecognizer();
+			SoundPlayer = new SoundEffectsPlayer(Configuration);
+
+			Recognizer.CommandAccepted += SoundPlayer.CommandAccepted;
+			Recognizer.CommandRejected += SoundPlayer.CommandRejected;
+			Recognizer.StartedListening += SoundPlayer.StartedListening;
+			Recognizer.StoppedListening += SoundPlayer.StoppedListening;
 		}
 
 		#region Singleton
@@ -38,6 +44,9 @@ namespace Articulate
 		{ get; private set; }
 
 		public VoiceRecognizer Recognizer
+		{ get; private set; }
+
+		public SoundEffectsPlayer SoundPlayer
 		{ get; private set; }
 
 		#endregion
