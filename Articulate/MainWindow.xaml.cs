@@ -388,22 +388,20 @@ namespace Articulate
 			SoundEffectsPlayer.EffectMode oldMode = Logic.SoundPlayer.Mode;
 			SoundEffectsPlayer.EffectMode mode = (SoundEffectsPlayer.EffectMode)(SoundEffectMode.SelectedIndex);
 
-			if(oldMode == mode)
-			{
-				return;
-			}
+			if(oldMode == mode) return;
 
-			string oldFolder = Logic.SoundPlayer.SoundFolder;
+			string oldFolder = Logic.Configuration.SoundEffectFolder;
 
 			SoundEffectFolder.Visibility = System.Windows.Visibility.Collapsed;
 
+			Logic.Configuration.SoundEffectMode = mode;
 			if (mode == SoundEffectsPlayer.EffectMode.Files)
 			{
+
 				System.Windows.Forms.FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
 				if(folderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 				{
-					SoundEffectFolder.Text = folderBrowser.SelectedPath;
-					SoundEffectFolder.Visibility = System.Windows.Visibility.Visible;
+					Logic.Configuration.SoundEffectFolder = folderBrowser.SelectedPath;
 				}
 				else
 				{
@@ -412,18 +410,18 @@ namespace Articulate
 					
 					if(oldMode == SoundEffectsPlayer.EffectMode.Files)
 					{
-						SoundEffectFolder.Text = oldFolder;
+						Logic.Configuration.SoundEffectFolder = oldFolder;
 					}
 				}
 
 				Logic.SoundPlayer.ChangeSource(mode, SoundEffectFolder.Text);
-				Logic.Configuration.SoundEffectMode = mode;
-				Logic.Configuration.SoundEffectFolder = SoundEffectFolder.Text;
+
+				SoundEffectFolder.Text = System.IO.Path.GetDirectoryName(Logic.Configuration.SoundEffectFolder);
+				SoundEffectFolder.Visibility = System.Windows.Visibility.Visible;
 			}
 			else
 			{
 				Logic.SoundPlayer.ChangeSource(mode);
-				Logic.Configuration.SoundEffectMode = mode;
 			}
 		}
 
