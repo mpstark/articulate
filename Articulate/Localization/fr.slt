@@ -52,6 +52,11 @@ settings_key_release_pause_explanation =
 
 settings_advanced_button = Parametres Avances
 
+settings_soundeffect_mode = Mode d'effet Sonore
+settings_soundeffect_mode_default = Norme
+settings_soundeffect_mode_files = Sons Personnalisés
+settings_soundeffect_mode_none = Désactivé
+
 error_header = Erreur
 error_title = Message d Erreur
 error_reload = Reessayer

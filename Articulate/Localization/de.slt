@@ -55,6 +55,11 @@ settings_key_release_pause_explanation =
 
 settings_advanced_button = Erweiterte Einstellungen
 
+settings_soundeffect_mode = Soundeffekte Modus
+settings_soundeffect_mode_default = Standard
+settings_soundeffect_mode_files = Brauch Soundeffekte
+settings_soundeffect_mode_none = Behindert
+
 error_header = Fehler
 error_title = Fehlermeldung
 error_reload = Noch einmal versuchen!
