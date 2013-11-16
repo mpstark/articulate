@@ -194,8 +194,8 @@ namespace Articulate
 					"arma3"
 				});
 
-			LanguageList.ItemsSource = TranslationManager.Instance.Translations.Select(x => x["translation_language"] ?? x.Culture.DisplayName);
-			LanguageList.SelectedItem = TranslationManager.Instance.CurrentTranslation["translation_language"] ?? TranslationManager.Instance.CurrentLanguage.DisplayName;
+			LanguageList.ItemsSource = TranslationManager.Instance.Translations.Select(x => x["translation_language", null] ?? x.Culture.DisplayName);
+			LanguageList.SelectedItem = TranslationManager.Instance.CurrentTranslation["translation_language", null] ?? TranslationManager.Instance.CurrentLanguage.DisplayName;
 
 			SoundEffectMode.SelectedIndex = (int)Logic.Configuration.SoundEffectMode;
 			if (Logic.Configuration.SoundEffectMode == SoundEffectsPlayer.EffectMode.Files)
@@ -378,7 +378,7 @@ namespace Articulate
 
 		private void Languages_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			var translation = TranslationManager.Instance.Translations.Find(x => x.Culture.DisplayName == LanguageList.SelectedItem.ToString());
+			var translation = TranslationManager.Instance.Translations.Find(x => (x["translation_language", null] ?? x.Culture.DisplayName) == LanguageList.SelectedItem.ToString());
 
 			Logic.Configuration.Language = (TranslationManager.Instance.CurrentLanguage = translation.Culture).Name;
 		}
