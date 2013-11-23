@@ -37,6 +37,12 @@ namespace Articulate
 			chars[index] = newChar;
 			return new string(chars);
 		}
+		public static IEnumerable<T> Combine<T>(this IEnumerable<T> collection,T second)
+		{
+			using (var e = collection.GetEnumerator())
+				while (e.MoveNext()) yield return e.Current;
+			yield return second;
+		}
 
 		public static IEnumerable<T> Combine<T>(this IEnumerable<T> collection, IEnumerable<T> second)
 		{

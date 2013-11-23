@@ -137,9 +137,15 @@ namespace Articulate
 		public string Language
 		{ get; set; }
 
+		/// <summary>
+		/// The delay between one key's press and its subsequent release
+		/// </summary>
 		public int KeyReleaseDelay
 		{ get; set; }
 
+		/// <summary>
+		/// The delay between one key's release and the next key's press
+		/// </summary>
 		public int KeyPressDelay
 		{ get; set; }
 

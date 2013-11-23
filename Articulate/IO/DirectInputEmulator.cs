@@ -79,7 +79,10 @@ namespace Articulate
 		public static OutputBase KeyPress(params DirectInputKeys[] keys)
 		{
 			if (keys.Length > 0)
-				return new OutputGroup(keys.Select(x => new KeyPress(x)));
+				return new OutputGroup(keys.Select(x => (OutputBase)new KeyDown(x)).SpaceOperations(Core.Instance.Configuration.KeyReleaseDelay)
+					.Combine(new Sleep(Core.Instance.Configuration.KeyPressDelay))
+					.Combine(keys.Reverse().Select(x => new KeyUp(x)).SpaceOperations(Core.Instance.Configuration.KeyReleaseDelay))
+					);
 
 			return new KeyPress(keys[0]);
 		}
@@ -118,7 +121,10 @@ namespace Articulate
 		public static OutputBase MouseClick(params System.Windows.Forms.MouseButtons[] buttons)
 		{
 			if (buttons.Length > 0)
-				return new OutputGroup(buttons.Select(x => new MouseClick(x)));
+				return new OutputGroup(
+					buttons.Select(x => (OutputBase)new MouseDown(x))
+					.Combine(new Sleep(Core.Instance.Configuration.MouseReleaseDelay))
+					.Combine(buttons.Reverse().Select(x => new MouseUp(x))));
 
 			return new MouseClick(buttons[0]);
 		}
