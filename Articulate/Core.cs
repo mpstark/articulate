@@ -10,6 +10,9 @@ namespace Articulate
 	{
 		private Core()
 		{
+			// Necessary to fix Core.Instance initialization loop when loading grammar
+			_Instance = this;
+
 			Configuration = Settings.Load();
 			Keybinder = new KeyMonitor(Configuration);
 			Recognizer = new VoiceRecognizer();
@@ -29,7 +32,7 @@ namespace Articulate
 		{
 			get
 			{
-				return _Instance = (_Instance ?? new Core());
+				return _Instance ?? new Core();
 			}
 		}
 
