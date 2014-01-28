@@ -79,7 +79,7 @@
   <ItemGroup>
     <Compile Include="DesignerTranslation.cs" />
     <Compile Include="FileBasedTranslation.cs" />
-    <Compile Include="ITranslation.cs" />
+    <Compile Include="TranslationBase.cs" />
     <Compile Include="LanguageChangedEventManager.cs" />
     <Compile Include="LanguageExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

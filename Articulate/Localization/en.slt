@@ -13,8 +13,8 @@ languages_button_tooltip = Change Language
 languages_header = Languages
 languages_combobox = Language
 languages_description = 
-	Choose the language you would like to use Articulate in. If your language
-	doesn't appear here then you can help by contributing a translation through
+	Choose the language you would like to use Articulate in. If your language 
+	doesn't appear here then you can help by contributing a translation through 
 	our GitHub wiki.
 
 settings_title = Settings
@@ -44,7 +44,18 @@ settings_end_command_pause_explanation =
 	Reducing this value will allow you to give commands with shorter breaks in between, 
 	but will also reduce your ability to pause in the middle of a command.
 
+settings_key_release_pause = Key Release Delay
+settings_key_release_pause_explanation =
+	Reducing this will allow commands to be executed faster, however it may also result
+	in a loss of accuracy within ArmA. If your commands are not being executed correctly
+	this is the first setting you should adjust.
+
 settings_advanced_button = Advanced Settings
+
+settings_soundeffect_mode = Sound Effect Mode
+settings_soundeffect_mode_default = Default
+settings_soundeffect_mode_files = Custom Sounds
+settings_soundeffect_mode_none = None
 
 error_header = Error
 error_title = Error Message
@@ -68,6 +79,9 @@ main_bi_post = [BI Forum Post]
 main_feedback = [Provide Feedback]
 main_wiki = [GitHub Wiki]
 
+menu_show = Show
+menu_hide = Hide
+menu_exit = Exit
 
 mouse_1048576 = Left Mouse
 mouse_2097152 = Right Mouse

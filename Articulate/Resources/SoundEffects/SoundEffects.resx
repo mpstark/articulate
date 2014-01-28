@@ -118,19 +118,16 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="en" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Localization\en.slt;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="command_accepted" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>command_accepted.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="Main" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Main.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="command_rejected" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>command_rejected.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="de" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Localization\de.slt;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="started_listening" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>started_listening.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="es" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Localization\es.slt;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="fr" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Localization\fr.slt;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="stopped_listening" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>stopped_listening.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

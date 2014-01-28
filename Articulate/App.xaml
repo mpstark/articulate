@@ -3,12 +3,14 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:m="http://metro.mahapps.com/winfx/xaml/controls"
 			 xmlns:c="http://metro.mahapps.com/winfx/xaml/shared"
+			 xmlns:t="clr-namespace:SierraLib.Translation;assembly=SierraLib.Translation"
 			 StartupUri="MainWindow.xaml">
 	<Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
 				<ResourceDictionary>
 					<c:ToUpperConverter x:Key="ToUpperConverter"/>
+					<t:TranslationValueConverter x:Key="Translate"/>
 
 					<!--Window Layout-->
 					<ControlTemplate x:Key="WindowTemplateKey" TargetType="{x:Type m:MetroWindow}">

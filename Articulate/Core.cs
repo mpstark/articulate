@@ -8,12 +8,35 @@ namespace Articulate
 {
 	public class Core : IDisposable
 	{
-		public Core()
+		private Core()
 		{
+			// Necessary to fix Core.Instance initialization loop when loading grammar
+			_Instance = this;
+
 			Configuration = Settings.Load();
 			Keybinder = new KeyMonitor(Configuration);
 			Recognizer = new VoiceRecognizer();
+			SoundPlayer = new SoundEffectsPlayer(Configuration);
+
+			Recognizer.CommandAccepted += SoundPlayer.CommandAccepted;
+			Recognizer.CommandRejected += SoundPlayer.CommandRejected;
+			Recognizer.StartedListening += SoundPlayer.StartedListening;
+			Recognizer.StoppedListening += SoundPlayer.StoppedListening;
 		}
+
+		#region Singleton
+
+		private static Core _Instance = null;
+
+		public static Core Instance
+		{
+			get
+			{
+				return _Instance ?? new Core();
+			}
+		}
+
+		#endregion
 
 		#region Public Properties
 
@@ -24,6 +47,9 @@ namespace Articulate
 		{ get; private set; }
 
 		public VoiceRecognizer Recognizer
+		{ get; private set; }
+
+		public SoundEffectsPlayer SoundPlayer
 		{ get; private set; }
 
 		#endregion

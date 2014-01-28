@@ -33,7 +33,7 @@ namespace Articulate
 	/// </summary>
 	public partial class MainWindow : MetroWindow, IDisposable
 	{
-		NotifyIcon ni;		
+		NotifyIcon ni;
 		Stack<IDisposable> RxSubscriptions = new Stack<IDisposable>();
 
 		AutoResetEvent PushToTalkRelease;
@@ -43,21 +43,10 @@ namespace Articulate
 			InitializeComponent();
 
 			PushToTalkRelease = new AutoResetEvent(false);
-			Logic = new Core();
+			Logic = Core.Instance;
 
 			TranslationManager.Instance.DefaultLanguage = new CultureInfo("en");
 			TranslationManager.Instance.CurrentLanguage = new CultureInfo(Logic.Configuration.Language ?? "en");
-
-			ni = new System.Windows.Forms.NotifyIcon();
-
-			ni.Icon = Properties.Resources.Main;
-			ni.Visible = true;
-			ni.Text = "Articulate";
-			ni.DoubleClick += (sender, args) =>
-				{
-					this.Show();
-					this.WindowState = WindowState.Normal;
-				};
 						
 			Logic.Keybinder.KeysPressed += OnKeysPressed;
 			Logic.Keybinder.KeysReleased += OnKeysReleased;
@@ -79,7 +68,7 @@ namespace Articulate
 			{
 				ConfidenceMarginNumber.Content = Math.Floor(args.EventArgs.NewValue).ToString();
 			}));
-			
+
 			RxSubscriptions.Push(SettingsFlyout.ToObservable<bool>(Flyout.IsOpenProperty).Skip(1).Distinct().ObserveOn(ThreadPoolScheduler.Instance).Subscribe(args =>
 			{
 				if (!args) Logic.Configuration.Save();
@@ -115,6 +104,13 @@ namespace Articulate
 			set { Dispatcher.Invoke(() => SetValue(ArticulateErrorMessageProperty, value)); }
 		}
 
+		public static DependencyProperty RecognizedCommandProperty = DependencyProperty.Register("RecognizedCommand", typeof(string), typeof(MainWindow), new PropertyMetadata(""));
+		public string RecognizedCommand
+		{
+			get { return (string)GetValue(RecognizedCommandProperty); }
+			set { Dispatcher.Invoke(() => SetValue(RecognizedCommandProperty, value)); }
+		}
+
 		#endregion
 
 		#region Window Events
@@ -129,17 +125,30 @@ namespace Articulate
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
+			TranslationManager.Instance.LanguageChanged += Translation_LanguageChanged;
+
 			// Load translations			
 			try
 			{
 				using (var enStream = new MemoryStream(Properties.Resources.en))
 					TranslationManager.Instance.Translations.Add(new FileBasedTranslation(CultureInfo.GetCultureInfo("en"), enStream));
 
+				using (var deStream = new MemoryStream(Properties.Resources.de))
+					TranslationManager.Instance.Translations.Add(new FileBasedTranslation(CultureInfo.GetCultureInfo("de"), deStream));
+
+				using (var esStream = new MemoryStream(Properties.Resources.es))
+					TranslationManager.Instance.Translations.Add(new FileBasedTranslation(CultureInfo.GetCultureInfo("es"), esStream));
+
+				using (var frStream = new MemoryStream(Properties.Resources.fr))
+					TranslationManager.Instance.Translations.Add(new FileBasedTranslation(CultureInfo.GetCultureInfo("fr"), frStream));
+
 				foreach (var file in new DirectoryInfo(Environment.CurrentDirectory).GetFiles("*.slt"))
 				{
 					using (var fs = file.OpenRead())
 						TranslationManager.Instance.Translations.Add(new FileBasedTranslation(CultureInfo.GetCultureInfo(System.IO.Path.GetFileNameWithoutExtension(file.Name)), fs));
 				}
+
+				TranslationManager.Instance.LoadBest();
 			}
 			catch (Exception ex)
 			{
@@ -153,12 +162,28 @@ namespace Articulate
 				App.HandleError(ex);
 #endif
 			}
+			
+			ni = new System.Windows.Forms.NotifyIcon();
+
+			ni.Icon = Properties.Resources.Main;
+			ni.Visible = true;
+			ni.Text = "Articulate";
+			ni.DoubleClick += (o, ee) =>
+			{
+				this.Show();
+				this.WindowState = WindowState.Normal;
+			};
+
+			ni.ContextMenu = new System.Windows.Forms.ContextMenu();
+			ni.ContextMenu.MenuItems.Add("menu_show".Translate("Show"), (o, ee) => { Show(); WindowState = WindowState.Normal; });
+			ni.ContextMenu.MenuItems.Add("menu_hide".Translate("Hide"), (o, ee) => { Hide(); WindowState = WindowState.Normal; });
+			ni.ContextMenu.MenuItems.Add("menu_exit".Translate("Exit"), (o, ee) => Close());
 
 			ListenMode.SelectedIndex = (int)Logic.Configuration.Mode;
 
 			ConfidenceMargin.Value = Logic.Configuration.ConfidenceMargin;
 			ConfidenceMarginNumber.Content = Logic.Configuration.ConfidenceMargin;
-			
+
 
 			if (!Logic.Configuration.Applications.Any())
 				Logic.Configuration.Applications.AddRange(new[] {
@@ -169,8 +194,15 @@ namespace Articulate
 					"arma3"
 				});
 
-			LanguageList.ItemsSource = TranslationManager.Instance.Translations.Select(x => x.Culture.DisplayName);
-			LanguageList.SelectedItem = TranslationManager.Instance.CurrentLanguage.DisplayName;
+			LanguageList.ItemsSource = TranslationManager.Instance.Translations.Select(x => x["translation_language", null] ?? x.Culture.DisplayName);
+			LanguageList.SelectedItem = TranslationManager.Instance.CurrentTranslation["translation_language", null] ?? TranslationManager.Instance.CurrentLanguage.DisplayName;
+
+			SoundEffectMode.SelectedIndex = (int)Logic.Configuration.SoundEffectMode;
+			if (Logic.Configuration.SoundEffectMode == SoundEffectsPlayer.EffectMode.Files)
+			{
+				SoundEffectFolder.Text = Logic.Configuration.SoundEffectFolder;
+				SoundEffectFolder.Visibility = System.Windows.Visibility.Visible;
+			}
 
 			Task.Factory.StartNew(LoadRecognizer);
 		}
@@ -219,7 +251,7 @@ namespace Articulate
 		{
 			Trace.WriteLine("Accepted command: " + e.Phrase + " " + e.Confidence);
 
-			Dispatcher.Invoke(() => LastCommand.Content = e.Phrase);
+			RecognizedCommand = e.Phrase;
 
 			if (Logic.Configuration.Mode == Articulate.ListenMode.PushToArm) Enabled = false;
 		}
@@ -228,7 +260,7 @@ namespace Articulate
 		{
 			Trace.WriteLine("Rejected command: " + e.Phrase + " " + e.Confidence);
 
-			Dispatcher.Invoke(() => LastCommand.Content = "state_recognition_failed".Translate("What was that?"));
+			RecognizedCommand = "state_recognition_failed";
 
 			// TODO: Decide whether or not Push To Arm should keep trying until it gets a match
 			if (Logic.Configuration.Mode == Articulate.ListenMode.PushToArm) Enabled = false;
@@ -260,8 +292,9 @@ namespace Articulate
 
 		private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
 		{
-			Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
 			e.Handled = true;
+			if (!Uri.IsWellFormedUriString(e.Uri.OriginalString, UriKind.Absolute)) return;
+			Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
 		}
 
 		private void AdvancedSettings_Click(object sender, RoutedEventArgs e)
@@ -297,7 +330,7 @@ namespace Articulate
 				}
 			}
 		}
-		
+
 		void OnKeysPressed(object sender, CompoundKeyBind e)
 		{
 			if (Logic.Configuration.Mode == Articulate.ListenMode.Continuous) return;
@@ -309,7 +342,7 @@ namespace Articulate
 			else
 				Enabled = Logic.Configuration.Mode == Articulate.ListenMode.PushToTalk || Logic.Configuration.Mode == Articulate.ListenMode.PushToArm;
 		}
-	
+
 		void OnKeysReleased(object sender, CompoundKeyBind e)
 		{
 			if (Logic.Configuration.Mode == Articulate.ListenMode.PushToArm) return; // Don't disable if we're armed
@@ -329,7 +362,7 @@ namespace Articulate
 
 		#endregion
 
-		#region Settings 
+		#region Settings
 
 		private void ListenMode_Selected(object sender, RoutedEventArgs e)
 		{
@@ -345,9 +378,87 @@ namespace Articulate
 
 		private void Languages_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			var translation = TranslationManager.Instance.Translations.Find(x => x.Culture.DisplayName == LanguageList.SelectedItem.ToString());
+			var translation = TranslationManager.Instance.Translations.Find(x => (x["translation_language", null] ?? x.Culture.DisplayName) == LanguageList.SelectedItem.ToString());
 
 			Logic.Configuration.Language = (TranslationManager.Instance.CurrentLanguage = translation.Culture).Name;
+		}
+
+		private void SoundEffectMode_Selected(object sender, RoutedEventArgs e)
+		{
+			SoundEffectsPlayer.EffectMode oldMode = Logic.SoundPlayer.Mode;
+			SoundEffectsPlayer.EffectMode mode = (SoundEffectsPlayer.EffectMode)(SoundEffectMode.SelectedIndex);
+
+			if(oldMode == mode) return;
+
+			string oldFolder = Logic.Configuration.SoundEffectFolder;
+
+			SoundEffectFolder.Visibility = System.Windows.Visibility.Collapsed;
+
+			Logic.Configuration.SoundEffectMode = mode;
+			if (mode == SoundEffectsPlayer.EffectMode.Files)
+			{
+
+				System.Windows.Forms.FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
+				if(folderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+				{
+					Logic.Configuration.SoundEffectFolder = folderBrowser.SelectedPath;
+				}
+				else
+				{
+					// Revert the change if the user clicked cancel.
+					SoundEffectMode.SelectedIndex = (int)oldMode;
+					
+					if(oldMode == SoundEffectsPlayer.EffectMode.Files)
+					{
+						Logic.Configuration.SoundEffectFolder = oldFolder;
+					}
+				}
+
+				Logic.SoundPlayer.ChangeSource(mode, SoundEffectFolder.Text);
+
+				SoundEffectFolder.Text = System.IO.Path.GetDirectoryName(Logic.Configuration.SoundEffectFolder);
+				SoundEffectFolder.Visibility = System.Windows.Visibility.Visible;
+			}
+			else
+			{
+				Logic.SoundPlayer.ChangeSource(mode);
+			}
+		}
+
+		#endregion
+
+		#region Translation
+		
+		void Translation_LanguageChanged(object sender, TranslationChangedEventArgs e)
+		{
+			if (ni != null)
+			{
+				ni.ContextMenu.MenuItems.Clear();
+				ni.ContextMenu.MenuItems.Add("menu_show".Translate("Show"), (o, ee) => { Show(); WindowState = WindowState.Normal; });
+				ni.ContextMenu.MenuItems.Add("menu_hide".Translate("Hide"), (o, ee) => { Hide(); WindowState = WindowState.Normal; });
+				ni.ContextMenu.MenuItems.Add("menu_exit".Translate("Exit"), (o, ee) => Close());
+			}
+
+			if (Logic != null)
+			{
+				switch (Logic.Recognizer.State)
+				{
+					case VoiceRecognizer.VoiceRecognizerState.Error:
+						State = "state_error".Translate("ERROR");
+						break;
+					case VoiceRecognizer.VoiceRecognizerState.Listening:
+					case VoiceRecognizer.VoiceRecognizerState.ListeningOnce:
+						State = "state_online".Translate("LISTENING");
+						break;
+
+					case VoiceRecognizer.VoiceRecognizerState.Paused:
+					case VoiceRecognizer.VoiceRecognizerState.Pausing:
+						State = "state_offline".Translate("OFFLINE");
+						break;
+				}
+			}
+
+			RecognizedCommand = "";
 		}
 
 		#endregion

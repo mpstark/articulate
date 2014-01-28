@@ -13,19 +13,19 @@ namespace Articulate
     {
         public SrgsItem Item { get; private set; }
 
-		public Command(string semantic, string[] alternates, IEnumerable<INPUT[]> keyList)
+		public Command(string semantic, string[] alternates, IEnumerable<OutputBase> keyList)
         {
             GenerateRuleList(semantic, alternates);
             GenerateKeyLookup(semantic, keyList);
         }
 
-		public Command(string semantic, string[] alternates, IEnumerable<INPUT[]> keyList, SrgsRuleRef subjectRef)
+		public Command(string semantic, string[] alternates, IEnumerable<OutputBase> keyList, SrgsRuleRef subjectRef)
         {
             GenerateRuleList(semantic, alternates, subjectRef);
             GenerateKeyLookup(semantic, keyList);
         }
 
-		public Command(string semantic, string[] alternates, IEnumerable<INPUT[]> keyList, SrgsRuleRef subjectRef, DirectObject directObject)
+		public Command(string semantic, string[] alternates, IEnumerable<OutputBase> keyList, SrgsRuleRef subjectRef, DirectObject directObject)
         {
             GenerateRuleList(semantic, alternates, subjectRef, directObject);
             GenerateKeyLookup(semantic, keyList, directObject);
@@ -61,15 +61,15 @@ namespace Articulate
             RootRule = rule;
         }
 
-        private void GenerateKeyLookup(string semantic, IEnumerable<INPUT[]> keyList, DirectObject directObject = null)
+		private void GenerateKeyLookup(string semantic, IEnumerable<OutputBase> keyList, DirectObject directObject = null)
         {
-            var keys = new List<INPUT[]>();
+			var keys = new List<OutputBase>();
             foreach (var key in keyList)
             {
                 keys.Add(key);
             }
 
-            KeyLookup = new Dictionary<string, List<INPUT[]>>();
+			KeyLookup = new Dictionary<string, List<OutputBase>>();
             KeyLookup.Add(semantic, keys);
 
             if (directObject != null)

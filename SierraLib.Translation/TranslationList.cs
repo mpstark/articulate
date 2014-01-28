@@ -7,18 +7,18 @@ using System.Diagnostics.Contracts;
 
 namespace SierraLib.Translation
 {
-    public class TranslationList : List<ITranslation>
+    public class TranslationList : List<TranslationBase>
     {
         public TranslationList()
         {
             Contract.Ensures(Count == 0);
         }
 
-        public ITranslation this[CultureInfo culture]
+        public TranslationBase this[CultureInfo culture]
         {
             get
             {
-                foreach (ITranslation translation in this)
+                foreach (TranslationBase translation in this)
                     if (translation.Culture == culture)
                         return translation;
                 return null;

@@ -1,0 +1,156 @@
+﻿translation_language = Deutsch
+translation_author = Alpha-Kilo
+translation_website = 
+
+app_title = Articulate
+
+state_offline = Nicht bereit.
+state_online = Ich höre!
+state_error = Fehler
+state_recognition_failed = Wie bitte?
+
+languages_button_tooltip = Sprache wechseln
+languages_header = Sprachen
+languages_combobox = Sprache
+languages_description =
+	Wähle die Sprache, in der Du Articulate verwenden möchtest. Wenn Deine 
+	Sprache hier nicht erscheint, dann kannst Du helfen, indem Du über 
+	unsere GitHub Wiki eine Übersetzung beisteuerst.
+
+settings_title = Einstellungen
+settings_button_tooltip = Articulate einrichten
+settings_header = Einstellungen
+
+settings_listening_mode = Funktionsweise
+listening_mode_continuous = Ständig aktiv
+listening_mode_ptt = Push To Talk (Taste beim Sprechen gedrückt halten)
+listening_mode_pta = Push To Arm (Taste drücken, um ein einzelnes Kommando zu geben)
+listening_mode_pti = Push To Ignore (Taste zum Stummschalten gedrückt halten)
+
+settings_confidence = Reaktionsgeschwindigkeit
+settings_confidence_explanation =
+	Das Verringern dieses Wertes kann helfen, die Reaktionsgeschwindigkeit 
+	auf Kosten der Genauigkeit zu erhöhen.
+
+settings_command_keys = Befehlstasten
+settings_command_keys_bind = Tastenbelegung hinzufügen
+settings_command_keys_bind_busy = Tasten zum Drücken und Loslassen
+settings_command_keys_bind_tooltip = Eine PTT-Taste hinzufügen
+settings_command_keys_explanation =
+	Schaltfläche anklicken, um die Befehlstaste zu ändern. ESC drücken, um 
+	die Tastenbelegung abzubrechen. Ein Doppelklick löscht eine 
+	Tastenbelegung.
+
+settings_end_command_pause = Pause zum Beenden der Eingabe
+settings_end_command_pause_explanation =
+	Das Verringern dieses Wertes ermöglicht es, die Befehle flüssiger zu 
+	sprechen, aber dadurch werden Sprechpausen früher als Abbruch der 
+	Eingabe wahrgenommen.
+
+settings_key_release_pause = Tastendruck Verzögerung
+settings_key_release_pause_explanation =
+	Reducing this will allow commands to be executed faster, however it may also result
+	in a loss of accuracy within ArmA. If your commands are not being executed correctly
+	this is the first setting you should adjust.
+
+settings_advanced_button = Erweiterte Einstellungen
+
+settings_soundeffect_mode = Soundeffekte Modus
+settings_soundeffect_mode_default = Standard
+settings_soundeffect_mode_files = Brauch Soundeffekte
+settings_soundeffect_mode_none = Behindert
+
+error_header = Fehler
+error_title = Fehlermeldung
+error_reload = Noch einmal versuchen!
+
+about_button_tooltip = Informationen über Articulate
+about_header = Über Articulate
+about_title = Willkommen bei Articulate!
+about_text =
+	Articulate ist ein großartiges Werkzeug zur Führung einer KI-Gruppe in 
+	ArmA. \n
+	Jeder ArmAspieler kennt das vielseitige, aber umständlich zu bedienende 
+	Befehlsmenü. Articulate wurde entwickelt, um das Führen der KI-Gruppe so 
+	einfach wie möglich zu machen. Befehle können jetzt einfach ins Mikrofon 
+	gesprochen werden.
+about_authors_title = Autoren
+main_preview_warning =
+	Dies ist eine sehr frühe Vorschauversion des Programms zum Einholen von 
+	Meinungen. Die Erfahrungen damit werden unterschiedlich sein.
+main_bi_post = [Beitrag im BI-Forum]
+main_feedback = [Feedback geben]
+main_wiki = [GitHub Wiki]
+
+menu_show = Ziegen
+menu_hide = Verstecken
+menu_exit = Schließen
+
+mouse_1048576 = Linke Maustaste
+mouse_2097152 = Rechte Maustaste
+mouse_8388608 = Maustaste 4
+mouse_16777216 = Maustaste 5
+
+keyboard_8 = Rücktaste
+keyboard_9 = Tabulatortaste
+keyboard_20 = Feststelltaste
+keyboard_32 = Leertaste
+keyboard_48 = 0
+keyboard_49 = 1
+keyboard_50 = 2
+keyboard_51 = 3
+keyboard_52 = 4
+keyboard_53 = 5
+keyboard_54 = 6
+keyboard_55 = 7
+keyboard_56 = 8
+keyboard_57 = 9
+keyboard_65 = A
+keyboard_66 = B
+keyboard_67 = C
+keyboard_68 = D
+keyboard_69 = E
+keyboard_70 = F
+keyboard_71 = G
+keyboard_72 = H
+keyboard_73 = I
+keyboard_74 = J
+keyboard_75 = K
+keyboard_76 = L
+keyboard_77 = M
+keyboard_78 = N
+keyboard_79 = O
+keyboard_80 = P
+keyboard_81 = Q
+keyboard_82 = R
+keyboard_83 = S
+keyboard_84 = T
+keyboard_85 = U
+keyboard_86 = V
+keyboard_87 = W
+keyboard_88 = X
+keyboard_89 = Y
+keyboard_90 = Z
+keyboard_91 = Linke Windowstaste
+keyboard_92 = Rechte Windowstaste
+keyboard_112 = F1
+keyboard_113 = F2
+keyboard_114 = F3
+keyboard_115 = F4
+keyboard_116 = F5
+keyboard_117 = F6
+keyboard_118 = F7
+keyboard_119 = F8
+keyboard_120 = F9
+keyboard_121 = F10
+keyboard_122 = F11
+keyboard_123 = F12
+keyboard_160 = Linke Umschalttaste
+keyboard_161 = rechte Umschalttaste
+keybaord_162 = Linke Steuerungstaste
+keyboard_163 = Rechte Steuerungstaste
+keyboard_164 = Linke Alt-Taste
+keyboard_165 = Rechte Alt-Taste
+keyboard_187 = =
+keyboard_189 = =
+keyboard_192 = ~

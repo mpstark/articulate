@@ -1,0 +1,152 @@
+﻿translation_language = Español
+translation_author = Dj Otacon
+translation_website = https://github.com/Falcata
+
+app_title = Articulate
+
+state_offline = APAGADO
+state_online = ESCUCHANDO
+state_error = FALLADO
+state_recognition_failed = ¿Que has dicho?
+
+languages_button_tooltip = Cambiar el lenguaje
+languages_header = Lenguajes
+languages_combobox = Lenguaje
+languages_description = 
+	Elige el lenguaje que te gustaría usar en Articulate. Si tu lenguaje no aparece 
+	aqui considera colaborar traducciendolo en nuestro Github Wiki.
+
+settings_title = Opciones
+settings_button_tooltip = Configura Articulate
+settings_header = Opciones
+
+settings_listening_mode = Modo de escucha
+listening_mode_continuous = Continuo
+listening_mode_ptt = Pulsa para hablar
+listening_mode_pta = Pulsa para armar
+listening_mode_pti = Pulsa para ignorar
+
+settings_confidence = Margen de confianza
+settings_confidence_explanation = 
+	Reducir este valor aumentara el rendimiento a costa de la precisión
+
+settings_command_keys = Teclas de las ordenes
+settings_command_keys_bind = Añadir tecla enlazada
+settings_command_keys_bind_busy = Pulsa y libera la tecla
+settings_command_keys_bind_tooltip = Añadir una tecla PTT
+settings_command_keys_explanation =
+	Pulsa en el botón para cambiar la tecla del comando, pulsa Escape para cancelar la asignacion. 
+	Doble "click" en un comando para eliminarlo.
+
+settings_end_command_pause = Comando Terminación Pausa
+settings_end_command_pause_explanation =
+	Reducir este parametro te permitira dar ordenes con pausas mas cortas, 
+	pero reducira el tiempo que tienes para hacer pausas entre ordenes.
+
+settings_key_release_pause = Botón Prensa Retardo
+settings_key_release_pause_explanation =
+	Reducing this will allow commands to be executed faster, however it may also result
+	in a loss of accuracy within ArmA. If your commands are not being executed correctly
+	this is the first setting you should adjust.
+
+settings_advanced_button = Ajustes avanzados
+
+settings_soundeffect_mode = Modo de Efecto de Sonido
+settings_soundeffect_mode_default = Estándar
+settings_soundeffect_mode_files = Sonido Personalizado
+settings_soundeffect_mode_none = Discapacitado
+
+error_header = Error
+error_title = Mensaje de Error
+error_reload = Reintentar
+
+about_button_tooltip = Información acerca de Articulate
+about_header = Acerca
+about_title = Bienvenido a Articulate!
+about_text = 
+	Articulate es una herramienta brillante para los jugadores de Arma que te permitira 
+	dar ordenes a tu escuadron de la manera más facil.\n
+	Cualquiera que haya jugado Arma sabe que el menu de ordenes aun siendo extremadamente 
+	potente, es uno de los más engorrosos aspectos de la gestión de unidades. 
+	Articulate ha sido diseñado para simplificar esta tarea, 
+	permitiendote usar tu microfono para dar las ordenes.
+about_authors_title = Autores
+
+main_preview_warning = 
+	Esta es una versión extremadamente temprana. Las experiencias pueden variar.
+main_bi_post = [BI Foro Post]
+main_feedback = [Enviar opinion]
+main_wiki = [GitHub Wiki]
+
+menu_show = Mostrar
+menu_hide = Ocultar
+menu_exit = Salir
+
+mouse_1048576 = Ratón Izquierda
+mouse_2097152 = Ratón Derecha
+mouse_8388608 = Ratón 4
+mouse_16777216 = Ratón 5
+
+keyboard_8 = Borrar
+keyboard_9 = Tabulador
+keyboard_20 = Bloquear Mayusculas
+keyboard_32 = Espacio
+keyboard_48 = 0
+keyboard_49 = 1
+keyboard_50 = 2
+keyboard_51 = 3
+keyboard_52 = 4
+keyboard_53 = 5
+keyboard_54 = 6
+keyboard_55 = 7
+keyboard_56 = 8
+keyboard_57 = 9
+keyboard_65 = A
+keyboard_66 = B
+keyboard_67 = C
+keyboard_68 = D
+keyboard_69 = E
+keyboard_70 = F
+keyboard_71 = G
+keyboard_72 = H
+keyboard_73 = I
+keyboard_74 = J
+keyboard_75 = K
+keyboard_76 = L
+keyboard_77 = M
+keyboard_78 = N
+keyboard_79 = O
+keyboard_80 = P
+keyboard_81 = Q
+keyboard_82 = R
+keyboard_83 = S
+keyboard_84 = T
+keyboard_85 = U
+keyboard_86 = V
+keyboard_87 = W
+keyboard_88 = X
+keyboard_89 = Y
+keyboard_90 = Z
+keyboard_91 = Izquierda Win
+keyboard_92 = Derecha Win
+keyboard_112 = F1
+keyboard_113 = F2
+keyboard_114 = F3
+keyboard_115 = F4
+keyboard_116 = F5
+keyboard_117 = F6
+keyboard_118 = F7
+keyboard_119 = F8
+keyboard_120 = F9
+keyboard_121 = F10
+keyboard_122 = F11
+keyboard_123 = F12
+keyboard_160 = Mayusculas Izquierda
+keyboard_161 = Mayusculas Derecha
+keybaord_162 = Ctrl Izquierda
+keyboard_163 = Ctrl Derecha
+keyboard_164 = Alt Izquieda
+keyboard_165 = Alt Derecha
+keyboard_187 = =
+keyboard_189 = =
+keyboard_192 = ~

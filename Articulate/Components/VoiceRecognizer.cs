@@ -143,6 +143,16 @@ namespace Articulate
 		/// </summary>
 		public event EventHandler<CommandDetectedEventArgs> CommandRejected;
 
+		/// <summary>
+		/// Fired when the recognizer starts listening for commands.
+		/// </summary>
+		public event EventHandler StartedListening;
+
+		/// <summary>
+		/// Fired when the recognizer stops listening for commands.
+		/// </summary>
+		public event EventHandler StoppedListening;
+
 		#endregion
 
 		#region Constructor
@@ -267,6 +277,28 @@ namespace Articulate
 				CommandRejected(this, new CommandDetectedEventArgs(phrase, confidence));
 			}
 		}
+
+		/// <summary>
+		/// Triggers the StartedListening event if it has any subscribers.
+		/// </summary>
+		private void TriggerStartedListening()
+		{
+			if (this.StartedListening != null)
+			{
+				this.StartedListening(this, EventArgs.Empty);
+			}
+		}
+
+		/// <summary>
+		/// Triggers the StoppedListening event if it has any subscribers.
+		/// </summary>
+		private void TriggerStoppedListening()
+		{
+			if (this.StoppedListening != null)
+			{
+				this.StoppedListening(this, EventArgs.Empty);
+			}
+		}
 		#endregion
 
 		#region Public Methods
@@ -284,6 +316,7 @@ namespace Articulate
 				// Start listening in multiple mode (that is, don't quit after a single recongition)
 				Engine.RecognizeAsync(RecognizeMode.Multiple);
 				State = VoiceRecognizerState.Listening;
+				TriggerStartedListening();
 			}
 		}
 
@@ -297,6 +330,7 @@ namespace Articulate
 				// Stop listening gracefully
 				Engine.RecognizeAsyncStop();
 				State = VoiceRecognizerState.Pausing;
+				TriggerStoppedListening();
 			}
 		}
 
@@ -309,6 +343,7 @@ namespace Articulate
 			{
 				Engine.RecognizeAsyncCancel();
 				State = VoiceRecognizerState.Pausing;
+				TriggerStoppedListening();
 			}
 		}
 
@@ -326,6 +361,7 @@ namespace Articulate
 				// only listen for a single utterance
 				Engine.RecognizeAsync(RecognizeMode.Single);
 				State = VoiceRecognizerState.ListeningOnce;
+				TriggerStartedListening();
 			}
 		}
 		#endregion
@@ -349,7 +385,7 @@ namespace Articulate
 			}
 
 			// Get a thread from the thread pool to execute the command
-			Task.Factory.StartNew(() => CommandPool.Execute(recognizedPhrase.Result.Semantics));
+			CommandPool.ExecuteAsync(recognizedPhrase.Result.Semantics);
 		}
 
 		/// <summary>

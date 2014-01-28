@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using SierraLib.Translation;
+using System.Reactive.Concurrency;
 
 namespace Articulate
 {
@@ -42,6 +43,8 @@ namespace Articulate
 			ListenMode.SelectedIndex = (int)Logic.Configuration.Mode;
 			EndCommandPause.Value = Logic.Configuration.EndCommandPause;
 			EndCommandPauseNumber.Content = Logic.Configuration.EndCommandPause;
+			KeyReleasePause.Value = Logic.Configuration.KeyReleaseDelay;
+			KeyReleasePauseNumber.Content = Logic.Configuration.KeyReleaseDelay;
 
 			var CommandPauseEvent = Observable.FromEventPattern<RoutedPropertyChangedEventArgs<double>>(EndCommandPause, "ValueChanged");
 
@@ -50,9 +53,24 @@ namespace Articulate
 				EndCommandPauseNumber.Content = Math.Floor(args.EventArgs.NewValue).ToString();
 			}));
 
-			RxSubscriptions.Push(CommandPauseEvent.Skip(1).Distinct().Sample(TimeSpan.FromMilliseconds(500)).Subscribe(args =>
+			RxSubscriptions.Push(CommandPauseEvent.Skip(1).Distinct().Sample(TimeSpan.FromMilliseconds(500)).ObserveOn(ThreadPoolScheduler.Instance).Subscribe(args =>
 			{
 				Logic.Configuration.EndCommandPause = (int)args.EventArgs.NewValue;
+
+				if (Logic != null)
+					Logic.Recognizer.EndSilenceTimeout = (int)args.EventArgs.NewValue;
+			}));
+
+			var KeyReleaseEvent = Observable.FromEventPattern<RoutedPropertyChangedEventArgs<double>>(KeyReleasePause, "ValueChanged");
+
+			RxSubscriptions.Push(KeyReleaseEvent.Skip(1).Distinct().Sample(TimeSpan.FromMilliseconds(50)).ObserveOnDispatcher().Subscribe(args =>
+			{
+				KeyReleasePauseNumber.Content = Math.Floor(args.EventArgs.NewValue).ToString();
+			}));
+
+			RxSubscriptions.Push(KeyReleaseEvent.Skip(1).Distinct().Sample(TimeSpan.FromMilliseconds(500)).ObserveOn(ThreadPoolScheduler.Instance).Subscribe(args =>
+			{
+				Logic.Configuration.KeyReleaseDelay = (int)args.EventArgs.NewValue;
 
 				if (Logic != null)
 					Logic.Recognizer.EndSilenceTimeout = (int)args.EventArgs.NewValue;
@@ -106,5 +124,6 @@ namespace Articulate
 			PTTKey.IsEnabled = true;
 			PTTKey.Content = "settings_command_keys_bind".Translate();
 		}
+		
 	}
 }
