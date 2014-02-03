@@ -14,3 +14,6 @@
 
 // TODO: reference additional headers your program requires here
 #include <string>
+#include <thread>
+#include <queue>
+#include <namedpipeapi.h>
