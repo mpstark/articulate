@@ -1,4 +1,5 @@
 #pragma once
+#include "Packet.h"
 
 class ServerBase
 {
@@ -12,6 +13,6 @@ protected:
 	void write(char* data, int outputSize);
 
 private:
-	std::queue<Packet*> packets;
+	std::queue<Packet*>* packets;
 };
 

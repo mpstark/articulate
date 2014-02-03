@@ -16,4 +16,5 @@ void __stdcall RVExtension(char *output, int outputSize, const char *function)
 {
 	if (!strcmp(function, "version")) strncpy_s(output, outputSize, "1.0", _TRUNCATE);
 	else if (!strcmp(function, "read")) server->read(output, outputSize);
+	else strncpy_s(output, outputSize, "nil", _TRUNCATE);
 }
