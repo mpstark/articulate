@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30110.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Articulate", "Articulate\Articulate.csproj", "{D048847D-F7E1-4F00-98B8-78271EFA94D7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{40794F4E-F04E-4EB1-84C5-CC80CEAC8369}"
@@ -12,8 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{40794F
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SierraLib.Translation", "SierraLib.Translation\SierraLib.Translation.csproj", "{292C7945-E283-4E46-AED2-CC253673A80B}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Articulate_Extension", "Articulate_Extension\Articulate_Extension.vcxproj", "{2BDC7B9A-86B4-410B-9EBC-CCC3614F0AA5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,16 +45,6 @@ Global
 		{292C7945-E283-4E46-AED2-CC253673A80B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{292C7945-E283-4E46-AED2-CC253673A80B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{292C7945-E283-4E46-AED2-CC253673A80B}.Release|Win32.ActiveCfg = Release|Any CPU
-		{2BDC7B9A-86B4-410B-9EBC-CCC3614F0AA5}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{2BDC7B9A-86B4-410B-9EBC-CCC3614F0AA5}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{2BDC7B9A-86B4-410B-9EBC-CCC3614F0AA5}.Debug|Mixed Platforms.Build.0 = Debug|Win32
-		{2BDC7B9A-86B4-410B-9EBC-CCC3614F0AA5}.Debug|Win32.ActiveCfg = Debug|Win32
-		{2BDC7B9A-86B4-410B-9EBC-CCC3614F0AA5}.Debug|Win32.Build.0 = Debug|Win32
-		{2BDC7B9A-86B4-410B-9EBC-CCC3614F0AA5}.Release|Any CPU.ActiveCfg = Release|Win32
-		{2BDC7B9A-86B4-410B-9EBC-CCC3614F0AA5}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{2BDC7B9A-86B4-410B-9EBC-CCC3614F0AA5}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{2BDC7B9A-86B4-410B-9EBC-CCC3614F0AA5}.Release|Win32.ActiveCfg = Release|Win32
-		{2BDC7B9A-86B4-410B-9EBC-CCC3614F0AA5}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
