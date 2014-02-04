@@ -2,9 +2,9 @@
 #include "Packet.h"
 
 
-Packet::Packet(char* _data, int _size)
+Packet::Packet(const char* _data, int _size)
 {
-	data = new std::string(_data);
+	data = new String(_data);
 	size = _size;
 }
 
@@ -18,7 +18,7 @@ int Packet::getSize()
 	return size;
 }
 
-std::string Packet::getData()
+String Packet::getData()
 {
 	return *data;
 }

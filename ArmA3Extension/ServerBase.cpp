@@ -38,8 +38,8 @@ void ServerBase::read(char* output, int outputSize)
 	packets->pop();
 }
 
-void ServerBase::write(char* data, int size)
+void ServerBase::write(TCHAR* data, int size)
 {
-	Packet* packet = new Packet(data, size);
+	Packet* packet = new Packet((const char*)data, size);
 	packets->push(packet);
 }

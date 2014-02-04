@@ -79,6 +79,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="NamedPipeServer.h" />
     <ClInclude Include="Packet.h" />
     <ClInclude Include="ServerBase.h" />
     <ClInclude Include="stdafx.h" />
@@ -94,6 +95,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="NamedPipeServer.cpp" />
     <ClCompile Include="Packet.cpp" />
     <ClCompile Include="ServerBase.cpp" />
     <ClCompile Include="stdafx.cpp">

@@ -7,11 +7,10 @@ public:
 	ServerBase();
 	~ServerBase();
 	int pending();
-	virtual void read(char* output, int outputSize);
-
-protected:
-	void write(char* data, int outputSize);
-
+	virtual void start() = 0;
+	void read(char* output, int outputSize);
+	void write(TCHAR* data, int outputSize);
+	
 private:
 	std::queue<Packet*>* packets;
 };

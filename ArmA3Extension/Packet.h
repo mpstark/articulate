@@ -2,14 +2,14 @@
 class Packet
 {
 public:
-	Packet(char* _data, int _size);
+	Packet(const char* _data, int _size);
 	~Packet();
 
 	int getSize();
-	std::string getData();
+	String getData();
 
 private:
 	int size;
-	std::string* data;
+	String* data;
 };
 
