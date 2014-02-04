@@ -33,13 +33,13 @@ void ServerBase::read(char* output, int outputSize)
 	}
 
 	Packet* packet = packets->front();
-	packet->getData().copy(output, outputSize);
+	strncpy_s(output, outputSize, packet->getData().c_str(), _TRUNCATE);
 	delete packet;
 	packets->pop();
 }
 
-void ServerBase::write(TCHAR* data, int size)
+void ServerBase::write(const char* data, int size)
 {
-	Packet* packet = new Packet((const char*)data, size);
+	Packet* packet = new Packet(data, size);
 	packets->push(packet);
 }

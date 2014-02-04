@@ -3,7 +3,8 @@
 
 using namespace std;
 
-void listen(ServerBase* server, HANDLE pipe);
+void createPipe(ServerBase* server, LPCWSTR name, HANDLE* pipe);
+void listen(ServerBase* server, LPCWSTR name, HANDLE* pipe);
 void onClient(ServerBase* server, HANDLE port);
 
 NamedPipeServer::NamedPipeServer(LPCWSTR pipeName)
@@ -17,60 +18,65 @@ NamedPipeServer::~NamedPipeServer()
 
 void NamedPipeServer::start()
 {
-	DWORD dwThreadId;
-
-	createPipe();
-	thread t(listen, this, pipe);
+	thread t(listen, this, name, &pipe);
 	t.detach();
 }
 
-void NamedPipeServer::createPipe()
+BOOL NamedPipeServer::active()
 {
-	if (!pipe)
-	{
-		pipe = CreateNamedPipe(
-			name,
-			PIPE_ACCESS_INBOUND,
-			PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT,
-			PIPE_UNLIMITED_INSTANCES,
-			0,
-			PIPE_BUFFER_SIZE,
-			0,
-			NULL
-		);
+	return !!pipe;
+}
 
-		if (pipe == NULL || pipe == INVALID_HANDLE_VALUE)
-		{
-			pipe = 0;
-			return;
-		}
+void createPipe(ServerBase* server, LPCWSTR name, HANDLE* pipe)
+{
+	*pipe = CreateNamedPipe(
+		name,
+		PIPE_ACCESS_INBOUND,
+		PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT,
+		PIPE_UNLIMITED_INSTANCES,
+		0,
+		PIPE_BUFFER_SIZE,
+		0,
+		NULL
+	);
+
+	if (*pipe == NULL || *pipe == INVALID_HANDLE_VALUE)
+	{
+		*pipe = 0;
+		char* error = "articulateError = \"Failed to open named pipe\"";
+		server->write(error, strnlen_s(error, 1024));
+		return;
 	}
 }
 
-void listen(ServerBase* server, HANDLE pipe)
+void listen(ServerBase* server, LPCWSTR name, HANDLE *pipe)
 {
 	BOOL connected;
-	DWORD dwThreadId;
 	while (true)
 	{
-		connected = ConnectNamedPipe(pipe, NULL) ? TRUE : (GetLastError() == ERROR_PIPE_CONNECTED);
+		createPipe(server, name, pipe);
+		connected = ConnectNamedPipe(*pipe, NULL) ? TRUE : (GetLastError() == ERROR_PIPE_CONNECTED);
 		if (connected)
 		{
-			std::thread t(onClient, server, pipe);
+			std::thread t(onClient, server, *pipe);
 			t.detach();
 		}
 		else 
 		{
+			char* error = "articulateError = \"Command client couldn't connect to the pipe\"";
+			server->write(error, strnlen_s(error, 1024));
 			CloseHandle(pipe);
 			pipe = NULL;
 		}
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	}
 }
 
 void onClient(ServerBase* server, HANDLE port)
 {
 	HANDLE hHeap = GetProcessHeap();
-	TCHAR* buffer = (TCHAR*)HeapAlloc(hHeap, 0, PIPE_BUFFER_SIZE*sizeof(TCHAR));
+	char* buffer = (char*)HeapAlloc(hHeap, 0, PIPE_BUFFER_SIZE * sizeof(char));
 	DWORD cbBytesRead = 0;
 	BOOL fSuccess = FALSE;
 
@@ -87,7 +93,7 @@ void onClient(ServerBase* server, HANDLE port)
 		fSuccess = ReadFile(
 			port,
 			buffer,
-			PIPE_BUFFER_SIZE * sizeof(TCHAR),
+			PIPE_BUFFER_SIZE * sizeof(char),
 			&cbBytesRead,
 			NULL
 		);

@@ -33,6 +33,9 @@
     <ClInclude Include="NamedPipeServer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ArmA3Extension.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

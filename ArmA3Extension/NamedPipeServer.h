@@ -10,6 +10,7 @@ public:
 	NamedPipeServer(LPCWSTR pipeName);
 	~NamedPipeServer();
 	void start() override;
+	BOOL active() override;
 
 private:
 	LPCWSTR name;

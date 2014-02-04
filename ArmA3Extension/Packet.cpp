@@ -4,7 +4,7 @@
 
 Packet::Packet(const char* _data, int _size)
 {
-	data = new String(_data);
+	data = new String(_data, _size);
 	size = _size;
 }
 
