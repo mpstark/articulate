@@ -140,6 +140,7 @@
     <Compile Include="Core.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IO\DirectInput.cs" />
+    <Compile Include="IO\NamedPipes.cs" />
     <Compile Include="IO\OutputBase.cs" />
     <Compile Include="Localization\FileBasedTranslation.cs" />
     <Compile Include="Resources\SoundEffects\SoundEffects.Designer.cs">
