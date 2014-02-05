@@ -13,8 +13,8 @@ languages_button_tooltip = Välj språk
 languages_header = Språk
 languages_combobox = Språk
 languages_description =
-  Välj det språk som du skulle vilja använda Articulate på. Om ditt språk inte
-  finns med på listan så kan du hjälpa oss översätta genom vår wiki på GitHub.
+	Välj det språk som du skulle vilja använda Articulate på. Om ditt språk inte 
+	finns med på listan så kan du hjälpa oss översätta genom vår wiki på GitHub.
 
 settings_title = Inställningar
 settings_button_tooltip = Konfigurera Articulate
@@ -28,26 +28,26 @@ listening_mode_pti = Tryck för att ignorera
 
 settings_confidence = Självsäkerhetsgräns
 settings_confidence_explanation =
-  Om du minskar detta värde blir igenkänningen snabbare mot att den lättare misstolkas
+	Om du minskar detta värde blir igenkänningen snabbare mot att den lättare misstolkas
 
 settings_command_keys = Aktiveringsknappar
 settings_command_keys_bind = Lägg till kortkommando
 settings_command_keys_bind_busy = Tryck ned och släpp knapparna
 settings_command_keys_bind_tooltip = Lägg till en aktiveringsknapp
 settings_command_keys_explanation =
-  Klicka på knappen för att ändra kortkommando, tryck Esc för att avbryta.
-  Dubbelklicka på ett kommando för att ta bort det.
+	Klicka på knappen för att ändra kortkommando, tryck Esc för att avbryta. 
+	Dubbelklicka på ett kommando för att ta bort det.
 
 settings_end_command_pause = Kommandopaus
 settings_end_command_pause_explanation =
-  Om du minskar detta värde så kan du diktera flera kommandon snabbare med kortare paus mellan,
-  men du kan inte längre ta lika mycket pauser i mitten av ett kommando.
+	Om du minskar detta värde så kan du diktera flera kommandon snabbare med kortare paus mellan, 
+	men du kan inte längre ta lika mycket pauser i mitten av ett kommando.
 
 settings_key_release_pause = Knappfördröjning
 settings_key_release_pause_explanation =
-  Ett lägre värde här ökar takten mellan tangenttryckningar när ett kommando utförs. Detta
-  kan dock medföra sämre precision i ArmA om knapptryckningarna kommer för fort. Om dina
-  kommandon inte utförs korrekt är detta den första inställningen du borde justera.
+	Ett lägre värde här ökar takten mellan tangenttryckningar när ett kommando utförs. Detta 
+	kan dock medföra sämre precision i ArmA om knapptryckningarna kommer för fort. Om dina 
+	kommandon inte utförs korrekt är detta den första inställningen du borde justera.
 
 settings_advanced_button = Avancerade inställningar
 
@@ -64,16 +64,16 @@ about_button_tooltip = Information om Articulate
 about_header = Om
 about_title = Välkomment till Articulate!
 about_text =
-  Articulate är ett smart verktyg för ArmA-spelare, designat för att göra
-  det så enkelt som möjligt att ge din grupp order.\n
-  Alla som spelat ArmA vet att befallningsmenyn är både svårförstådd och tidskrävande,
-  även om den är otroligt kraftfull. Articulate har byggts för att göra det så snabbt och
-  lättförstått som möjligt att ge befallningar genom att istället låta dig prata i din
-  mikrofon.
+	Articulate är ett smart verktyg för ArmA-spelare, designat för att göra 
+	det så enkelt som möjligt att ge din grupp order.\n
+	Alla som spelat ArmA vet att befallningsmenyn är både svårförstådd och tidskrävande, 
+	även om den är otroligt kraftfull. Articulate har byggts för att göra det så snabbt och 
+	lättförstått som möjligt att ge befallningar genom att istället låta dig prata i din 
+	mikrofon.
 about_authors_title = Upphovsmän
 
 main_preview_warning =
-  Detta är en extremt tidig version för förhandstittande och synpunkter. Den kommer inte att fungera likadant för alla.
+	Detta är en extremt tidig version för förhandstittande och synpunkter. Den kommer inte att fungera likadant för alla.
 
 main_bi_post = [BI Forum-inlägg]
 main_feedback = [Ge synpunkter]
