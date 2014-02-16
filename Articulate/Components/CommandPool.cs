@@ -158,7 +158,7 @@ namespace Articulate
             commandSet.Add(watch.Item);
 
             // suppressive fire (9)
-            Command suppresiveFire = new Command("SUPRESS", new string[] { "supppresive fire", "surpress" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.Three),  DirectInputEmulator.KeyPress(DirectInputKeys.Nine) }, subjectRef);
+            Command suppresiveFire = new Command("SUPRESS", new string[] { "suppresive fire", "suppress" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.Three),  DirectInputEmulator.KeyPress(DirectInputKeys.Nine) }, subjectRef);
             commandObjects.Add("SUPRESS", suppresiveFire);
             commandSet.Add(suppresiveFire.Item);
             #endregion
