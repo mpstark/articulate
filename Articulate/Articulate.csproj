@@ -81,6 +81,13 @@
     <Reference Include="MahApps.Metro">
       <HintPath>..\packages\MahApps.Metro.0.10.1.1\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libraries\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpRaven">
+      <HintPath>..\Libraries\SharpRaven.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -137,6 +144,7 @@
     <Compile Include="Components\KeyMonitor.cs" />
     <Compile Include="Components\SoundEffectsPlayer.cs" />
     <Compile Include="Components\VoiceRecognizer.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Core.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IO\DirectInput.cs" />
@@ -203,6 +211,7 @@
     <None Include="Localization\es.slt" />
     <None Include="Localization\fr.slt" />
     <None Include="Localization\sv.slt" />
+    <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

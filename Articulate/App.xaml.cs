@@ -8,6 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
+using SharpRaven;
+
 namespace Articulate
 {
     /// <summary>
@@ -21,6 +23,12 @@ namespace Articulate
 		{
 			get;
 			private set;
+		}
+
+		static RavenClient _Sentry = null;
+		internal static RavenClient Sentry
+		{
+			get { return _Sentry = _Sentry ?? new RavenClient(Constants.SentryDSN); }
 		}
 
 		[STAThread]
@@ -48,6 +56,8 @@ namespace Articulate
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
 		public static void HandleError(Exception ex)
 		{
+			Sentry.CaptureException(ex);
+
 			if (IsErrorHandling) return;
 			IsErrorHandling = true;
 
@@ -68,7 +78,6 @@ namespace Articulate
 
 				WriteError(sw, ex);
 			}
-
 		}
 
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
