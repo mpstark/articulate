@@ -49,6 +49,9 @@ namespace Articulate
         #endregion
 
         #region Protected Methods
+        /// <summary>
+        /// Generate the SrgsRule that this symbol represents.
+        /// </summary>
         protected abstract void GenerateRule();
         #endregion
     }
@@ -85,6 +88,9 @@ namespace Articulate
         #endregion
 
         #region Protected Methods
+        /// <summary>
+        /// Generate the SrgsRule that this symbol represents.
+        /// </summary>
         protected override void GenerateRule()
         {
             // inits a new SrgsRule with a single item containing the pronounceable choice and the semantic tag and returns it
@@ -99,28 +105,49 @@ namespace Articulate
     class SymbolGroup : AbstractSymbol
     {
         #region Public Properties
+        /// <summary>
+        /// The symbols that this SymbolGroup contains.
+        /// </summary>
         public List<AbstractSymbol> Members { get; set; }
 
+        /// <summary>
+        /// Spoken words/phrases that do not have any semantic meaning and come before this symbol
+        /// </summary>
         [YAXCollection(YAXCollectionSerializationTypes.Serially, SeparateBy = "; ")]
         public List<string> Prefix { get; set; }
 
+        /// <summary>
+        /// Whether or not the prefix collection is required or optional. Only valid if Prefix exists and has words/phrases.
+        /// </summary>
         [YAXAttributeFor("Prefix")]
         [YAXSerializeAs("required")]
         public bool PrefixRequired { get; set; }
 
+        /// <summary>
+        /// Spoken words/phrases that do not have any semantic meaning and come after this symbol
+        /// </summary>
         [YAXCollection(YAXCollectionSerializationTypes.Serially, SeparateBy = "; ")]
         public List<string> Postfix { get; set; }
 
+        /// <summary>
+        /// Whether or not the postfix collection is required or optional. Only valid if Prefix exists and has words/phrases.
+        /// </summary>
         [YAXAttributeFor("Postfix")]
         [YAXSerializeAs("required")]
         public bool PostfixRequired { get; set; }
 
+        /// <summary>
+        /// Number of times that symbols in this SymbolGroup can repeat. Must 1 or greater. 1 is default.
+        /// </summary>
         [YAXAttributeFor("..")]
         [YAXSerializeAs("repeat")]
         public int Repeat { get; set; }
         #endregion
 
         #region Constructors
+        /// <summary>
+        /// Default Constuctor
+        /// </summary>
         public SymbolGroup()
         {
             Members = new List<AbstractSymbol>();
@@ -133,6 +160,9 @@ namespace Articulate
         #endregion
 
         #region Protected Methods
+        /// <summary>
+        /// Generate the SrgsRule that this symbol represents.
+        /// </summary>
         protected override void GenerateRule()
         {
             Rule = new SrgsRule(Name);
@@ -144,14 +174,17 @@ namespace Articulate
                 symbolItem.Add(new SrgsItem(PrefixRequired ? 1 : 0, 1, new SrgsOneOf(Prefix.ToArray())));
             }
 
-            // add each of the members RuleRefs
+            // add each of the members RuleRefs into a choice
             SrgsOneOf memberChoice = new SrgsOneOf();
             foreach (AbstractSymbol symbol in Members)
             {
                 memberChoice.Add(new SrgsItem(new SrgsRuleRef(symbol.Rule)));
             }
-            symbolItem.Add(memberChoice);
-            symbolItem.Add(new SrgsSemanticInterpretationTag("out = rules.latest();")); // unsure if needed
+
+            // can recognize 1 to Repeat of these symbols
+            symbolItem.Add(new SrgsItem(1, Repeat, memberChoice));
+
+            // NOTE: may need to use a SrgsSemanticInterpretationTag here to forward tags on
 
             // add the postfix
             if (Postfix.Count > 0)
