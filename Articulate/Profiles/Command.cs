@@ -11,6 +11,7 @@ namespace Articulate
     [YAXSerializeAs("Command")]
     class NewCommand
     {
+        #region Public Properties
         [YAXAttributeFor("..")]
         [YAXSerializeAs("name")]
         public string Name { get; set; }
@@ -18,5 +19,15 @@ namespace Articulate
         public string Format { get; set;}
 
         public string Output { get; set; }
+        #endregion
+
+        #region Constructors
+        public NewCommand()
+        {
+            Name = "";
+            Format = "";
+            Output = "";
+        }
+        #endregion
     }
 }

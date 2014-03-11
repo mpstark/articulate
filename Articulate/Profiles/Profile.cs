@@ -9,6 +9,7 @@ namespace Articulate
 {
     class Profile
     {
+        #region Public Properties
         [YAXAttributeFor("..")]
         [YAXSerializeAs("name")]
         public string Name { get; set; }
@@ -34,5 +35,20 @@ namespace Articulate
         public List<AbstractSymbol> Symbols { get; set; }
 
         public List<NewCommand> Commands { get; set; }
+        #endregion
+
+        #region Constructors
+        public Profile()
+        {
+            Name = "";
+            Language = "";
+            Applications = new List<string>();
+            RequireApplication = false;
+            RequireForeground = false;
+            InitCode = "";
+            Symbols = new List<AbstractSymbol>();
+            Commands = new List<NewCommand>();
+        }
+        #endregion
     }
 }
