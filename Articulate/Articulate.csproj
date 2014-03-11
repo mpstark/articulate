@@ -122,6 +122,9 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="YAXLib">
+      <HintPath>..\packages\YAXLib.2.12\lib\YAXLib.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Page Include="AdvancedSettings.xaml">
@@ -150,6 +153,9 @@
     <Compile Include="IO\DirectInput.cs" />
     <Compile Include="IO\OutputBase.cs" />
     <Compile Include="Localization\FileBasedTranslation.cs" />
+    <Compile Include="Profiles\Command.cs" />
+    <Compile Include="Profiles\Profile.cs" />
+    <Compile Include="Profiles\Symbol.cs" />
     <Compile Include="Resources\SoundEffects\SoundEffects.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
