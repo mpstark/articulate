@@ -48,6 +48,14 @@ namespace Articulate
         private SrgsRule _rule;
         #endregion
 
+        #region Public Methods
+        /// <summary>
+        /// Gets all of the rules that are underneath this symbol.
+        /// </summary>
+        /// <returns>A List containing all of the SrgsRules</returns>
+        public abstract Dictionary<string, SrgsRule> GetRules();
+        #endregion
+
         #region Protected Methods
         /// <summary>
         /// Generate the SrgsRule that this symbol represents.
@@ -84,6 +92,19 @@ namespace Articulate
         {
             Value = "";
             Pronounceables = new List<string>();
+        }
+        #endregion
+
+        #region Public Methods
+        /// <summary>
+        /// Gets all of the rules that are underneath this symbol.
+        /// </summary>
+        /// <returns>A List containing all of the SrgsRules</returns>
+        public override Dictionary<string, SrgsRule> GetRules()
+        {
+            Dictionary<string, SrgsRule> ruleList = new Dictionary<string, SrgsRule>();
+            ruleList.Add(Name, Rule);
+            return ruleList;
         }
         #endregion
 
@@ -156,6 +177,29 @@ namespace Articulate
             Postfix = new List<string>();
             PostfixRequired = false;
             Repeat = 1;
+        }
+        #endregion
+
+        #region Public Methods
+        /// <summary>
+        /// Gets all of the rules that are underneath this symbol.
+        /// </summary>
+        /// <returns>A List containing all of the SrgsRules</returns>
+        public override Dictionary<string, SrgsRule> GetRules()
+        {
+            Dictionary<string, SrgsRule> ruleList = new Dictionary<string, SrgsRule>();
+            
+            // add all of the rules underneath
+            foreach(AbstractSymbol symbol in Members)
+            {
+                foreach (var pair in symbol.GetRules())
+                    ruleList.Add(pair.Key, pair.Value);
+            }
+            
+            // add this rule
+            ruleList.Add(Name, Rule);
+
+            return ruleList;
         }
         #endregion
 

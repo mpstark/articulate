@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Speech.Recognition;
+using System.Speech.Recognition.SrgsGrammar;
 using YAXLib;
 
 namespace Articulate
@@ -39,11 +41,11 @@ namespace Articulate
         public string Name { get; set; }
 
         /// <summary>
-        /// Language of the profile that is loaded. This will be the recognizor that is used for this profile.
+        /// Locale of the profile that is loaded. This will be the recognizor that is used for this profile.
         /// </summary>
         [YAXAttributeFor("..")]
-        [YAXSerializeAs("language")]
-        public string Language { get; set; }
+        [YAXSerializeAs("locale")]
+        public string Locale { get; set; }
 
         /// <summary>
         /// The applications that this profile affects.
@@ -88,12 +90,45 @@ namespace Articulate
         public Profile()
         {
             Name = "";
-            Language = "";
+            Locale = "en";
             Applications = new List<string>();
             AppRequirements = ApplicationRequirements.Running;
             InitCode = "";
             Symbols = new List<AbstractSymbol>();
             Commands = new List<NewCommand>();
+        }
+        #endregion
+
+        #region Public Methods
+        public SrgsDocument CompileToSrgsDocument()
+        {
+            SrgsDocument document = new SrgsDocument();
+            document.Culture = new System.Globalization.CultureInfo(Locale);
+            Dictionary<string, SrgsRule> rules = new Dictionary<string, SrgsRule>();
+
+            // go through all of the symbols and add their rules
+            foreach(AbstractSymbol symbol in Symbols)
+            {
+                Dictionary<string, SrgsRule> ruleList = symbol.GetRules();
+                foreach (var rulePair in ruleList)
+                {
+                    rules.Add(rulePair.Key, rulePair.Value);
+                    document.Rules.Add(rulePair.Value);
+                }
+            }
+
+            // go through all of the commands, add their SrgsItem's to a SrgsRule that will become the root of the document
+            // the root of the document is where all recognition starts
+            SrgsRule newRootRule = new SrgsRule(Name + " Commands");
+            SrgsOneOf commandChoice = new SrgsOneOf();
+            foreach(NewCommand command in Commands)
+            {
+                commandChoice.Add(command.GenerateSrgsItem(rules));
+            }
+
+            document.Rules.Add(newRootRule);
+            document.Root = newRootRule;
+            return document;
         }
         #endregion
     }

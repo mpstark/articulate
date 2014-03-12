@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Speech.Recognition;
+using System.Speech.Recognition.SrgsGrammar;
 using YAXLib;
 
 namespace Articulate
@@ -46,7 +48,12 @@ namespace Articulate
         #endregion
 
         #region Public Methods
-        
+        public SrgsItem GenerateSrgsItem(Dictionary<string, SrgsRule> availableRules)
+        {
+            SrgsItem commandItem = new SrgsItem();
+
+            return commandItem;
+        }
         #endregion
     }
 }
