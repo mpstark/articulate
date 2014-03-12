@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Speech.Recognition;
 using System.Speech.Recognition.SrgsGrammar;
 using YAXLib;
+using System.Text.RegularExpressions;
 
 namespace Articulate
 {
@@ -28,7 +29,19 @@ namespace Articulate
         /// 
         /// Format specification:
         /// 
-        /// TODO: fill in
+        /// Enclosed in:
+        /// []: required
+        /// {}: optional
+        /// 
+        /// symbols are not enclosed in ""
+        /// semantic-less words/phrases must be inclosed in ""
+        /// 
+        /// Inside [] or {}, can have | to indicate OR
+        /// Cannot mix symbols and semantic-less words/phrases
+        /// 
+        /// Examples:
+        /// 
+        /// {"fucking"|"damn"|"cocksucking"|"god damn"} : optional, semantic-less, word choice.
         /// </summary>
         public string Format { get; set;}
 
@@ -48,6 +61,11 @@ namespace Articulate
         #endregion
 
         #region Public Methods
+        /// <summary>
+        /// Creates a SrgsItem that conforms to the Format string and a list of symbol names with their rules
+        /// </summary>
+        /// <param name="availableRules">A dictionary holding the available symbols and their rules</param>
+        /// <returns>A SrgsItem that matches the Format string</returns>
         public SrgsItem GenerateSrgsItem(Dictionary<string, SrgsRule> availableRules)
         {
             SrgsItem commandItem = new SrgsItem();
