@@ -220,7 +220,7 @@ namespace Articulate
             /// </summary>
             public static readonly Parser<FormatToken> Symbol =
                 from content in Parse.LetterOrDigit.Or(Parse.Char('_')).AtLeastOnce().Text()
-                from optional in Parse.Optional(Parse.Char('?')).End()
+                from optional in Parse.Optional(Parse.Char('?'))
                 select new SymbolToken(content, optional.IsDefined && !optional.IsEmpty);
 
             /// <summary>
@@ -248,7 +248,7 @@ namespace Articulate
             /// Parses a GroupToken
             /// </summary>
             public static readonly Parser<FormatToken> Group =
-                from newGroup in OrGroup.Or(AndGroup)
+                from newGroup in AndGroup.Or(OrGroup)
                 select newGroup;
 
             /// <summary>
@@ -256,7 +256,14 @@ namespace Articulate
             /// </summary>
             public static readonly Parser<FormatToken> FormatToken =
                 (from content in Group.Or(Pronounceable).Or(Symbol)
-                 select content).Token(); 
+                 select content).Token();
+
+            /// <summary>
+            /// Parses a Format String
+            /// </summary>
+            public static readonly Parser<IEnumerable<FormatToken>> Format =
+                from content in FormatToken.DelimitedBy(Parse.WhiteSpace)
+                select content;
             #endregion
         }
         #endregion
