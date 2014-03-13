@@ -12,7 +12,7 @@ namespace Articulate
     /// <summary>
     /// A symbol that is used to generate a SrgsRule.
     /// </summary>
-    abstract class AbstractSymbol
+    public abstract class AbstractSymbol
     {
         #region Public Properties
         /// <summary>
@@ -67,7 +67,7 @@ namespace Articulate
     /// <summary>
     /// A symbol that contains ties a name to a value and a list of pronounceables 
     /// </summary>
-    class Symbol : AbstractSymbol
+    public class Symbol : AbstractSymbol
     {
         #region Public Properties
         /// <summary>
@@ -123,7 +123,7 @@ namespace Articulate
     /// <summary>
     /// A symbol that contains other symbols, of type Symbol and of type SymbolGroup
     /// </summary>
-    class SymbolGroup : AbstractSymbol
+    public class SymbolGroup : AbstractSymbol
     {
         #region Public Properties
         /// <summary>

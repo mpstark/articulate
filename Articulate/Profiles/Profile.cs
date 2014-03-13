@@ -12,7 +12,7 @@ namespace Articulate
     /// <summary>
     /// An Articulate XML+Lua-based profile.
     /// </summary>
-    class Profile
+    public class Profile
     {
         #region Enums
         /// <summary>
