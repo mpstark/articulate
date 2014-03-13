@@ -478,5 +478,66 @@ namespace ArticulateTest
             Assert.AreEqual(second.Phrase, "world");
             Assert.IsFalse(second.IsOptional);
         }
+
+        [Test]
+        public void EmailExample()
+        {
+            // Everytime I read this, I'm a little bit offended.
+            // I wrote it.
+            string parseMe = "(\"fucking\"|\"damn\"|\"cocksucking\"|\"god damn\")? subject? formation";
+            IEnumerable<NewCommand.FormatToken> result = NewCommand.FormatGrammar.Format.End().Parse(parseMe);
+
+            NewCommand.GroupToken first = result.ToArray()[0] as NewCommand.GroupToken;
+            Assert.IsTrue(first.IsOptional);
+            Assert.AreEqual(first.Operation, NewCommand.GroupToken.GroupOperations.Or);
+
+            NewCommand.PronounceableToken firstfirst = first.Members.ToArray()[0] as NewCommand.PronounceableToken;
+            Assert.AreEqual(firstfirst.Phrase, "fucking");
+            Assert.IsFalse(firstfirst.IsOptional);
+
+            NewCommand.PronounceableToken firstsecond = first.Members.ToArray()[1] as NewCommand.PronounceableToken;
+            Assert.AreEqual(firstsecond.Phrase, "damn");
+            Assert.IsFalse(firstsecond.IsOptional);
+
+            NewCommand.PronounceableToken firstthird = first.Members.ToArray()[2] as NewCommand.PronounceableToken;
+            Assert.AreEqual(firstthird.Phrase, "cocksucking");
+            Assert.IsFalse(firstthird.IsOptional);
+
+            NewCommand.PronounceableToken firstfourth = first.Members.ToArray()[3] as NewCommand.PronounceableToken;
+            Assert.AreEqual(firstfourth.Phrase, "god damn");
+            Assert.IsFalse(firstfourth.IsOptional);
+
+            NewCommand.SymbolToken second = result.ToArray()[1] as NewCommand.SymbolToken;
+            Assert.AreEqual(second.SymbolName, "subject");
+            Assert.IsTrue(second.IsOptional);
+
+            NewCommand.SymbolToken third = result.ToArray()[2] as NewCommand.SymbolToken;
+            Assert.AreEqual(third.SymbolName, "formation");
+            Assert.IsFalse(third.IsOptional);
+        }
+
+        [Test]
+        [ExpectedException(typeof(ParseException))]
+        public void ImproperSymbolAfter()
+        {
+            string parseMe = " hello  $  ";
+            IEnumerable<NewCommand.FormatToken> result = NewCommand.FormatGrammar.Format.End().Parse(parseMe);
+        }
+
+        [Test]
+        [ExpectedException(typeof(ParseException))]
+        public void ImproperSymbolBefore()
+        {
+            string parseMe = "$  hello    ";
+            IEnumerable<NewCommand.FormatToken> result = NewCommand.FormatGrammar.Format.End().Parse(parseMe);
+        }
+
+        [Test]
+        [ExpectedException(typeof(ParseException))]
+        public void EmptyGroupWithSymbol()
+        {
+            string parseMe = "() hello";
+            IEnumerable<NewCommand.FormatToken> result = NewCommand.FormatGrammar.Format.End().Parse(parseMe);
+        }
     }
 }
