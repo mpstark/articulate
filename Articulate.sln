@@ -13,8 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{40794F
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SierraLib.Translation", "SierraLib.Translation\SierraLib.Translation.csproj", "{292C7945-E283-4E46-AED2-CC253673A80B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArticulateTest", "ArticulateTest\ArticulateTest.csproj", "{455E514E-2A72-4465-B0CC-664E0ED952E6}"
 EndProject
 Global
@@ -27,10 +25,6 @@ Global
 		{D048847D-F7E1-4F00-98B8-78271EFA94D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D048847D-F7E1-4F00-98B8-78271EFA94D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D048847D-F7E1-4F00-98B8-78271EFA94D7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{292C7945-E283-4E46-AED2-CC253673A80B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{292C7945-E283-4E46-AED2-CC253673A80B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{292C7945-E283-4E46-AED2-CC253673A80B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{292C7945-E283-4E46-AED2-CC253673A80B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{455E514E-2A72-4465-B0CC-664E0ED952E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{455E514E-2A72-4465-B0CC-664E0ED952E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{455E514E-2A72-4465-B0CC-664E0ED952E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
