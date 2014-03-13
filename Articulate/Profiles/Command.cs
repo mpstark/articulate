@@ -238,7 +238,7 @@ namespace Articulate
             /// </summary>
             public static readonly Parser<FormatToken> AndGroup =
                 from start in Parse.Char('(')
-                from members in Group.Or(Pronounceable).Or(Symbol).DelimitedBy(Parse.WhiteSpace)
+                from members in Group.Or(Pronounceable).Or(Symbol).DelimitedBy(Parse.WhiteSpace.AtLeastOnce())
                 from end in Parse.Char(')')
                 from optional in Parse.Optional(Parse.Char('?'))
                 select new GroupToken(members, optional.IsDefined && !optional.IsEmpty, GroupToken.GroupOperations.And);
@@ -255,15 +255,15 @@ namespace Articulate
             /// Parses a FormatToken
             /// </summary>
             public static readonly Parser<FormatToken> FormatToken =
-                (from content in Group.Or(Pronounceable).Or(Symbol)
-                 select content).Token();
+                from content in Group.Or(Pronounceable).Or(Symbol)
+                select content;
 
             /// <summary>
             /// Parses a Format String
             /// </summary>
             public static readonly Parser<IEnumerable<FormatToken>> Format =
-                from content in FormatToken.DelimitedBy(Parse.WhiteSpace)
-                select content;
+                (from content in FormatToken.DelimitedBy(Parse.WhiteSpace.AtLeastOnce())
+                select content).Token();
             #endregion
         }
         #endregion

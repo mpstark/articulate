@@ -209,6 +209,23 @@ namespace ArticulateTest
         }
 
         [Test]
+        public void ANDGroupOfTwoSymbolsWithOddWhitespace()
+        {
+            string parseMe = "(hello \t  world)";
+            NewCommand.GroupToken group = (NewCommand.GroupToken)NewCommand.FormatGrammar.Group.End().Parse(parseMe);
+            Assert.IsFalse(group.IsOptional);
+            Assert.AreEqual(group.Operation, NewCommand.GroupToken.GroupOperations.And);
+
+            NewCommand.SymbolToken first = group.Members.ToArray()[0] as NewCommand.SymbolToken;
+            Assert.AreEqual(first.SymbolName, "hello");
+            Assert.IsFalse(first.IsOptional);
+
+            NewCommand.SymbolToken second = group.Members.ToArray()[1] as NewCommand.SymbolToken;
+            Assert.AreEqual(second.SymbolName, "world");
+            Assert.IsFalse(second.IsOptional);
+        }
+
+        [Test]
         public void ANDGroupOfOneSymbolOnePronounceable()
         {
             string parseMe = "(hello \"world\")";
@@ -407,14 +424,59 @@ namespace ArticulateTest
         }
 
         [Test]
-        public void TwoSymbol()
+        public void OneSymbolWithBeginningWhitespace()
         {
-            string parseMe = "hello";
+            string parseMe = "   \thello";
             IEnumerable<NewCommand.FormatToken> result = NewCommand.FormatGrammar.Format.End().Parse(parseMe);
 
             NewCommand.SymbolToken first = result.First() as NewCommand.SymbolToken;
             Assert.AreEqual(first.SymbolName, "hello");
             Assert.IsFalse(first.IsOptional);
+        }
+
+        [Test]
+        public void TwoSymbolOneOptional()
+        {
+            string parseMe = "hello? world";
+            IEnumerable<NewCommand.FormatToken> result = NewCommand.FormatGrammar.Format.End().Parse(parseMe);
+
+            NewCommand.SymbolToken first = result.ToArray()[0] as NewCommand.SymbolToken;
+            Assert.AreEqual(first.SymbolName, "hello");
+            Assert.IsTrue(first.IsOptional);
+
+            NewCommand.SymbolToken second = result.ToArray()[1] as NewCommand.SymbolToken;
+            Assert.AreEqual(second.SymbolName, "world");
+            Assert.IsFalse(second.IsOptional);
+        }
+
+        [Test]
+        public void OneSymbolOnePronouncible()
+        {
+            string parseMe = "hello \"world\"";
+            IEnumerable<NewCommand.FormatToken> result = NewCommand.FormatGrammar.Format.End().Parse(parseMe);
+
+            NewCommand.SymbolToken first = result.ToArray()[0] as NewCommand.SymbolToken;
+            Assert.AreEqual(first.SymbolName, "hello");
+            Assert.IsFalse(first.IsOptional);
+
+            NewCommand.PronounceableToken second = result.ToArray()[1] as NewCommand.PronounceableToken;
+            Assert.AreEqual(second.Phrase, "world");
+            Assert.IsFalse(second.IsOptional);
+        }
+
+        [Test]
+        public void OneSymbolOnePronouncibleWithOddWhitespace()
+        {
+            string parseMe = "\thello \t \"world\"   ";
+            IEnumerable<NewCommand.FormatToken> result = NewCommand.FormatGrammar.Format.End().Parse(parseMe);
+
+            NewCommand.SymbolToken first = result.ToArray()[0] as NewCommand.SymbolToken;
+            Assert.AreEqual(first.SymbolName, "hello");
+            Assert.IsFalse(first.IsOptional);
+
+            NewCommand.PronounceableToken second = result.ToArray()[1] as NewCommand.PronounceableToken;
+            Assert.AreEqual(second.Phrase, "world");
+            Assert.IsFalse(second.IsOptional);
         }
     }
 }
