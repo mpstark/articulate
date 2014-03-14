@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ProfileSchema"
+    targetNamespace="http://tempuri.org/ProfileSchema.xsd"
+    elementFormDefault="qualified"
+    xmlns="http://tempuri.org/ProfileSchema.xsd"
+    xmlns:mstns="http://tempuri.org/ProfileSchema.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+</xs:schema>

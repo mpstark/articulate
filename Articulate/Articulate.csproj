@@ -225,6 +225,9 @@
     <None Include="Localization\fr.slt" />
     <None Include="Localization\sv.slt" />
     <None Include="packages.config" />
+    <None Include="Profiles\ProfileSchema.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
