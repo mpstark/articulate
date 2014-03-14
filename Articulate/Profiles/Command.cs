@@ -131,7 +131,7 @@ namespace Articulate
                     throw new ProfileParseException("Symbol definition with name " + SymbolName + " not defined.");
                 }
 
-                return new SrgsItem(IsOptional ? 0 : 1, 1, new SrgsRuleRef(availableRules[SymbolName]), new SrgsSemanticInterpretationTag("out += \"" + SymbolName + "; \";"));
+                return new SrgsItem(IsOptional ? 0 : 1, 1, new SrgsRuleRef(availableRules[SymbolName]));
             } 
             #endregion
         }
