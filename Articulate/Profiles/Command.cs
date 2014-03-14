@@ -131,7 +131,7 @@ namespace Articulate
                     throw new ProfileParseException("Symbol definition with name " + SymbolName + " not defined.");
                 }
 
-                return new SrgsItem(new SrgsRuleRef(availableRules[SymbolName]), new SrgsSemanticInterpretationTag("out += \"" + SymbolName + "; \";"));
+                return new SrgsItem(IsOptional ? 0 : 1, 1, new SrgsRuleRef(availableRules[SymbolName]), new SrgsSemanticInterpretationTag("out += \"" + SymbolName + "; \";"));
             } 
             #endregion
         }
@@ -169,7 +169,7 @@ namespace Articulate
             /// <returns>A SrgsItem represented by this token</returns>
             public override SrgsItem GenerateSrgsItem(Dictionary<string, SrgsRule> availableRules)
             {
-                return new SrgsItem(Phrase);
+                return new SrgsItem(IsOptional ? 0 : 1, 1, Phrase);
             }
             #endregion
         }
@@ -244,7 +244,7 @@ namespace Articulate
             /// <returns>A SrgsItem represented by this token</returns>
             public override SrgsItem GenerateSrgsItem(Dictionary<string, SrgsRule> availableRules)
             {
-                SrgsItem ret = new SrgsItem();
+                SrgsItem ret = new SrgsItem(IsOptional ? 0 : 1, 1);
 
                 if (Operation == GroupOperations.And)
                 {
