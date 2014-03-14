@@ -115,7 +115,8 @@ namespace Articulate
         protected override void GenerateRule()
         {
             // inits a new SrgsRule with a single item containing the pronounceable choice and the semantic tag and returns it
-            Rule = new SrgsRule(Name, new SrgsItem(new SrgsOneOf(Pronounceables.ToArray()), new SrgsSemanticInterpretationTag("out += \"{" + Name + "}\";")));
+            // TODO: make sure that this is the way that we should be using SrgsSemanticInterpretationTag
+            Rule = new SrgsRule(Name, new SrgsItem(new SrgsOneOf(Pronounceables.ToArray()), new SrgsSemanticInterpretationTag("out += \"" + Name + "; \";")));
         }
         #endregion
     }
@@ -227,8 +228,6 @@ namespace Articulate
 
             // can recognize 1 to Repeat of these symbols
             symbolItem.Add(new SrgsItem(1, Repeat, memberChoice));
-
-            // NOTE: may need to use a SrgsSemanticInterpretationTag here to forward tags on
 
             // add the postfix
             if (Postfix.Count > 0)
