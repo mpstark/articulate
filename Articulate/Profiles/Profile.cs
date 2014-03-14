@@ -10,6 +10,26 @@ using YAXLib;
 namespace Articulate
 {
     /// <summary>
+    /// An exception to be thrown when encountering an irrecoverable situation while parsing a profile
+    /// </summary>
+    [Serializable()]
+    public class ProfileParseException : System.Exception
+    {
+        #region Constructors
+        // This classes structure lovingly stole from http://msdn.microsoft.com/en-us/library/ms173163.aspx
+
+        public ProfileParseException() : base() { }
+        public ProfileParseException(string message) : base(message) { }
+        public ProfileParseException(string message, System.Exception inner) : base(message, inner) { }
+
+        // A constructor is needed for serialization when an 
+        // exception propagates from a remoting server to the client.  
+        protected ProfileParseException(System.Runtime.Serialization.SerializationInfo info,
+            System.Runtime.Serialization.StreamingContext context) { } 
+        #endregion
+    }
+
+    /// <summary>
     /// An Articulate XML+Lua-based profile.
     /// </summary>
     public class Profile
