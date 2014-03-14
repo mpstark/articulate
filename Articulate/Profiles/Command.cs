@@ -133,6 +133,7 @@ namespace Articulate
 
                 return new SrgsItem(new SrgsRuleRef(availableRules[SymbolName]), new SrgsSemanticInterpretationTag("out += \"" + SymbolName + "; \";"));
             } 
+            #endregion
         }
 
         /// <summary>
