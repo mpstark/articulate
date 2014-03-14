@@ -64,7 +64,7 @@ namespace Articulate
         /// <summary>
         /// A token from a command format string.
         /// </summary>
-        public class FormatToken
+        public abstract class FormatToken
         {
             #region Public Members
             /// <summary>
@@ -81,6 +81,15 @@ namespace Articulate
             {
                 IsOptional = false;
             } 
+            #endregion
+
+            #region Public Methods
+            /// <summary>
+            /// Gets a SrgsItem represented by this token
+            /// </summary>
+            /// <param name="availableRules">The available group tokens inside the profile</param>
+            /// <returns>A SrgsItem represented by this token</returns>
+            public abstract SrgsItem GenerateSrgsItem(Dictionary<string, SrgsRule> availableRules); 
             #endregion
         }
 
@@ -108,6 +117,22 @@ namespace Articulate
                 IsOptional = optional;
             } 
             #endregion
+
+            #region Public Methods
+            /// <summary>
+            /// Gets a SrgsItem represented by this token
+            /// </summary>
+            /// <param name="availableRules">The available group tokens inside the profile</param>
+            /// <returns>A SrgsItem represented by this token</returns>
+            public override SrgsItem GenerateSrgsItem(Dictionary<string, SrgsRule> availableRules)
+            {
+                if (!availableRules.ContainsKey(SymbolName))
+                {
+                    throw new ProfileParseException("Symbol definition with name " + SymbolName + " not defined.");
+                }
+
+                return new SrgsItem(new SrgsRuleRef(availableRules[SymbolName]), new SrgsSemanticInterpretationTag("out += \"" + SymbolName + "; \";"));
+            } 
         }
 
         /// <summary>
@@ -133,6 +158,18 @@ namespace Articulate
                 Phrase = phrase;
                 IsOptional = optional;
             } 
+            #endregion
+
+            #region Public Methods
+            /// <summary>
+            /// Gets a SrgsItem represented by this token
+            /// </summary>
+            /// <param name="availableRules">The available group tokens inside the profile</param>
+            /// <returns>A SrgsItem represented by this token</returns>
+            public override SrgsItem GenerateSrgsItem(Dictionary<string, SrgsRule> availableRules)
+            {
+                return new SrgsItem(Phrase);
+            }
             #endregion
         }
 
@@ -196,6 +233,43 @@ namespace Articulate
                 IsOptional = optional;
                 Operation = operation;
             } 
+            #endregion
+
+            #region Public Methods
+            /// <summary>
+            /// Gets a SrgsItem represented by this token
+            /// </summary>
+            /// <param name="availableRules">The available group tokens inside the profile</param>
+            /// <returns>A SrgsItem represented by this token</returns>
+            public override SrgsItem GenerateSrgsItem(Dictionary<string, SrgsRule> availableRules)
+            {
+                SrgsItem ret = new SrgsItem();
+
+                if (Operation == GroupOperations.And)
+                {
+                    foreach (var member in Members)
+                    {
+                        ret.Add(member.GenerateSrgsItem(availableRules));
+                    }
+                }
+                else if (Operation == GroupOperations.Or)
+                {
+                    SrgsOneOf choice = new SrgsOneOf();
+
+                    foreach (var member in Members)
+                    {
+                        choice.Add(member.GenerateSrgsItem(availableRules));
+                    }
+
+                    ret.Add(choice);
+                }
+                else
+                {
+                    throw new ProfileParseException("Invalid group operator in command format.");
+                }
+
+                return ret;
+            }
             #endregion
         }
 
@@ -276,9 +350,17 @@ namespace Articulate
         /// <returns>A SrgsItem that matches the Format string</returns>
         public SrgsItem GenerateSrgsItem(Dictionary<string, SrgsRule> availableRules)
         {
-            SrgsItem commandItem = new SrgsItem();
+            int counter = 1;
+            SrgsItem command = new SrgsItem();
             
-            return commandItem;
+            IEnumerable<FormatToken> topLevelTokens = FormatGrammar.Format.Parse(Format);
+            foreach(FormatToken token in topLevelTokens)
+            {
+                command.Add(token.GenerateSrgsItem(availableRules));
+                command.Add(new SrgsSemanticInterpretationTag("out.param" + counter++ + " = rules.latest();"));
+            }
+
+            return command;
         }
         #endregion
     }
