@@ -18,7 +18,7 @@ namespace Articulate
         /// <summary>
         /// The symbol's name. Has to be unique in the profile namespace.
         /// </summary>
-        [YAXAttributeFor("..")]
+        [YAXAttributeFor(".")]
         [YAXSerializeAs("name")]
         public string Name { get; set; }
 
@@ -73,7 +73,7 @@ namespace Articulate
         /// <summary>
         /// The value that the symbol resolves to. Doesn't have to be unique.
         /// </summary>
-        [YAXAttributeFor("..")]
+        [YAXAttributeFor(".")]
         [YAXSerializeAs("value")]
         public string Value { get; set; }
 
@@ -90,6 +90,7 @@ namespace Articulate
         /// </summary>
         public Symbol()
         {
+            Name = "";
             Value = "";
             Pronounceables = new List<string>();
         }
@@ -116,7 +117,7 @@ namespace Articulate
         {
             // inits a new SrgsRule with a single item containing the pronounceable choice and the semantic tag and returns it
             // TODO: make sure that this is the way that we should be using SrgsSemanticInterpretationTag
-            Rule = new SrgsRule(Name, new SrgsItem(new SrgsOneOf(Pronounceables.ToArray()), new SrgsSemanticInterpretationTag("out += \"" + Name + "; \";")));
+            Rule = new SrgsRule(Name, new SrgsItem(new SrgsOneOf(Pronounceables.ToArray()), new SrgsSemanticInterpretationTag("out += \"" + Name + "; \"")));
         }
         #endregion
     }
@@ -161,7 +162,7 @@ namespace Articulate
         /// <summary>
         /// Number of times that symbols in this SymbolGroup can repeat. Must 1 or greater. 1 is default.
         /// </summary>
-        [YAXAttributeFor("..")]
+        [YAXAttributeFor(".")]
         [YAXSerializeAs("repeat")]
         public int Repeat { get; set; }
         #endregion

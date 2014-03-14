@@ -32,6 +32,7 @@ namespace Articulate
     /// <summary>
     /// An Articulate XML+Lua-based profile.
     /// </summary>
+    [YAXSerializeAs("Profile")]
     public class Profile
     {
         #region Enums
@@ -56,14 +57,14 @@ namespace Articulate
         /// <summary>
         /// Name of the profile. Must be unique between loaded profiles.
         /// </summary>
-        [YAXAttributeFor("..")]
+        [YAXAttributeFor(".")]
         [YAXSerializeAs("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Locale of the profile that is loaded. This will be the recognizor that is used for this profile.
         /// </summary>
-        [YAXAttributeFor("..")]
+        [YAXAttributeFor(".")]
         [YAXSerializeAs("locale")]
         public string Locale { get; set; }
 
@@ -139,13 +140,14 @@ namespace Articulate
 
             // go through all of the commands, add their SrgsItem's to a SrgsRule that will become the root of the document
             // the root of the document is where all recognition starts
-            SrgsRule newRootRule = new SrgsRule(Name + " Commands");
+            SrgsRule newRootRule = new SrgsRule("Commands");
             SrgsOneOf commandChoice = new SrgsOneOf();
             foreach(NewCommand command in Commands)
             {
                 commandChoice.Add(command.GenerateSrgsItem(rules));
             }
 
+            newRootRule.Add(commandChoice);
             document.Rules.Add(newRootRule);
             document.Root = newRootRule;
             return document;
