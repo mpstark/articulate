@@ -229,6 +229,7 @@ namespace Articulate
 
             // can recognize 1 to Repeat of these symbols
             symbolItem.Add(new SrgsItem(1, Repeat, memberChoice));
+            symbolItem.Add(new SrgsSemanticInterpretationTag("out += \"" + Name + "; \""));
 
             // add the postfix
             if (Postfix.Count > 0)
