@@ -30,13 +30,16 @@ namespace ArticulateTest
             profile.Locale = "en";
             profile.Name = "Arma Test Profile";
 
+            SymbolGroup groupSymbol = new SymbolGroup();
+            groupSymbol.Name = "testgroup";
+
             Symbol testSymbol = new Symbol();
             testSymbol.Name = "test";
             testSymbol.Pronounceables.Add("test");
             testSymbol.Pronounceables.Add("testing");
             testSymbol.Pronounceables.Add("testing this thing");
             testSymbol.Value = "F1";
-            profile.Symbols.Add(testSymbol);
+            groupSymbol.Members.Add(testSymbol);
 
             Symbol wheeSymbol = new Symbol();
             wheeSymbol.Name = "whee";
@@ -44,11 +47,13 @@ namespace ArticulateTest
             wheeSymbol.Pronounceables.Add("wheeeee");
             wheeSymbol.Pronounceables.Add("woohooo");
             wheeSymbol.Value = "F2";
-            profile.Symbols.Add(wheeSymbol);
+            groupSymbol.Members.Add(wheeSymbol);
+
+            profile.Symbols.Add(groupSymbol);
 
             NewCommand testCommand = new NewCommand();
             testCommand.Name = "testCommand";
-            testCommand.Format = "(\"hello\"|\"Hi\")? (test|whee)";
+            testCommand.Format = "(\"hello\"|\"Hi\")? (test|whee) testgroup?";
             testCommand.Output = "NotImplemented()";
 
             profile.Commands.Add(testCommand);
