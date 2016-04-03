@@ -208,6 +208,8 @@ namespace Articulate
 			}
 
 			Task.Factory.StartNew(LoadRecognizer);
+
+			App.Sentry.CaptureMessageAsync("Started", SharpRaven.Data.ErrorLevel.Info);
 		}
 
 		private void Window_Closing(object sender, CancelEventArgs e)
@@ -234,6 +236,8 @@ namespace Articulate
 					ErrorMessage = Logic.Recognizer.SetupError;
 					ErrorFlyout.IsOpen = true;
 				});
+
+				App.Sentry.CaptureMessageAsync("Recognizer Failed", SharpRaven.Data.ErrorLevel.Warning);
 			}
 			else
 			{

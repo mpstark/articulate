@@ -1,0 +1,150 @@
+﻿translation_language = Hungarian
+translation_author = Gary Raven
+translation_website = https://github.com/geriko7
+
+app_title = Articulate
+
+state_offline = OFFLINE
+state_online = HALLGATÁS
+state_error = HIBA
+state_recognition_failed = Nem értettem amit mondtál...
+
+languages_button_tooltip = Nyelv megváltoztatása
+languages_header = Nyelvek
+languages_combobox = Nyelv
+languages_description = 
+Válaszd ki azt a nyelvet amit szeretnél használni. Ha ez a nyelv
+nem jelenik meg a menüben akkor segíts nekünk lefordítani a GitHub wikin keresztül!
+
+settings_title = Beállítások
+settings_button_tooltip = Articulate beállításai
+settings_header = Beállítások
+
+settings_listening_mode = Hallgatási mód
+listening_mode_continuous = Folyamatos
+listening_mode_ptt = Billentyű nyomása
+listening_mode_pta = Billentyű egyszeri megnyomása
+listening_mode_pti = Billentyű megnyomása a szünethez
+
+settings_confidence = "Bizalom" szegély
+settings_confidence_explanation = 
+	Az érték csökkentése segíti a program fogékonyságát a pontosság árán
+
+settings_command_keys = Parancs billentyűk
+settings_command_keys_bind = Billentyű hozzáadása
+settings_command_keys_bind_busy = Nyomd és Engedd el a billentyűket
+settings_command_keys_bind_tooltip = PTT billentyű hozzáadása
+settings_command_keys_explanation =
+	Nyomj meg egy billentyűt hogy megváltoztasd a parancs billentyűt. Nyomd meg az Esc-et, hogy abbahagyd a "bindelést". 
+ Dupla kattintással eltávolíthatod a billentyűt/billentyűket.
+
+settings_end_command_pause = Parancs leállítási szünet
+settings_end_command_pause_explanation =
+	Az érték csökkentésével a parancsokat rövidebb szünetekben is kiadhatod,
+	de nehezebb lesz vele a csata közepén szünetet tartani.
+
+settings_key_release_pause = Billentyű lenyomási időköz
+settings_key_release_pause_explanation =
+	Az érték csökkentésével a parancsokat gyorsabban végezheted el, habár ezzel a parancsok
+ pontossága is csökkenni fog az Armában. Ammenyiben a parancsaidat nem jól hajtja végig a program,
+ ez legyen az első amit növelned kell.
+
+settings_advanced_button = Haladó Beállítások
+
+settings_soundeffect_mode = Hang Effekt mód
+settings_soundeffect_mode_default = Alapbeállítás
+settings_soundeffect_mode_files = Egyedi hangok
+settings_soundeffect_mode_none = Semmilyen
+
+error_header = Hiba
+error_title = Hiba üzenet
+error_reload = Újra
+
+about_button_tooltip = Információk az Articulate szoftverről
+about_header = Rólunk
+about_title = Üdvözöllek az Articulate szoftvernél!
+about_text = 
+Az Articulate egy brilliáns program, ahhoz hogy az ArmA nevű játékban a csapatodat a legkönnyebben írányíthasd. \n
+	Bárki aki játszott az Armával, tudja, hogy a parancs menü mennyire fontos, de nagyon sok időt igényel.
+	Az Articulate szoftvert azért készítették, hogy ezt a lehető legegyszerűbbé tegyék, a mikrofonod használatával,
+	hogy parancsokat adhass nekik, miközben beszélsz.
+about_authors_title = Fejlesztők
+
+main_preview_warning = 
+Ez egy nagyon alfa verzióban álló szoftver: fontos a visszajelzés. A tapasztalatok változóak.
+main_bi_post = [BI Fórum]
+main_feedback = [Visszajelzés küldése]
+main_wiki = [GitHub Wiki]
+
+menu_show = Előhoz
+menu_hide = Elrejt
+menu_exit = Kilépés
+
+mouse_1048576 = Bal Egér
+mouse_2097152 = Jobb Egér
+mouse_8388608 = Egér 4
+mouse_16777216 = Egér 5
+
+keyboard_8 = Backspace
+keyboard_9 = Tab
+keyboard_20 = Caps Lock
+keyboard_32 = Space
+keyboard_48 = 0
+keyboard_49 = 1
+keyboard_50 = 2
+keyboard_51 = 3
+keyboard_52 = 4
+keyboard_53 = 5
+keyboard_54 = 6
+keyboard_55 = 7
+keyboard_56 = 8
+keyboard_57 = 9
+keyboard_65 = A
+keyboard_66 = B
+keyboard_67 = C
+keyboard_68 = D
+keyboard_69 = E
+keyboard_70 = F
+keyboard_71 = G
+keyboard_72 = H
+keyboard_73 = I
+keyboard_74 = J
+keyboard_75 = K
+keyboard_76 = L
+keyboard_77 = M
+keyboard_78 = N
+keyboard_79 = O
+keyboard_80 = P
+keyboard_81 = Q
+keyboard_82 = R
+keyboard_83 = S
+keyboard_84 = T
+keyboard_85 = U
+keyboard_86 = V
+keyboard_87 = W
+keyboard_88 = X
+keyboard_89 = Y
+keyboard_90 = Z
+keyboard_91 = Bal Win
+keyboard_92 = Jobb Win
+keyboard_112 = F1
+keyboard_113 = F2
+keyboard_114 = F3
+keyboard_115 = F4
+keyboard_116 = F5
+keyboard_117 = F6
+keyboard_118 = F7
+keyboard_119 = F8
+keyboard_120 = F9
+keyboard_121 = F10
+keyboard_122 = F11
+keyboard_123 = F12
+keyboard_160 = Bal Shift
+keyboard_161 = Jobb Shift
+keybaord_162 = Bal Ctrl
+keyboard_163 = Jobb Ctrl
+keyboard_164 = Bal Alt
+keyboard_165 = Jobb Alt
+keyboard_187 = =
+keyboard_189 = =
+keyboard_192 = ~

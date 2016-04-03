@@ -384,9 +384,11 @@ namespace Articulate
 				return;
 			}
 
-			// Get a thread from the thread pool to execute the command
-			CommandPool.ExecuteAsync(recognizedPhrase.Result.Semantics);
-		}
+            // Get a thread from the thread pool to execute the command
+#pragma warning disable CS4014
+            CommandPool.ExecuteAsync(recognizedPhrase.Result.Semantics);
+#pragma warning restore CS4014
+        }
 
 		/// <summary>
 		/// Some speech was rejected by the voiceEngine
