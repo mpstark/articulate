@@ -73,17 +73,17 @@ namespace Articulate
             commandSet.Add(stop.Item);
 
             // Wait for me (7)
-            Command waitForMe = new Command("WAIT", new string[] { "wait for me", "wait up", "wait" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.One),  DirectInputEmulator.KeyPress(DirectInputKeys.Seven) }, subjectRef);
+            Command waitForMe = new Command("WAIT", new string[] { "wait for me", "wait up", "wait" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.One),  DirectInputEmulator.KeyPress(DirectInputKeys.Six) }, subjectRef);
             commandObjects.Add("WAIT", waitForMe);
             commandSet.Add(waitForMe.Item);
 
             // Find cover (8)
-            Command cover = new Command("COVER", new string[] { "go for cover", "look for cover", "cover", "find cover", "get to cover", "hide" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.One),  DirectInputEmulator.KeyPress(DirectInputKeys.Eight) }, subjectRef);
+            Command cover = new Command("COVER", new string[] { "go for cover", "look for cover", "cover", "find cover", "get to cover", "hide" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.One),  DirectInputEmulator.KeyPress(DirectInputKeys.Seven) }, subjectRef);
             commandObjects.Add("COVER", cover);
             commandSet.Add(cover.Item);
 
             // Next waypoint (9)
-            Command nextWaypoint = new Command("NEXTWAYPOINT", new string[] { "next waypoint", "go to the next waypoint" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.One),  DirectInputEmulator.KeyPress(DirectInputKeys.Nine) }, subjectRef);
+            Command nextWaypoint = new Command("NEXTWAYPOINT", new string[] { "next waypoint", "go to the next waypoint" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.One),  DirectInputEmulator.KeyPress(DirectInputKeys.Eight) }, subjectRef);
             commandObjects.Add("NEXTWAYPOINT", nextWaypoint);
             commandSet.Add(nextWaypoint.Item);
             #endregion
@@ -157,7 +157,7 @@ namespace Articulate
             commandObjects.Add("WATCH", watch);
             commandSet.Add(watch.Item);
 
-            // suppressive fire (9)
+            // suppressive fire (9) -What does it do in-game?
             Command suppresiveFire = new Command("SUPRESS", new string[] { "suppresive fire", "suppress" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.Three),  DirectInputEmulator.KeyPress(DirectInputKeys.Nine) }, subjectRef);
             commandObjects.Add("SUPRESS", suppresiveFire);
             commandSet.Add(suppresiveFire.Item);
@@ -174,7 +174,30 @@ namespace Articulate
             commandObjects.Add("DISMOUNT", dismount);
             commandSet.Add(dismount.Item);
             #endregion
-
+            #region Action (5)
+            
+            //Low fuel
+            Command lowfuel = new Command("LOWFUEL", new string[] { "Bingo fuel", "Be advised low fuel" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.Five),  DirectInputEmulator.KeyPress(DirectInputKeys.Two) }, subjectRef);
+            commandObjects.Add("LOWFUEL", lowfuel);
+            commandSet.Add(lowfuel.Item);
+            
+            //Low Ammo
+            Command lowammo = new Command("LOWAMMO", new string[] { "Running low on ammo" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.Five),  DirectInputEmulator.KeyPress(DirectInputKeys.Three) }, subjectRef);
+            commandObjects.Add("LOWAMMO", lowammo);
+            commandSet.Add(lowammo.Item);
+            
+            
+            //Target Neutralized
+            Command hostiledown = new Command("HOSTILEDOWN", new string[] { "Hostile down", "Target down", "Scratch one", "He is down", "Target Neutralized" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.Five),  DirectInputEmulator.KeyPress(DirectInputKeys.Seven) }, subjectRef);
+            commandObjects.Add("HOSTILEDOWN", hostiledown);
+            commandSet.Add(hostiledown.Item);
+            
+            //KIA, Lost one
+            Command friendlydown = new Command("KIA", new string[] { "We have lost one", "Man down", "He is hit", "Shit we got a man down" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.Five),  DirectInputEmulator.KeyPress(DirectInputKeys.Eight) }, subjectRef);
+            commandObjects.Add("KIA", friendlydown);
+            commandSet.Add(friendlydown.Item);
+            #endregion
+            
             #region Action (6)
             // open menu
             Command openActionMenu = new Command("OPENACTION", new string[] { "show actions", "action menu", "perform action", "do action", "open action menu", "actions" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.Six) }, subjectRef);
