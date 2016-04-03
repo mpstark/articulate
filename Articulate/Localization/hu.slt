@@ -26,9 +26,9 @@ listening_mode_ptt = Billentyű nyomása
 listening_mode_pta = Billentyű egyszeri megnyomása
 listening_mode_pti = Billentyű megnyomása a szünethez
 
-settings_confidence = Confidence Margin
+settings_confidence = "Bizalom" szegély
 settings_confidence_explanation = 
-	Reducing this value can help increase reponsiveness at the cost of accuracy
+	Az érték csökkentése segíti a program fogékonyságát a pontosság árán
 
 settings_command_keys = Parancs billentyűk
 settings_command_keys_bind = Billentyű hozzáadása
