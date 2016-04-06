@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 
 using SharpRaven;
+using System.Reflection;
 
 namespace Articulate
 {
@@ -28,7 +29,18 @@ namespace Articulate
 		static RavenClient _Sentry = null;
 		internal static RavenClient Sentry
 		{
-			get { return _Sentry = _Sentry ?? new RavenClient(Constants.SentryDSN); }
+			get {
+                return _Sentry = _Sentry ?? new RavenClient(Constants.SentryDSN)
+                {
+#if DEBUG
+                    Environment = "debug",
+#else
+                    Environment = "release",
+#endif
+                    Release = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyVersionAttribute>().Version,
+                    Logger = "Desktop"
+                };
+            }
 		}
 
 		[STAThread]
