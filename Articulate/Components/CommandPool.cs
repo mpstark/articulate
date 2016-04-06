@@ -157,7 +157,7 @@ namespace Articulate
             commandObjects.Add("WATCH", watch);
             commandSet.Add(watch.Item);
 
-            // suppressive fire (9) -What does it do in-game?
+            // suppressive fire (9) -Now works in-game
             Command suppresiveFire = new Command("SUPRESS", new string[] { "suppresive fire", "suppress" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.Three),  DirectInputEmulator.KeyPress(DirectInputKeys.Nine) }, subjectRef);
             commandObjects.Add("SUPRESS", suppresiveFire);
             commandSet.Add(suppresiveFire.Item);
@@ -175,7 +175,7 @@ namespace Articulate
             commandSet.Add(dismount.Item);
             #endregion
 
-            #region Action (5)
+            #region Status (5)
             
             // Low fuel
             Command lowfuel = new Command("LOWFUEL", new string[] { "fuel low", "bingo fuel", "be advised bingo fuel", "be advised low fuel", "be advised fuel low" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.Five),  DirectInputEmulator.KeyPress(DirectInputKeys.Two) }, subjectRef);
@@ -187,6 +187,20 @@ namespace Articulate
             commandObjects.Add("LOWAMMO", lowammo);
             commandSet.Add(lowammo.Item);
             
+            // Injured
+            Command injured = new Command("INJURED", new string[] { "I'm injured", "injured", "medic", "I need a medic", "I need some help", "I need some help now", "somebody help me", "wounded", "I'm hit", "fuck I'm hurt" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.Five),  DirectInputEmulator.KeyPress(DirectInputKeys.Four) }, subjectRef);
+            commandObjects.Add("INJURED", injured);
+            commandSet.Add(injured.Item);
+            
+            // SITREP, Report Status
+            Command sitrep = new Command("SITREP", new string[] { "report in over", "sitrep", "report status", "report in" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.Five),  DirectInputEmulator.KeyPress(DirectInputKeys.Five) }, subjectRef);
+            commandObjects.Add("SITREP", sitrep);
+            commandSet.Add(sitrep.Item);
+            
+            // Under Fire
+            Command underfire = new Command("underfire", new string[] { "I'm under fire", "taking fire", "under fire", "enemy fire" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.Five),  DirectInputEmulator.KeyPress(DirectInputKeys.Six) }, subjectRef);
+            commandObjects.Add("underfire", underfire);
+            commandSet.Add(underfire.Item);
             
             // Target Neutralized
             Command hostiledown = new Command("HOSTILEDOWN", new string[] { "hostile down", "target down", "scratch one", "he is down", "target neutralized", "tango down" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.Five),  DirectInputEmulator.KeyPress(DirectInputKeys.Seven) }, subjectRef);
