@@ -174,28 +174,30 @@ namespace Articulate
             commandObjects.Add("DISMOUNT", dismount);
             commandSet.Add(dismount.Item);
             #endregion
+
             #region Action (5)
             
-            //Low fuel
-            Command lowfuel = new Command("LOWFUEL", new string[] { "Bingo fuel", "Be advised low fuel" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.Five),  DirectInputEmulator.KeyPress(DirectInputKeys.Two) }, subjectRef);
+            // Low fuel
+            Command lowfuel = new Command("LOWFUEL", new string[] { "fuel low", "bingo fuel", "be advised bingo fuel", "be advised low fuel", "be advised fuel low" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.Five),  DirectInputEmulator.KeyPress(DirectInputKeys.Two) }, subjectRef);
             commandObjects.Add("LOWFUEL", lowfuel);
             commandSet.Add(lowfuel.Item);
             
-            //Low Ammo
-            Command lowammo = new Command("LOWAMMO", new string[] { "Running low on ammo" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.Five),  DirectInputEmulator.KeyPress(DirectInputKeys.Three) }, subjectRef);
+            // Low Ammo
+            Command lowammo = new Command("LOWAMMO", new string[] { "I'm running low on ammo", "running low on ammo", "ammo low" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.Five),  DirectInputEmulator.KeyPress(DirectInputKeys.Three) }, subjectRef);
             commandObjects.Add("LOWAMMO", lowammo);
             commandSet.Add(lowammo.Item);
             
             
-            //Target Neutralized
-            Command hostiledown = new Command("HOSTILEDOWN", new string[] { "Hostile down", "Target down", "Scratch one", "He is down", "Target Neutralized" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.Five),  DirectInputEmulator.KeyPress(DirectInputKeys.Seven) }, subjectRef);
+            // Target Neutralized
+            Command hostiledown = new Command("HOSTILEDOWN", new string[] { "hostile down", "target down", "scratch one", "he is down", "target neutralized", "tango down" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.Five),  DirectInputEmulator.KeyPress(DirectInputKeys.Seven) }, subjectRef);
             commandObjects.Add("HOSTILEDOWN", hostiledown);
             commandSet.Add(hostiledown.Item);
             
-            //KIA, Lost one
-            Command friendlydown = new Command("KIA", new string[] { "We have lost one", "Man down", "He is hit", "Shit we got a man down" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.Five),  DirectInputEmulator.KeyPress(DirectInputKeys.Eight) }, subjectRef);
+            // KIA, Lost one
+            Command friendlydown = new Command("KIA", new string[] { "we have lost one", "man down", "he is hit", "shit we have got a man down", "we have got a man down" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.Five),  DirectInputEmulator.KeyPress(DirectInputKeys.Eight) }, subjectRef);
             commandObjects.Add("KIA", friendlydown);
             commandSet.Add(friendlydown.Item);
+
             #endregion
             
             #region Action (6)
