@@ -121,7 +121,7 @@
 						   Content="80" />
 					</Grid>
 					<Slider x:Name="ConfidenceMargin"
-						Value="80" Minimum="65" Maximum="95"/>
+						Value="80" Minimum="60" Maximum="95"/>
 					<TextBlock TextWrapping="Wrap" Text="{t:Translate settings_confidence_explanation}"/>
 
                     <Label FontSize="16" Content="{t:Translate settings_soundeffect_mode}"/>
