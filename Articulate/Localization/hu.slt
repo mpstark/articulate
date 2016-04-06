@@ -4,7 +4,7 @@ translation_website = https://github.com/geriko7
 
 app_title = Articulate
 
-state_offline = OFFLINE
+state_offline = OFF-LINE
 state_online = HALLGATÁS
 state_error = HIBA
 state_recognition_failed = Nem értettem amit mondtál...
@@ -13,8 +13,7 @@ languages_button_tooltip = Nyelv megváltoztatása
 languages_header = Nyelvek
 languages_combobox = Nyelv
 languages_description = 
-Válaszd ki azt a nyelvet amit szeretnél használni. Ha ez a nyelv
-nem jelenik meg a menüben akkor segíts nekünk lefordítani a GitHub wikin keresztül!
+Válaszd ki azt a nyelvet amit szeretnél használni. Ha ez a nyelv nem jelenik meg a menüben akkor segíts nekünk lefordítani a GitHub wikin keresztül!
 
 settings_title = Beállítások
 settings_button_tooltip = Articulate beállításai
@@ -28,7 +27,7 @@ listening_mode_pti = Billentyű megnyomása a szünethez
 
 settings_confidence = "Bizalom" szegély
 settings_confidence_explanation = 
-	Az érték csökkentése segíti a program fogékonyságát a pontosság árán
+	Az érték csökkentése segíti a program fogékonyságát a pontosság árán.
 
 settings_command_keys = Parancs billentyűk
 settings_command_keys_bind = Billentyű hozzáadása
