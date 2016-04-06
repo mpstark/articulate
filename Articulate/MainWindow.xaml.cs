@@ -145,7 +145,10 @@ namespace Articulate
 				using (var svStream = new MemoryStream(Properties.Resources.sv))
 					TranslationManager.Instance.Translations.Add(new FileBasedTranslation(CultureInfo.GetCultureInfo("sv"), svStream));
 
-				foreach (var file in new DirectoryInfo(Environment.CurrentDirectory).GetFiles("*.slt"))
+                using (var svStream = new MemoryStream(Properties.Resources.hu))
+                    TranslationManager.Instance.Translations.Add(new FileBasedTranslation(CultureInfo.GetCultureInfo("hu"), svStream));
+
+                foreach (var file in new DirectoryInfo(Environment.CurrentDirectory).GetFiles("*.slt"))
 				{
 					using (var fs = file.OpenRead())
 						TranslationManager.Instance.Translations.Add(new FileBasedTranslation(CultureInfo.GetCultureInfo(System.IO.Path.GetFileNameWithoutExtension(file.Name)), fs));

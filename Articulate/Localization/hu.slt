@@ -36,7 +36,7 @@ settings_command_keys_bind_busy = Nyomd és Engedd el a billentyűket
 settings_command_keys_bind_tooltip = PTT billentyű hozzáadása
 settings_command_keys_explanation =
 	Nyomj meg egy billentyűt hogy megváltoztasd a parancs billentyűt. Nyomd meg az Esc-et, hogy abbahagyd a "bindelést". 
- Dupla kattintással eltávolíthatod a billentyűt/billentyűket.
+	Dupla kattintással eltávolíthatod a billentyűt/billentyűket.
 
 settings_end_command_pause = Parancs leállítási szünet
 settings_end_command_pause_explanation =
@@ -46,8 +46,8 @@ settings_end_command_pause_explanation =
 settings_key_release_pause = Billentyű lenyomási időköz
 settings_key_release_pause_explanation =
 	Az érték csökkentésével a parancsokat gyorsabban végezheted el, habár ezzel a parancsok
- pontossága is csökkenni fog az Armában. Ammenyiben a parancsaidat nem jól hajtja végig a program,
- ez legyen az első amit növelned kell.
+	pontossága is csökkenni fog az Armában. Ammenyiben a parancsaidat nem jól hajtja végig a program,
+	ez legyen az első amit növelned kell.
 
 settings_advanced_button = Haladó Beállítások
 

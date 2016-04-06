@@ -37,7 +37,7 @@ namespace Articulate
 #else
                     Environment = "release",
 #endif
-                    Release = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyVersionAttribute>().Version,
+                    Release = Assembly.GetExecutingAssembly().GetVersion()?.ToString(3),
                     Logger = "Desktop"
                 };
             }
@@ -126,5 +126,6 @@ namespace Articulate
 			}
 		}
 
+        
     }
 }

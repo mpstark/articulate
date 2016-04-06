@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -51,5 +53,11 @@ namespace Articulate
 			using (var e = second.GetEnumerator())
 				while (e.MoveNext()) yield return e.Current;
 		}
-	}
+
+        public static Version GetVersion(this Assembly assembly)
+        {
+            return assembly?.GetName()?.Version;
+        }
+
+    }
 }

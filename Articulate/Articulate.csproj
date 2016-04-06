@@ -211,6 +211,7 @@
     <None Include="Localization\de.slt" />
     <None Include="Localization\es.slt" />
     <None Include="Localization\fr.slt" />
+    <None Include="Localization\hu.slt" />
     <None Include="Localization\sv.slt" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
