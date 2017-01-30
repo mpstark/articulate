@@ -197,7 +197,8 @@ namespace Articulate
 					"arma2",
 					"arma2oa",
 					"takeonh",
-					"arma3"
+					"arma3",
+					"arma3_x64"
 				});
 
 			LanguageList.ItemsSource = TranslationManager.Instance.Translations.Select(x => x["translation_language", null] ?? x.Culture.DisplayName);
