@@ -381,7 +381,16 @@ namespace Articulate
 			if (!MonitoredExecutables.Any(x => x.Equals(activeApplication, StringComparison.OrdinalIgnoreCase)))
 			{
 				Trace.WriteLine(string.Format("Skipping command, {0} is not in the list of monitored applications", activeApplication));
-				return;
+
+                //App.Sentry.Capture(new SharpRaven.Data.SentryEvent("Unmonitored Forground Application")
+                //{
+                //    Level = SharpRaven.Data.ErrorLevel.Warning,
+                //    Extra = new Dictionary<string, string>()
+                //    {
+                //        { "ExecutableName", activeApplication }
+                //    }
+                //});
+                return;
 			}
 
             // Get a thread from the thread pool to execute the command

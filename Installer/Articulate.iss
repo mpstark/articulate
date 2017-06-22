@@ -2,12 +2,12 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Articulate"
-#define MyAppVersion "0.2.12"
+#define MyAppVersion "0.2.13"
 #define MyAppPublisher "Articulate Team"
 #define MyAppURL "https://github.com/Mpstark/articulate"
 #define MyAppExeName "Articulate.exe"
 #define SetupFileName "ArticulateSetup"
-#define Copyright "Copyright ï¿½ 2013 Michael Starkweather, Benjamin Pannell, and other contributors."
+#define Copyright "Copyright © 2013 Michael Starkweather, Benjamin Pannell, and other contributors."
 #define Mutex "Articulate"
 #define ReleaseType "Development Preview"
 
