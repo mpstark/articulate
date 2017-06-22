@@ -190,16 +190,15 @@ namespace Articulate
 			ConfidenceMargin.Value = Logic.Configuration.ConfidenceMargin;
 			ConfidenceMarginNumber.Content = Logic.Configuration.ConfidenceMargin;
 
-
-			if (!Logic.Configuration.Applications.Any())
-				Logic.Configuration.Applications.AddRange(new[] {
-					"arma",
-					"arma2",
-					"arma2oa",
-					"takeonh",
-					"arma3",
-					"arma3_x64"
-				});
+			Logic.Configuration.Applications.AddToSet(new[] {
+				"arma",
+				"arma2",
+				"arma2oa",
+				"takeonh",
+				"arma3",
+				"arma3_x64",
+                "arma_64"
+			});
 
 			LanguageList.ItemsSource = TranslationManager.Instance.Translations.Select(x => x["translation_language", null] ?? x.Culture.DisplayName);
 			LanguageList.SelectedItem = TranslationManager.Instance.CurrentTranslation["translation_language", null] ?? TranslationManager.Instance.CurrentLanguage.DisplayName;

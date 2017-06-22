@@ -54,6 +54,12 @@ namespace Articulate
 				while (e.MoveNext()) yield return e.Current;
 		}
 
+        public static void AddToSet<T>(this List<T> list, IEnumerable<T> items)
+        {
+            var set = new HashSet<T>(list);
+            list.AddRange(items.Where(i => !set.Contains(i)));
+        }
+
         public static Version GetVersion(this Assembly assembly)
         {
             return assembly?.GetName()?.Version;
