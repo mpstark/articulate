@@ -41,9 +41,29 @@ namespace Articulate
             commandSet.Add(select);
 
             #region Commands
+            #region Utilities
+
+            // Open Map (M)
+            Command map = new Command("MAP", new string[] { "map", "toggle map", "show map", "hide map", "open map", "close map" }, new[] { DirectInputEmulator.KeyPress(DirectInputKeys.M) });
+            commandObjects.Add("MAP", map);
+            commandSet.Add(map.Item);
+
+            // Open Inventory (I)
+            Command inventory = new Command("INVENTORY", new string[] { "inventory", "toggle inventory", "show inventory", "hide inventory", "open inventory", "close inventory" }, new[] { DirectInputEmulator.KeyPress(DirectInputKeys.I) });
+            commandObjects.Add("INVENTORY", inventory);
+            commandSet.Add(inventory.Item);
+
+            // Lights (L)
+            Command lights = new Command("LIGHTS", new string[] { "lights", "light", "flashlight", "torch", "laser" }, new[] { DirectInputEmulator.KeyPress(DirectInputKeys.L) });
+            commandObjects.Add("LIGHTS", lights);
+            commandSet.Add(lights.Item);
+
+
+            #endregion
+
             #region Move (1)
             // return to formation (1)
-			Command returnToFormation = new Command("FORMUP", new string[] { "return to formation", "form up", "fallback", "fall back", "regroup", "join up", "rally on me", "rally to me" }, new [] { DirectInputEmulator.KeyPress(DirectInputKeys.One), DirectInputEmulator.KeyPress(DirectInputKeys.One) }, subjectRef);
+            Command returnToFormation = new Command("FORMUP", new string[] { "return to formation", "form up", "fallback", "fall back", "regroup", "join up", "rally on me", "rally to me" }, new [] { DirectInputEmulator.KeyPress(DirectInputKeys.One), DirectInputEmulator.KeyPress(DirectInputKeys.One) }, subjectRef);
             commandObjects.Add("FORMUP", returnToFormation);
             commandSet.Add(returnToFormation.Item);
 
@@ -86,17 +106,12 @@ namespace Articulate
             Command nextWaypoint = new Command("NEXTWAYPOINT", new string[] { "next waypoint", "go to the next waypoint" }, new [] {  DirectInputEmulator.KeyPress(DirectInputKeys.One),  DirectInputEmulator.KeyPress(DirectInputKeys.Eight) }, subjectRef);
             commandObjects.Add("NEXTWAYPOINT", nextWaypoint);
             commandSet.Add(nextWaypoint.Item);
-            #endregion
-	    
-           // Move to (10)
-           Command moveTo = new Command("MOVETO", new string[] { "move to", "move", "move there" }, new [] { DirectInputEmulator.KeyPress(DirectInputKeys.Space) }, subjectRef);
-           commandObjects.Add("MOVETO", moveTo);
-           commandSet.Add(moveTo.Item);
 
-           // Map (11)
-           Command map = new Command("MAP", new string[] { "map" }, new[] { DirectInputEmulator.KeyPress(DirectInputKeys.M) }, subjectRef);
-           commandObjects.Add("MAP", map);
-           commandSet.Add(map.Item);
+            // Move to (Space)
+            Command moveTo = new Command("MOVETO", new string[] { "move to", "move", "move there", "move up" }, new[] { DirectInputEmulator.KeyPress(DirectInputKeys.Space) }, subjectRef);
+            commandObjects.Add("MOVETO", moveTo);
+            commandSet.Add(moveTo.Item);
+            #endregion
 
             #region Target (2)
             // open menu
