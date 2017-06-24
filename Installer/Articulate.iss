@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Articulate"
-#define MyAppVersion "0.2.13"
+#define MyAppVersion "0.2.14"
 #define MyAppPublisher "Articulate Team"
 #define MyAppURL "https://github.com/Mpstark/articulate"
 #define MyAppExeName "Articulate.exe"
