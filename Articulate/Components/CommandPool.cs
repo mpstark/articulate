@@ -87,6 +87,16 @@ namespace Articulate
             commandObjects.Add("NEXTWAYPOINT", nextWaypoint);
             commandSet.Add(nextWaypoint.Item);
             #endregion
+	    
+           // Move to (10)
+           Command moveTo = new Command("MOVETO", new string[] { "move to", "move", "move there" }, new [] { DirectInputEmulator.KeyPress(DirectInputKeys.Space) }, subjectRef);
+           commandObjects.Add("MOVETO", moveTo);
+           commandSet.Add(moveTo.Item);
+
+           // Map (11)
+           Command map = new Command("MAP", new string[] { "map" }, new[] { DirectInputEmulator.KeyPress(DirectInputKeys.M) }, subjectRef);
+           commandObjects.Add("MAP", map);
+           commandSet.Add(map.Item);
 
             #region Target (2)
             // open menu
